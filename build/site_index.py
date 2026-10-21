@@ -61,8 +61,7 @@ page=f'''<!DOCTYPE html>
 {HEADER}
 
 <main class="post archives-page">
-<h2>Docs</h2>
-<div class="docs-brand"><p class="docs-masthead-name">Notes &amp; Explainers</p><p class="docs-tagline">Long-form docs, newest first</p></div>
+<h2>Notes &amp; Explainers</h2>
 <p class="docs-intro">Single-page explainers on things I’m using and learning: how they work, what they measure, where they fall short.</p>
 <ul class="doc-list">
 {items}
