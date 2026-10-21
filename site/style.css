@@ -1,0 +1,880 @@
+/*  
+Theme Name: Emma
+Theme URI: http://indrayam.com/
+Description: A simple theme with lots of orange.
+Version: 1.0
+Author: Anand Sharma
+Author URI: http://indrayam.com/
+
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700;800;900&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700;6..72,800;6..72,900&family=PT+Serif:wght@400;700&family=Source+Sans+Pro:wght@400;600;700;900&display=swap');
+
+:root {
+	--color-text: #333333;
+	--color-heading: #333333;
+	--color-content: #1f1f1d;
+	--color-muted: #808080;
+	--color-faint: #999999;
+	--color-link: #990000;
+	--color-accent: #e7651a;
+	--color-panel: #ffffff;
+	--color-panel-alt: #fcf7f4;
+	--color-border: #808080;
+	--color-border-light: #cccccc;
+	--color-quote-border: #ebd4c8;
+	--color-archive-border: #cbd5d8;
+	--color-archive-accent: #8fa6ad;
+	--font-site-body: "PT Serif", Georgia, "Times New Roman", serif;
+	--font-content: Newsreader, Georgia, "Times New Roman", serif;
+	--font-heading: Lora, Georgia, "Times New Roman", serif;
+	--font-ui: "Source Sans Pro", Arial, sans-serif;
+}
+
+/* Responsive baseline for the legacy static pages. */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	max-width: 100%;
+	overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+	max-width: 100%;
+	height: auto;
+}
+
+iframe,
+object,
+embed {
+	max-width: 100%;
+}
+
+table {
+	max-width: 100%;
+}
+
+body {
+	max-width: 100%;
+	overflow-x: hidden;
+	margin: 0 0 5px;
+	color: var(--color-text);
+	font-family: var(--font-site-body);
+	font-size: 17px;
+	background-image: url("/images/blue-dash.gif");
+	border-top: 10px solid var(--color-accent);
+}
+
+h1 {
+	font-family: var(--font-heading);
+	font-size: 2em;
+	font-weight: 900;
+	line-height: normal;
+	margin-top: 0pt;
+	margin-bottom: 0pt;
+	padding-top: 1pt;
+}
+
+h2 {
+	font-family: var(--font-heading);
+	font-size: 1.5em;
+	font-weight: 700;
+	line-height: normal;
+	margin-top: 0pt;
+	margin-bottom: 5pt;
+	padding-top: 0pt;
+	border-style: none none dashed none;
+	border-color: var(--color-border-light);
+	border-width: 0 0 1px 0;
+}
+
+h2 a {
+	color: var(--color-heading);
+	text-decoration: none;
+}
+
+h3 {
+	font-size: 1.17em;
+	font-weight: normal;
+	line-height: normal;
+	color: var(--color-muted);
+	margin-top: 0pt;
+	padding-top: 0pt;
+}
+
+h4 {
+	font-size: 1em;
+	font-weight: bold;
+	line-height: normal;
+	color: var(--color-muted);
+	margin-top: 0pt;
+	margin-bottom: 0pt;
+	padding-top: 0pt;
+}
+
+a {
+	color: var(--color-link);
+	text-decoration: underline;
+}
+
+blockquote {
+	font: normal 17px/1.6 var(--font-heading);
+	margin: 1.2em 45px 1.4em;
+	border: 1px solid var(--color-quote-border);
+	border-left: 4px solid var(--color-accent);
+	padding: 12px 16px 10px 16px;
+	background-color: var(--color-panel-alt);
+}
+
+blockquote p {
+	margin: 0;
+}
+
+blockquote cite {
+	display: block;
+	margin-top: 10px;
+	font: italic 14px/1.5 var(--font-site-body);
+	color: #666666;
+	text-align: right;
+}
+
+blockquote cite a {
+	color: var(--color-link);
+}
+
+.archival-note {
+	font: italic 11pt Georgia, "Times New Roman", Times, serif;
+	line-height: 1.55;
+	text-align: left;
+	margin: 1.2em 45px 1.4em 45px;
+	border: 1px solid var(--color-archive-border);
+	border-left: 4px solid var(--color-archive-accent);
+	padding: 12px 16px 10px 16px;
+	background-color: #f4f7f7;
+	color: #59666a;
+}
+
+.archival-note p {
+	margin: 0;
+}
+
+pre {
+	box-sizing: border-box;
+	max-width: 100%;
+	margin: 1.4rem 0;
+	padding: 1rem 1.15rem;
+	font: 0.9rem/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+	color: #24292f;
+	background: #f6f8fa;
+	border: 1px solid #d0d7de;
+	border-left: 4px solid var(--color-accent);
+	border-radius: 6px;
+	box-shadow: 0 1px 2px rgba(27, 31, 36, 0.08);
+	overflow-x: auto;
+	overflow-y: hidden;
+	tab-size: 4;
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Reusable content components */
+
+.post{
+	margin-top: 24pt;
+	margin-bottom: 10pt;
+	margin-left: 72pt;
+	margin-right: 72pt;
+	background-color: var(--color-panel);
+	border: 1px solid var(--color-border);
+	padding:15px;
+	font-family: var(--font-content);
+	font-size: 19.2px;
+	line-height: 1.5;
+	color: var(--color-content);
+	width: auto;
+	max-width: 100%;
+	overflow-wrap: anywhere;
+}
+
+.post pre {
+	max-width: 100%;
+	overflow-x: auto;
+	overflow-y: hidden;
+	overflow-wrap: normal;
+	white-space: pre;
+}
+
+pre code.hljs {
+	display: block;
+	padding: 0;
+	color: inherit;
+	background: transparent;
+}
+
+.hljs-comment,
+.hljs-quote {
+	color: #6a737d;
+	font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst,
+.hljs-section {
+	color: #cf222e;
+}
+
+.hljs-string,
+.hljs-doctag,
+.hljs-regexp,
+.hljs-addition {
+	color: #0a7b3e;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+	color: #0550ae;
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+	color: #8250df;
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+	color: #953800;
+}
+
+.hljs-built_in,
+.hljs-type,
+.hljs-symbol,
+.hljs-bullet {
+	color: #0a3069;
+}
+
+.hljs-meta,
+.hljs-meta .hljs-keyword {
+	color: #8250df;
+}
+
+.hljs-deletion {
+	color: #82071e;
+}
+
+.post table {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	overflow-x: auto;
+}
+
+.post td,
+.post th {
+	overflow-wrap: anywhere;
+}
+
+.post iframe,
+.post object,
+.post embed {
+	display: block;
+	max-width: 100%;
+}
+
+.post > h2 {
+	font-family: var(--font-ui);
+	font-weight: 900;
+	color: var(--color-heading);
+}
+
+.featured-kicker {
+	display: block;
+	margin: 0 0 0.35rem;
+	font-family: var(--font-ui);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.09em;
+	line-height: 1.2;
+	text-transform: uppercase;
+	color: var(--color-accent);
+}
+
+.flickr-photo { 
+        border: solid 1px #000000; 
+}
+
+.flickr-frame {	
+       float: right; 
+       margin-left: 15px; 
+       margin-bottom: 15px; 
+}
+
+.flickrEmailImage {	
+       float: left;
+       margin-right: 15px;
+       margin-bottom: 15px;
+       border: solid 1px #000000;
+}
+
+.comment {
+	margin-top: 24pt;
+	margin-bottom: 10pt;
+	margin-left: 72pt;
+	margin-right: 72pt;
+	background-color: var(--color-panel-alt);
+	border: 1px solid var(--color-quote-border);
+	padding:15px;
+}
+
+.commententry{
+	background-color: var(--color-panel);
+	border: 1px solid var(--color-border);
+	padding:15px;
+}
+
+.commententryauthor{
+	background-color: var(--color-panel);
+	border: 1px solid var(--color-border);
+	border-left: 3px solid var(--color-link);
+	padding:15px;
+}
+
+
+.postlinks{
+	text-align: right;
+	font-size:90%;
+}
+
+.time{
+	font-family: Courier, monospace;
+}
+
+.copyright {
+	font-family: var(--font-site-body);
+	font-size: 11px;
+	margin-top: 5px;
+	text-align:center;
+	color: var(--color-faint);
+}
+
+.note {
+	font-family: var(--font-site-body);
+	font-size: 12px;
+	color: var(--color-link);
+}
+
+/* Shared site chrome and legacy page hooks */
+
+#sidebar{
+	float:right;
+	width : 200px;
+	background-color: #FFFFFF;
+	border-left:1px solid #000000;
+	border-right:1px solid #000000;
+	border-bottom:1px solid #000000;
+	border-top:1px solid #000000;
+	padding:15px;
+	margin-top:60px;
+	margin-left:25px;
+}
+
+#header{
+	margin-top: 24pt;
+	margin-bottom: 10pt;
+	margin-left: 72pt;
+	margin-right: 52pt;
+	padding-top: 1px;
+	max-width: 100%;
+	overflow-wrap: anywhere;
+}
+
+/* Keep the legacy header portrait overlapping the first content panel. */
+#header + .post {
+	margin-top: -10pt;
+}
+
+#header + .post > h2:first-child {
+	clear: both;
+}
+
+#topnav{
+	font-size: 90%;
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+
+.topnav-menu > .topnav-toggle {
+	display: none;
+}
+
+.topnav-menu > .topnav-toggle-input {
+	display: none;
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+.topnav-menu > .topnav-links {
+	display: block;
+}
+
+.topnav-menu .topnav-separator {
+	white-space: pre;
+}
+
+#myPic{
+	padding-right:12px;
+	float:left;
+	margin-left: 12pt;
+}
+
+#myPic img {
+	display: block;
+	width: 120px;
+	height: auto;
+	max-width: 100%;
+}
+
+#commentmeta{
+	font-size:85%;
+}
+
+#postdates{
+	text-align: right;
+	font-size:85%;
+}
+
+#edit{
+	text-align: center;
+}
+
+#strike{
+   text-decoration: line-through;
+}
+
+.aboutme {
+	font: normal 10pt Georgia, "Times New Roman", Times, serif;
+	margin-left: 50px; 
+	margin-right: 10px; 
+	padding: 5px 5px 5px 10px;
+}
+
+.right {
+       text-align: right;
+}
+
+#code {
+       font-family: "Courier New", Courier, sans-serif;
+       font-weight: normal;
+       font-size: 10pt;
+       color: #3232cd;
+}
+
+#codeflow {
+       font-family: "Courier New", Courier, sans-serif;
+       font-weight: normal;
+}
+
+.poem {
+        font: italic 1.5em "monotype corsiva", Georgia, Serif;
+	margin-left: 10px; 
+	margin-right: 10px;
+        border: 1px solid  #ff9900;
+        background: #ffffcc;
+        width: 90%;
+        text-align: center;
+} 
+
+.poem h2 {
+        font-family: "monotype corsiva", Georgia, Serif;
+        font-size: 105%;
+        font-weight: bold;  
+	margin-left: 10px; 
+	margin-right: 10px;
+        text-align: center; 
+        border-width: 0 0 0 0;
+}
+
+#marriage {
+        font-family: "monotype corsiva", Georgia, Serif;
+        font-size: 115%;
+        font-weight: normal;
+        color: black;
+}
+
+.alt {
+        background-color: #FAFAF0 !important;
+}
+
+.small {
+        font-size: 0.9em;
+        color: #999;
+}
+
+.post ul {
+	padding: 0;
+	margin: 0;
+}
+
+.post li {
+	list-style: none;
+}
+
+.date {
+	position: absolute;
+	background: url(/images/calendar.png);
+	height: 67px;
+	width: 59px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: white;
+	margin: 0;
+}
+
+.date .month, .date .day {
+	text-align: center;
+	width: 59px;
+}
+.date .month {
+	overflow: hidden;
+	font-size: 13px;
+	position: absolute;
+	margin-top: 42px;
+	text-transform: uppercase;
+}
+
+.date .day {
+	font-weight: bold;
+	font-size: 30px;
+	line-height: 32px;
+	position: absolute;
+	margin-top: 11px;
+}
+
+.date .year {
+	display: none;
+}
+
+/* ── About Me page ─────────────────────────────────────────────────── */
+.aboutme-page {
+	padding: 20px 20px 24px 20px;
+}
+
+.aboutme-hero {
+	clear: both;
+	margin: 0 auto 28px;
+	text-align: center;
+}
+
+.aboutme-hero img {
+	display: block;
+	height: auto;
+	width: 80%;
+	max-width: 100%;
+	margin: 0 auto;
+}
+
+.aboutme-image-caption {
+	color: #aaa;
+	font-size: 9px;
+	line-height: 1.3;
+	margin: 4px auto 0;
+	text-align: center;
+	width: 80%;
+}
+
+.aboutme-photo {
+	float: left;
+	margin: 4px 18px 12px 0;
+	max-width: 160px;
+}
+
+/* ── Archives page ──────────────────────────────────────────────────── */
+.archives-page h3 {
+	margin-top: 24px;
+	margin-bottom: 4px;
+	padding-bottom: 2px;
+	border-bottom: 1px dashed #ccc;
+}
+
+.archive-legend {
+	margin: 0 0 20px 0;
+	padding: 8px 12px;
+	border-left: 3px solid #9b8f87;
+	background-color: #f5f2ef;
+	color: #59666a;
+	font-size: 0.9em;
+}
+
+.archive-marker {
+	color: #8a6d5a;
+	font-weight: bold;
+}
+
+.archives-page li.archive-degraded::before {
+	content: "*";
+	color: #8a6d5a;
+	font-weight: bold;
+	display: inline-block;
+	width: 0.8em;
+}
+
+.archives-page li.archive-degraded a {
+	color: #7e4f3a;
+}
+
+.archives-page ul {
+	margin: 0 0 0 20px;
+	padding: 0;
+}
+
+.archives-page li {
+	list-style: none;
+	margin: 2px 0;
+	line-height: 1.5;
+}
+
+.aboutme-page .aboutme {
+	font: inherit;
+	margin: 0;
+	padding: 0;
+}
+
+/* ── Wide-screen width constraints ───────────────────────────────────────── */
+/* The legacy theme used fixed pt margins which makes content span too wide. */
+@media screen and (min-width: 900px) {
+	#header {
+		box-sizing: border-box;
+		margin-left: auto !important;
+		margin-right: auto !important;
+		max-width: 760px !important;
+	}
+	.post {
+		box-sizing: border-box;
+		margin-left: auto !important;
+		margin-right: auto !important;
+		max-width: 760px !important;
+	}
+}
+
+/* Give large desktop screens a little more breathing room without changing
+   the existing tablet and phone layouts. */
+@media screen and (min-width: 1280px) and (hover: hover) and (pointer: fine) {
+	#header,
+	.post {
+		max-width: 840px !important;
+	}
+}
+/* ── Collapsible category archive ─────────────────────────────────── */
+.archives-page details.category-group,
+.archives-page details.archive-year-group {
+	margin-top: 24px;
+}
+
+.archives-page details.category-group:first-of-type,
+.archives-page details.archive-year-group:first-of-type {
+	margin-top: 0;
+}
+
+.archives-page details.category-group summary,
+.archives-page details.archive-year-group summary {
+	display: block;
+	position: relative;
+	margin-bottom: 4px;
+	padding: 2px 0 2px 1.2em;
+	border-bottom: 1px dashed #ccc;
+	font-size: 1.17em;
+	font-weight: bold;
+	cursor: pointer;
+	list-style: none;
+}
+
+.archives-page details.category-group summary::-webkit-details-marker,
+.archives-page details.archive-year-group summary::-webkit-details-marker {
+	display: none;
+}
+
+.archives-page details.category-group summary::marker,
+.archives-page details.archive-year-group summary::marker {
+	content: "";
+}
+
+.archives-page details.category-group summary::before,
+.archives-page details.archive-year-group summary::before {
+	content: "";
+	position: absolute;
+	left: 0.25em;
+	top: 0.42em;
+	width: 0.4em;
+	height: 0.4em;
+	border-right: 1px solid #8a6d5a;
+	border-bottom: 1px solid #8a6d5a;
+	transform: rotate(-45deg);
+	transition: transform 0.15s ease;
+}
+
+.archives-page details.category-group[open] summary::before,
+.archives-page details.archive-year-group[open] summary::before {
+	top: 0.3em;
+	transform: rotate(45deg);
+}
+
+.archives-page details.category-group summary .small,
+.archives-page details.archive-year-group summary .small {
+	font-size: 0.77em;
+	font-weight: normal;
+}
+
+
+/* On narrow screens, fall back to nearly full width. */
+@media screen and (max-width: 899px) {
+	#header, .post {
+		margin-left: 10px !important;
+		margin-right: 10px !important;
+		max-width: none !important;
+		width: auto !important;
+	}
+
+	#sidebar {
+		float: none;
+		width: auto;
+		max-width: none;
+		margin: 1rem 10px;
+	}
+
+	#myPic {
+		margin-left: 0;
+	}
+
+	.post {
+		padding: 12px;
+	}
+
+	blockquote,
+	.archival-note {
+		margin-left: 0.5rem;
+		margin-right: 0.5rem;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	body {
+		font-size: 16px;
+	}
+
+	#header {
+		margin-top: 16pt;
+	}
+
+	#topnav {
+		line-height: 1.7;
+	}
+
+	.post {
+		padding: 10px;
+	}
+
+	pre {
+		padding: 0.85rem 0.9rem;
+		font-size: 0.82rem;
+	}
+
+	blockquote,
+	.archival-note {
+		margin-left: 0;
+		margin-right: 0;
+		padding: 10px 12px;
+	}
+
+	.aboutme-page {
+		padding: 12px 10px 16px;
+	}
+
+	.aboutme-hero img {
+		width: 100%;
+	}
+
+	.aboutme-image-caption {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	.topnav-menu > .topnav-toggle-input {
+		display: block;
+	}
+
+	.topnav-menu > .topnav-toggle {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
+		min-height: 2.25rem;
+		padding: 0.35rem 0.6rem;
+		border: 1px solid var(--color-border);
+		background: var(--color-panel);
+		color: var(--color-link);
+		font: inherit;
+		font-size: 90%;
+		font-weight: 700;
+		cursor: pointer;
+	}
+
+	.topnav-menu > .topnav-toggle::after {
+		content: "+";
+		font-size: 1.25em;
+		line-height: 1;
+	}
+
+	.topnav-menu > .topnav-toggle-input:checked + .topnav-toggle::after {
+		content: "−";
+	}
+
+	.topnav-menu > .topnav-toggle-input:focus-visible + .topnav-toggle {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 2px;
+	}
+
+	.topnav-menu > .topnav-links {
+		display: none;
+		padding: 0.25rem 0.6rem;
+		border: 1px solid var(--color-border);
+		border-top: 0;
+		background: var(--color-panel);
+	}
+
+	.topnav-menu > .topnav-toggle-input:checked ~ .topnav-links {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.topnav-menu .topnav-links a {
+		display: block;
+		padding: 0.3rem 0;
+	}
+
+	.topnav-menu .topnav-separator {
+		display: none;
+	}
+}
