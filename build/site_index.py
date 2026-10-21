@@ -48,8 +48,8 @@ page=f'''<!DOCTYPE html>
 .docs-tagline{{font-family:var(--font-ui);font-size:.8rem;letter-spacing:.09em;text-transform:uppercase;color:var(--color-accent);font-weight:700;margin:0 0 10px}}
 .docs-intro{{margin:0 0 14px;color:var(--color-content)}}
 .post ul.doc-list{{margin:0;padding:0}}
-.doc-entry{{padding:12px 0 12px 14px;border-left:4px solid var(--color-quote-border);margin:0 0 10px;background:var(--color-panel)}}
-.doc-entry:hover{{border-left-color:var(--color-accent);background:var(--color-panel-alt)}}
+.doc-entry{{padding:12px 0;margin:0 0 10px;background:var(--color-panel)}}
+.doc-entry:hover{{background:var(--color-panel-alt)}}
 .doc-title{{font-family:var(--font-heading);font-size:1.2em;font-weight:700;color:var(--color-heading);margin:0}}
 .doc-title a{{color:var(--color-link)}}
 .doc-meta{{font-family:var(--font-ui);font-size:.82rem;color:var(--color-muted);margin:2px 0 4px}}
