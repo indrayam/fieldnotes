@@ -23,18 +23,21 @@ P=[('Core',['laziness-protocol','foundational-thinking','redesign-from-first-pri
 ('Delegation',['guard-the-context-window','never-block-on-the-human']),('Meta',['encode-lessons-in-structure'])]
 assert sum(len(x) for _,x in G)==32 and sum(len(x) for _,x in P)==24
 NEW={'create-formal-verification-skill','maintain-formal-verification-skill'}
+def band(cls,g,n): return f'<div class="gband {cls}"><span>{g}</span><span class="gcount">{n}</span></div>'
 rows=''
 for g,ns in G:
-    rows+=f'<tr class="grp"><td colspan="3">{g} · {len(ns)}</td></tr>'
+    rows+=band('gb-cmd',g,len(ns))+'<div class="cards">'
     for n in ns:
-        w,u=split(D[n]); rows+=f'<tr><td class="nm">{sk(n)}{" <span class=\"tag\">new</span>" if n in NEW else ""}</td><td>{esc(w)}</td><td>{esc(u)}</td></tr>'
+        w,u=split(D[n]); rows+=f'<article class="card"><div class="ch">{sk(n)}<span class="kt kt-cmd">command</span>{"<span class=\"tag\">new</span>" if n in NEW else ""}</div><dl><dt>What</dt><dd>{esc(w)}</dd><dt>When</dt><dd>{esc(u)}</dd></dl></article>'
+    rows+='</div>'
 prow=''
 for g,ns in P:
-    prow+=f'<tr class="grp"><td colspan="2">{g} · {len(ns)}</td></tr>'
+    prow+=band('gb-pr',g,len(ns))+'<div class="cards">'
     for n in ns:
-        d=D['principle-'+n]; prow+=f'<tr><td class="nm">{L(f"skills/principle-{n}/SKILL.md","<code>"+n+"</code>")}</td><td>{esc(d)}</td></tr>'
+        d=D['principle-'+n]; prow+=f'<article class="card c-pr"><div class="ch">{L(f"skills/principle-{n}/SKILL.md","<code>"+n+"</code>")}<span class="kt kt-pr">principle</span></div><dl><dt>When it applies</dt><dd>{esc(d)}</dd></dl></article>'
+    prow+='</div>'
 PB=[('investigation','read-only question'),('bug-fix','repro → root cause → fix'),('perf-issue','measured slowness vs baseline'),('hillclimb','one metric, hypothesis loop'),('runtime-forensics','live symptom'),('trace-forensics','captured profile'),('feature','new behavior from a data shape'),('refactoring','behavior-preserving'),('prototype','throwaway sketch decides a fork'),('visual-parity','pixel-exact UI'),('authoring-a-skill','writing a SKILL.md'),('eval','blinded skill/prompt eval'),('babysit','PR to merge-ready'),('shipping','land verified stack'),('autonomous-run','long task, no stops'),('orchestrate','multi-day coordinator'),('autopilot-full','independent PRs to merged'),('autopilot-stack','one linear stack'),('session-pickup','resume prior work'),('pause-safely','suspend cleanly'),('multi-phase-plan','phased / stacked'),('worktree-cleanup','prune worktrees'),('opening-a-pr','ends every playbook')]
-pbt=''.join(f'<tr><td>{L(f"skills/poteto-mode/playbooks/{p}.md","<code>"+p+"</code>")}</td><td>{d}</td></tr>' for p,d in PB)
+pbt=band('gb-pb','All playbooks',len(PB))+'<div class="cards cards-sm">'+''.join(f'<article class="card c-pb"><div class="ch">{L(f"skills/poteto-mode/playbooks/{p}.md","<code>"+p+"</code>")}<span class="kt kt-pb">playbook</span></div><dl><dt>For</dt><dd>{d}</dd></dl></article>' for p,d in PB)+'</div>'
 nav=[('top','Overview'),('tldr','TL;DR'),('why','Why it exists'),('model','Mental model'),('how','How it works'),('workflow','Workflow skills'),('principles','Principles'),('playbooks','Playbooks'),('install','Install and setup'),('examples','Examples'),('gotchas','Gotchas and findings'),('new','What\'s new'),('next','Where to go next')]
 hero=f'''<header class="hero" id="top">
 <div class="eyebrow">A skill reference · pstack v0.15.29 · cursor/plugins @ {L("", H[:7])} (20 Oct 2026) · read 21 Oct 2026</div>
@@ -85,11 +88,11 @@ how=f'''<section id="how"><div class="sec-head"><div class="eyebrow">poteto-mode
 <tr><td>{L("skills/poteto-mode/scripts/worktree-audit.sh","<code>worktree-audit.sh</code>")}</td><td>A read-only audit table (SIZE, AGE, MERGED, DIRTY, REMOTE, PR, LAST_CHAT, BUCKET). It never deletes anything. Without <code>-b</code> it warns and uses origin/main.</td></tr>
 <tr><td>{L("skills/show-me-your-work/scripts/log.sh","<code>log.sh</code>")}</td><td>Appends a row to the decision TSV. In my run it removed tabs inside cells and prefixed <code>=cmd</code> with <code>'</code> to block spreadsheet formula injection.</td></tr></tbody></table></div></section>'''
 wf=f'''<section id="workflow"><div class="sec-head"><div class="eyebrow">skills/* · 32 commands</div><h2>Workflow skills</h2><p>The “what” and “when” text comes from each skill’s own frontmatter <code>description</code>. Click a name to open the file at this commit.</p></div>
-<div class="tablewrap"><table class="dense fx"><colgroup><col style="width:27%"><col style="width:38%"><col></colgroup><thead><tr><th>Skill</th><th>What</th><th>When</th></tr></thead><tbody>{rows}</tbody></table></div></section>'''
+{rows}</section>'''
 pr=f'''<section id="principles"><div class="sec-head"><div class="eyebrow">skills/principle-* · 24</div><h2>Principles</h2><p>Each principle is a short rule, 9 to 34 lines long. The router groups them into the five headings below. Each one is invoked as <code>principle-&lt;name&gt;</code>.</p></div>
-<div class="tablewrap"><table class="dense fx"><colgroup><col style="width:34%"><col></colgroup><thead><tr><th>Principle</th><th>When it applies (frontmatter)</th></tr></thead><tbody>{prow}</tbody></table></div></section>'''
+{prow}</section>'''
 pb=f'''<section id="playbooks"><div class="sec-head"><div class="eyebrow">skills/poteto-mode/playbooks/ · 23</div><h2>Playbooks</h2></div>
-<div class="tablewrap"><table class="dense"><thead><tr><th>Playbook</th><th>For</th></tr></thead><tbody>{pbt}</tbody></table></div></section>'''
+{pbt}</section>'''
 inst=f'''<section id="install"><div class="sec-head"><div class="eyebrow">README · {L("skills/setup-pstack/SKILL.md")}</div><h2>Install and setup</h2></div>
 {code("""/add-plugin pstack                      # Cursor
 /plugin marketplace add cursor/plugins  # Claude Code
@@ -135,6 +138,22 @@ nxt=f'''<section id="next"><div class="sec-head"><div class="eyebrow">Sources</d
 <li>{L("automations/benny/README.md","benny")}: a dormant Slack triage-and-fix automation pack that only runs on Cursor.</li>
 <li>Upstream: <a href="https://github.com/cursor/plugins/tree/main/pstack">github.com/cursor/plugins/tree/main/pstack</a> · plugin install <code>/home/box/agent-data/plugins/pstack</code></li></ul></div></section>'''
 foot=f'Built 21 Oct 2026 from cursor/plugins @ {H[:7]} (commit 20 Oct 2026, 7:05 PM EDT), pstack v0.15.29. All facts come from the repo files, git log and local script runs.'
-extra='<style>.tag{font:600 .62rem var(--f-mono,monospace);background:var(--gold-soft);padding:1px 6px;border-radius:9px;margin-left:4px;text-transform:uppercase}</style>'
+extra='''<style>.tag{font:600 .62rem var(--f-mono,monospace);background:var(--gold-soft);color:#7a5208;padding:1px 6px;border-radius:9px;text-transform:uppercase}
+:root{--b-cmd:#8a2a46;--b-cmd-ink:#f2f6fa;--b-pr:#fcefcc;--b-pr-ink:#5e3f05;--b-pr-rule:#d9971a;--b-pb:#c7e2f5;--b-pb-ink:#173f5f;--k-cmd:#8a2a46;--k-cmd-ink:#fff;--k-pr:#d9971a;--k-pr-ink:#1f1a2c;--k-pb:#c7e2f5;--k-pb-ink:#173f5f;--tag-ink:#7a5208}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--b-cmd:#5a1c30;--b-cmd-ink:#fbe9ef;--b-pr:#3a2f17;--b-pr-ink:#f6d48a;--b-pr-rule:#f1bd4f;--b-pb:#1f3447;--b-pb-ink:#bfe2fa;--k-cmd:#e88ca6;--k-cmd-ink:#1f1a2c;--k-pr:#f1bd4f;--k-pr-ink:#1f1a2c;--k-pb:#9fd0f2;--k-pb-ink:#14121c;--tag-ink:#f1bd4f}}
+:root[data-theme="dark"]{--b-cmd:#5a1c30;--b-cmd-ink:#fbe9ef;--b-pr:#3a2f17;--b-pr-ink:#f6d48a;--b-pr-rule:#f1bd4f;--b-pb:#1f3447;--b-pb-ink:#bfe2fa;--k-cmd:#e88ca6;--k-cmd-ink:#1f1a2c;--k-pr:#f1bd4f;--k-pr-ink:#1f1a2c;--k-pb:#9fd0f2;--k-pb-ink:#14121c;--tag-ink:#f1bd4f}
+.tag{color:var(--tag-ink)}
+.gband{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:22px 0 10px;padding:9px 14px;border-radius:9px;font-family:var(--f-display);font-weight:700;font-size:.95rem;letter-spacing:.01em}
+.gcount{font-size:.75rem;font-weight:700;padding:1px 9px;border-radius:999px;background:rgba(255,255,255,.18)}
+.gb-cmd{background:var(--b-cmd);color:var(--b-cmd-ink)}
+.gb-pr{background:var(--b-pr);color:var(--b-pr-ink);border-left:6px solid var(--b-pr-rule)}.gb-pr .gcount{background:var(--b-pr-rule);color:#1f1a2c}
+.gb-pb{background:var(--b-pb);color:var(--b-pb-ink);border-left:6px solid var(--sky-ink)}.gb-pb .gcount{background:var(--sky-ink);color:var(--panel)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;min-width:0}.cards-sm{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--k-cmd);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow);min-width:0;overflow-wrap:anywhere}
+.card.c-pr{border-top-color:var(--k-pr)}.card.c-pb{border-top-color:var(--sky-ink)}
+.card .ch{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:6px}.card .ch a{margin-right:auto;font-weight:600}.card .ch code{font-size:.86rem;white-space:normal}
+.kt{font-family:var(--f-display);font-size:.64rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.kt-cmd{background:var(--k-cmd);color:var(--k-cmd-ink)}.kt-pr{background:var(--k-pr);color:var(--k-pr-ink)}.kt-pb{background:var(--k-pb);color:var(--k-pb-ink)}
+.card dl{margin:0}.card dt{font-family:var(--f-display);font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-top:6px}.card dd{margin:2px 0 0;font-size:.88rem;color:var(--ink-2);line-height:1.45}</style>'''
 h=page('pstack','pstack',nav,extra+hero+tldr+why+model+how+wf+pr+pb+inst+ex+got+new+nxt,footer=foot)
 open('/workspace/dorothy-docs/pstack/index.html','w').write(h);print(len(h))
