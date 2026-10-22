@@ -4,10 +4,10 @@ Read `README.md` before changing or building this site. It is the detailed refer
 
 ## Shared editing
 
-- Before starting work, run `git pull --rebase origin main` to include changes from the other editor, Grok Bot.
+- Before starting work, run `git pull --rebase origin main` to include changes from other editors.
 - Keep commits small. Never force-push.
 - Content work (explainers, the docs homepage, the build) stays inside this repository. Do not edit the sibling indrayam.com repos from here.
-- Shared site chrome (header nav, footer, `style.css`, favicon) is owned by Sutra Site, which keeps all four indrayam.com sites aligned. Sutra may change it here, through the builder in `build/` plus a rebuild, and will tell Dorothy Docs what changed. Don't revert those changes on a later rebuild.
+- Shared site chrome (header nav, footer, `style.css`, favicon) is kept aligned across all four indrayam.com sites and may be changed here as part of a cross-site update. Make such changes through the builder in `build/` plus a rebuild, and don't revert them on a later rebuild.
 
 ## Sources and generated pages
 
