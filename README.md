@@ -31,6 +31,6 @@ A missing source stops the build with a message naming the var. You only need th
 ## Rules
 - Hand edits in `site/` are fine for pages that are not generated.
 - Generated docs (everything listed above): edit `build/`, then rebuild. A hand edit to their `site/` file is overwritten on the next rebuild.
-- `git pull --rebase` before you start; small commits; never force-push.
+- `git pull --rebase` before starting; small commits; never force-push.
 - No internal Cisco material (ai-native-assessment, ai-harness-setup, anything from work). `build.py` fails if it finds it.
 - Don't touch the other indrayam sites from here.
