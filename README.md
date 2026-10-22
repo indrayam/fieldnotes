@@ -1,6 +1,6 @@
 # docs.indrayam.com
 
-Single-page explainers, each a self-contained HTML file. Two editors: Anand (Mac + Codex) and Dorothy Docs (Grok Bot box).
+Single-page explainers, each a self-contained HTML file. Edited from more than one machine and agent, so follow the sync rules in `AGENTS.md`.
 
 ## Layout
 - `site/`: exactly what is deployed. One folder per doc (`site/<slug>/index.html`) plus the home page `site/index.html`.
