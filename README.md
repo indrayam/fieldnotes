@@ -33,4 +33,4 @@ A missing source stops the build with a message naming the var. You only need th
 - Generated docs (everything listed above): edit `build/`, then rebuild. A hand edit to their `site/` file is overwritten on the next rebuild.
 - Check branch and working-tree state before editing; follow `AGENTS.md` for safe synchronization. Keep commits small; never force-push.
 - No internal Cisco material (ai-native-assessment, ai-harness-setup, anything from work). `build.py` fails if it finds it.
-- Don't touch the other indrayam sites from here.
+- Content work stays in this repo; don't edit the sibling indrayam.com repos from here. Shared site chrome (header nav, footer, `style.css`, favicon) may change here as part of a cross-site update; see `AGENTS.md`.
