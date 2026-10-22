@@ -1,0 +1,1 @@
+Pillow>=10   # gal.py: re-encodes gallery images to WebP data URIs

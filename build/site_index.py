@@ -1,9 +1,11 @@
 """Build docs.indrayam.com home: 4th sibling of indrayam.com / dailydiff / resume.
 Shares v1 style.css (shipped verbatim as /style.css) + blog header/nav/copyright."""
 import sys,html,shutil,os
-site=sys.argv[1]
-V1='/workspace/dorothy-docs/_src/indrayam-site/v1'
-IMG='/tmp/iv1/images' if os.path.isdir('/tmp/iv1/images') else '/workspace/dorothy-docs/_build/assets/images'
+sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
+from config import src, SITE, ASSETS, BUILD
+site=sys.argv[1] if len(sys.argv)>1 else SITE
+V1=src('INDRAYAM_V1_SRC')
+IMG=os.path.join(ASSETS,'images')
 # PUBLIC allowlist only. Newest first. (slug,title,date ISO,topic,summary)
 DOCS=[
 ("pstack","pstack","2026-10-21","AI tooling","Lauren Tan’s pack of agent skills for Cursor: one router, /poteto-mode, picks a playbook and pulls in skills and principles as needed."),
@@ -22,7 +24,7 @@ shutil.copy(V1+'/style.css',site+'/style.css')
 os.makedirs(site+'/images',exist_ok=True)
 for f in ('favicon.ico','me.gif','blue-dash.gif'): shutil.copy(f'{IMG}/{f}',site+'/images/'+f)
 E=html.escape
-HEADER=open('/workspace/dorothy-docs/_build/header.html').read()
+HEADER=open(os.path.join(BUILD,'header.html')).read()
 items="\n".join(f'''<li class="doc-entry"><h4 class="doc-title"><a href="/{s}/">{E(t)}</a></h4>
 <p class="doc-meta"><time datetime="{d}">{fmt(d)}</time> &mdash; {E(tp)}</p><p class="doc-summary">{E(sm)}</p></li>''' for s,t,d,tp,sm in DOCS)
 topics=sorted({d[3] for d in DOCS})

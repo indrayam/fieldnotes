@@ -28,7 +28,7 @@ secs.forEach(s=>s&&io.observe(s));
 """+XJS
 def esc(s): return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 def code(s,cap=None): return f'<div class="code"><pre>{esc(s)}</pre></div>'+(f'<p class="figcap">{cap}</p>' if cap else '')
-DEFAULT_FOOT="Internal Cisco material (Anand Sharma's work skills). Built locally from <code>/workspace/dorothy-docs/_src/hello-skills/</code> on 20 Oct 2026; nothing about these skills was fetched from the web. Do not publish."
+DEFAULT_FOOT="Built by Dorothy Docs."
 def page(title,eyebrow,nav,body,footer=None,extra_js=''):
     lis=''.join(f'<li><a href="#{i}"{" class=\"on\"" if n==0 else ""}>{t}</a></li>' for n,(i,t) in enumerate(nav))
     toc=''.join(f'<li><a href="#{i}">{t}</a></li>' for i,t in nav)

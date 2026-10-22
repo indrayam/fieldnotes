@@ -1,10 +1,11 @@
 import sys,os,re,json,glob
 sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from skdoc import *
-R='/home/box/illo-skill'; SK='skills/illo/'
+from config import src, asset
+R=src('ILLO_SRC'); SK='skills/illo/'
 D=Doc('illo',R,'https://github.com/tmchow/illo-skill/blob/0b0abee/')
 SKM=SK+'SKILL.md'; VS=SK+'references/visual-style.md'; E=SK+'scripts/illo.py'
-OLD=json.load(open('/workspace/dorothy-docs/_old/illo.json'))
+OLD=json.load(open(asset('illo','gallery.json')))
 def first_para(t):
     t=re.sub(r'^#.*\n','',t).strip(); return re.sub(r'\s+',' ',t.split('\n\n')[0])
 def first_sent(p,n=260):

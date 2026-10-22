@@ -1,7 +1,8 @@
 import sys,os,re,json,glob
 sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from skdoc import *
-R='/home/box/diagram-design'; SK='skills/diagram-design/'
+from config import src, asset
+R=src('DIAGRAM_DESIGN_SRC'); SK='skills/diagram-design/'
 D=Doc('diagram-design',R,'https://github.com/cathrynlavery/diagram-design/blob/7a12007/')
 SKM=SK+'SKILL.md'; skill=D.rd(SKM)
 # --- parse §3 guide

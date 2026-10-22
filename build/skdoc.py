@@ -89,5 +89,5 @@ document.getElementById("PPane").addEventListener("click",(e)=>{const b=e.target
 '''.replace('IT_P','IT_'+prefix).replace('GR_P','GR_'+prefix).replace('"P"','"'+prefix+'"').replace('"K"','"'+key+'"').replace('PPane',prefix+'Pane').replace('BLOBNOTE',blobnote)
 def build(slug,title,nav,body,footer,js):
     html=page(title,slug,nav,GCSS+XCSS+body+LB,footer=footer,extra_js=js+GJS)
-    out=f'/workspace/dorothy-docs/{slug}/index.html'; os.makedirs(os.path.dirname(out),exist_ok=True)
+    from config import out as _o; out=_o(slug)
     open(out,'w').write(html); return len(html)

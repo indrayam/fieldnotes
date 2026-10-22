@@ -1,10 +1,11 @@
 import sys,os,re,json
 sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from skdoc import *
-R='/home/box/drawio-skill'
+from config import src, asset
+R=src('DRAWIO_SRC')
 D=Doc('drawio',R,'https://github.com/jgraph/drawio-mcp/blob/05c1747/')
 S='plugins/cursor/skills/drawio/SKILL.md'; T='mcp-tool-server/src/index.js'
-OLD=json.load(open('/workspace/dorothy-docs/_old/drawio.json'))
+OLD=json.load(open(asset('drawio','gallery.json')))
 gi=[]
 for j,o in enumerate(OLD):
     k='layout' if j<4 else 'mmd' if j<16 else 'gal'

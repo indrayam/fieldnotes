@@ -2,14 +2,15 @@ import sys,os,re,json
 sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from skdoc import *
 from gal import uri
-R='/home/box/mcp_excalidraw'
+from config import src, asset
+R=src('EXCALIDRAW_SRC')
 D=Doc('excalidraw',R,'https://github.com/yctimlin/mcp_excalidraw/blob/774a70c/')
 S='skills/excalidraw-skill/SKILL.md'; CS='skills/excalidraw-skill/references/cheatsheet.md'
 def Q(s,f=S): return D.Q(s,f)
 cs=D.rd(CS)
-OLD=json.load(open('/workspace/dorothy-docs/_old/excalidraw.json'))
+OLD=json.load(open(asset('excalidraw','gallery.json')))
 gi=[dict(id=f'g{j}',n=o['n'],il=o['il'],d=re.sub(r'\s*\(L[\d–-]+\)','',o['d']),k='demo' if 'demo' in o['n'] else 'style',dark=o.get('dark',False)) for j,o in enumerate(OLD)]
-for j,(p,n,d) in enumerate([('/tmp/exc/s1.png','This run: SKILL.md example','Headless screenshot from the canvas server, 8 elements.'),('/tmp/exc/s1d.png','This run: --dark','Same scene with --dark.'),('/tmp/exc/r.png','This run: offline render','render on the exported .excalidraw, no server.')]):
+for j,(p,n,d) in enumerate([(asset('excalidraw','s1.png'),'This run: SKILL.md example','Headless screenshot from the canvas server, 8 elements.'),(asset('excalidraw','s1d.png'),'This run: --dark','Same scene with --dark.'),(asset('excalidraw','r.png'),'This run: offline render','render on the exported .excalidraw, no server.')]):
     gi.append(dict(id=f'r{j}',n=n,il=uri(p),d=d,k='run',dark=False))
 # MCP tools
 tools=[]

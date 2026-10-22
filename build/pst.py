@@ -1,9 +1,10 @@
-# Builds /workspace/dorothy-docs/pstack/index.html from the pstack source tree plus the per-item data in pstack_data/.
+# Builds site/pstack/index.html from the pstack source tree plus the per-item data in pstack_data/.
 import sys,os,re,glob,json,subprocess
 sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 from shell import page, esc, code
 from explorer import explorer, data_js
-SRC='/workspace/src/plugins-latest'; PS=SRC+'/pstack'; DD=os.path.join(os.path.dirname(os.path.abspath(__file__)),'pstack_data')
+from config import src, out, BUILD
+SRC=src('PSTACK_SRC'); PS=SRC+'/pstack'; DD=os.path.join(os.path.dirname(os.path.abspath(__file__)),'pstack_data')
 def sh(c): return subprocess.run(c,shell=True,capture_output=True,text=True,cwd=SRC).stdout.strip()
 H=sh('git rev-parse HEAD'); h7=H[:7]; VER=json.load(open(PS+'/plugin.json'))['version']
 HDATE=sh('git log -1 --format=%cs')
@@ -214,7 +215,6 @@ if BAD:
     sys.exit(1)
 foot=f'Compiled 22 Oct 2026 from cursor/plugins @ {h7} (pstack v{VER}, committed {HDATE}) · every quote is checked against its source file at build time · not affiliated with Cursor or Lauren Tan.'
 html=page('Inside pstack','pstack',nav,hero+smap+anat+sk+spb+spr+smod+sc+drv+fnd+ver+yours+hist+srcs,footer=foot,extra_js=JSX)
-os.makedirs('/workspace/dorothy-docs/pstack',exist_ok=True)
-open('/workspace/dorothy-docs/pstack/index.html','w').write(html)
-json.dump(dict(version=VER,commit=h7,skills=len(S),agents=len(A),playbooks=len(PB),principles=len(PR),dmi=f'{NDMI}/{NSK}',sloc=SLOC,tloc=TLOC,commits=NCOMMITS,bytes=len(html)),open('/tmp/pst_counts.json','w'))
-print(open('/tmp/pst_counts.json').read())
+open(out('pstack'),'w').write(html)
+json.dump(dict(version=VER,commit=h7,skills=len(S),agents=len(A),playbooks=len(PB),principles=len(PR),dmi=f'{NDMI}/{NSK}',sloc=SLOC,tloc=TLOC,commits=NCOMMITS,bytes=len(html)),open(os.path.join(BUILD,'pstack_counts.json'),'w'))
+print(open(os.path.join(BUILD,'pstack_counts.json')).read())
