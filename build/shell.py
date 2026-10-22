@@ -1,5 +1,7 @@
 import re
-CSS=open('/tmp/base.css').read()
+import os
+from explorer import CSS as XCSS, JS as XJS
+CSS=open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'base.css')).read()
 CSS+="""
 .v-bad{background:#f6dcdc;color:#7a1f1f}.v-warn{background:var(--gold-soft);color:#7a5208}
 :root[data-theme="dark"] .v-bad{background:#3a1f22;color:#f0a8a8}:root[data-theme="dark"] .v-warn{color:var(--gold)}
@@ -12,6 +14,7 @@ tr.grp td{background:var(--code-bg);font-family:var(--f-display);font-weight:700
 .code pre{overflow-x:auto;max-width:100%}.code{max-width:100%}
 .s0{color:var(--ink-3)}.s4{color:var(--sky-ink);font-weight:700}
 """
+CSS+=XCSS
 JS=r"""
 function mk(t,c,txt){const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e}
 document.querySelectorAll('.code').forEach(w=>{const b=mk('button','copy','Copy');b.type='button';b.onclick=async()=>{const t=w.querySelector('pre').innerText;try{await navigator.clipboard.writeText(t)}catch(e){const r=document.createElement('textarea');r.value=t;document.body.appendChild(r);r.select();document.execCommand('copy');r.remove()}b.textContent='Copied';b.classList.add('ok');setTimeout(()=>{b.textContent='Copy';b.classList.remove('ok')},1400)};w.appendChild(b)});
@@ -22,12 +25,13 @@ document.querySelectorAll('[data-filter]').forEach(box=>{const tb=document.getEl
 const links=[...document.querySelectorAll('#railList a')],secs=links.map(a=>document.querySelector(a.getAttribute('href')));
 const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target);links.forEach((l,j)=>l.classList.toggle('on',i===j))}})},{rootMargin:'-20% 0px -70% 0px'});
 secs.forEach(s=>s&&io.observe(s));
-"""
+"""+XJS
 def esc(s): return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 def code(s,cap=None): return f'<div class="code"><pre>{esc(s)}</pre></div>'+(f'<p class="figcap">{cap}</p>' if cap else '')
-DEFAULT_FOOT=""
+DEFAULT_FOOT="Internal Cisco material (Anand Sharma's work skills). Built locally from <code>/workspace/dorothy-docs/_src/hello-skills/</code> on 20 Oct 2026; nothing about these skills was fetched from the web. Do not publish."
 def page(title,eyebrow,nav,body,footer=None,extra_js=''):
     lis=''.join(f'<li><a href="#{i}"{" class=\"on\"" if n==0 else ""}>{t}</a></li>' for n,(i,t) in enumerate(nav))
+    toc=''.join(f'<li><a href="#{i}">{t}</a></li>' for i,t in nav)
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
@@ -38,6 +42,6 @@ def page(title,eyebrow,nav,body,footer=None,extra_js=''):
 <style>{CSS}</style></head><body><div class="shell">
 <nav class="rail" aria-label="Sections"><div class="eyebrow">{eyebrow}</div><ol id="railList">{lis}</ol>
 <button class="theme-btn" id="themeBtn" type="button">Theme: system</button></nav>
-<main>{body}
+<main><details class="toc"><summary>{eyebrow}</summary><ol>{toc}</ol></details>{body}
 <footer>{footer or DEFAULT_FOOT}</footer>
-</main></div><script>{JS}{extra_js}</script></body></html>'''
+</main></div><div class="backdrop" id="backdrop"></div><script>{JS}{extra_js}</script></body></html>'''

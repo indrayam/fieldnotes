@@ -1,0 +1,12 @@
+{
+ "findings": [
+  "<b>Only one skill can fire from a prompt’s wording.</b> <code>/setup-pstack</code> is the single SKILL.md without <code>disable-model-invocation: true</code>. <code>typescript-best-practices</code> (“Use when reading or editing any .ts or .tsx file.”) and <code>tdd</code> read like auto-triggers but only run when typed or read by the router.",
+  "<b>Five principle leaves are fragments.</b> After #571 (08bd59b, 11 Oct) and #634 (99743e9, 15 Oct), the bodies of exhaust-the-design-space, encode-lessons-in-structure, guard-the-context-window, laziness-protocol and migrate-callers-then-delete-legacy-apis start mid-thought. exhaust-the-design-space opens with “It also applies to product design decisions…”, leaning on a description the body no longer restates. They are marked stub in the principles grid.",
+  "<b>Swarm’s Phase A skips a number.</b> Its steps run 1, 2, 4, 5. A step 3 was removed without renumbering.",
+  "<b>why’s failure-mode list has one entry.</b> “Common Failure Modes to Avoid” ends after the single “Recency bias” bullet.",
+  "<b>unslop’s rule list has gaps.</b> 28 rules, with numbers 1, 2, 4, 6 and 21 missing after cuts. Rule 17 asks for sentence-case headings; this page uses Title Case by the publisher’s house rule.",
+  "<b>Two playbooks lack parts of the shape.</b> opening-a-pr and worktree-cleanup have no “You own…” stance line, and opening-a-pr and babysit have no <code>**Reply:**</code> line. Every other playbook has both.",
+  "<b>The docs check passes.</b> <code>scripts/check-pstack-docs.mjs</code> reports “57 skills (33 commands, 24 principles), 23 playbooks, 2 agents … 0 problems”, and <code>generate-pstack-harness-trees.mjs --check</code> reports “harness/pstack is up to date.” Both only pass on a full checkout: in a sparse one that omits cursor-team-kit, the first flags <code>/deslop</code> three times."
+ ],
+ "bun": "<code>bun test</code> (Bun, 5 files) failed on the first cold run: 59 pass, 1 fail, 1 error across 60 tests. The next four runs all passed 68 of 68. The same cold-start failure appeared on the previous commit, so it looks like a first-run setup race, not a broken test. The failing test name was not captured."
+}

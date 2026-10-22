@@ -1,0 +1,35 @@
+# test: an exact line from the leaf file that gives the check (validated at build time)
+P = {
+"laziness-protocol": "Make the smallest change that solves the problem. Fewer lines beat \"elegant\" boilerplate.",
+"foundational-thinking": "Ask \"does every subsequent phase benefit from this existing?\"",
+"redesign-from-first-principles": "Ask: \"if we were writing this from scratch with this new requirement, what would we build?\"",
+"attack-the-premise": "Do not start the next fix before the premise is written down and tested.",
+"subtract-before-you-add": "When a reference has no novel content, delete it rather than leaving a stub",
+"minimize-reader-load": "can a new reader answer \"where does X come from?\" and \"what can change X?\" in under 30 seconds? If not, cut layers or cut state.",
+"outcome-oriented-execution": "Intermediate breakage is acceptable when it is planned, scoped, and reversible",
+"experience-first": "The engineer who maintains the code next is a user too.",
+"exhaust-the-design-space": "It also applies to product design decisions where user experience depends on feel, not logic.",
+"build-the-lever": "If you cited it and there is no codemod, script, generator, or delegate skill in the diff, you didn't apply it.",
+"model-the-domain": "The sign that you skipped this is a new feature that grows an existing if/else chain by one more branch, or a second boolean that must stay in sync with the first.",
+"boundary-discipline": "\"Is this data crossing a system boundary right now?\" If not, validation is redundant.",
+"type-system-discipline": "If two arguments share a primitive type but mean different things, brand them.",
+"make-operations-idempotent": "If any answer is \"it depends on what state was left behind,\" the operation needs a reconciliation step.",
+"migrate-callers-then-delete-legacy-apis": "Update tests to assert the new contract, and delete tests that only protect pre-refactor implementation details",
+"separate-before-serializing-shared-state": "Instructions and conventions are not concurrency control.",
+"prove-it-works": "When verification fails, suspect the observation method before suspecting the system",
+"fix-root-causes": "If a workaround needs a paragraph-long comment to justify it, the code is wrong. Fix the code, not the comment.",
+"sequence-verifiable-units": "When a lever does the edits, the per-unit check is nearly free. Run it anyway.",
+"test-behavior-not-implementation": "Keep a test that catches the first edit and survives the second. Rewrite or delete the rest.",
+"explain-the-number": "If you cannot say why the number is not twice as good, you do not know what you measured.",
+"guard-the-context-window": "Limit files per phase, set turn budgets, account for mechanism costs.",
+"never-block-on-the-human": "Irreversible actions (force-push, delete production data, send external messages) still require confirmation.",
+"encode-lessons-in-structure": "If the fix is structural, only use the structural fix. The instruction is the symptom.",
+}
+# leaf bodies that read as fragments after cuts (verified via git log)
+STUBS = {
+"exhaust-the-design-space": "08bd59b (#571, 11 Oct)",
+"encode-lessons-in-structure": "08bd59b (#571, 11 Oct)",
+"guard-the-context-window": "08bd59b (#571, 11 Oct)",
+"laziness-protocol": "08bd59b (#571, 11 Oct)",
+"migrate-callers-then-delete-legacy-apis": "99743e9 (#634)",
+}

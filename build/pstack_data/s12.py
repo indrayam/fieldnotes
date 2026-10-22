@@ -1,0 +1,15 @@
+S = [
+dict(id="why", cat="understand",
+ tag="Finds out why code is the way it is by searching every place the reasons might be written down: git and PRs, tickets, docs, chat, observability, error tracking and analytics.",
+ invoke="why does the upload client retry three times with jitter instead of failing fast?",
+ how=["Pins the target and the question, guessing from context when vague and saying so.",
+      "Builds a code anchor inline: <code>git blame</code>, <code>git log --follow -p</code>, PR numbers from merge subjects, and <code>gh pr view</code> bodies and reviews.",
+      "Discovers the available MCPs and maps each to one of seven evidence categories, then spawns one investigator per category in a single message (default <code>grok-4.7-xhigh-fast</code>), adding an incident-postmortem playbook when the code looks defensive.",
+      "Skips a category only with a written reason: no MCP available (a gap), or provably irrelevant.",
+      "A synthesizer (default <code>claude-opus-5-5-xhigh</code>) writes the read with separated confidence levels, one Sources Consulted line per investigator, and a Preserve / Change / Avoid / Risk set when a change is planned."],
+ rules=["Document the null, don't skip the search.",
+        "Don't ask one agent to cover multiple MCPs.",
+        "Be honest about what you know vs what you're inferring.",
+        "Assuming the most recent commit is authoritative. The current shape is often the accretion of many earlier decisions. Trace back."],
+ lesson="Null results count as findings and confidence language is protected from editing, so the reader can tell evidence from inference. Its \"Common Failure Modes\" section lists a single item."),
+]

@@ -1,70 +1,106 @@
-import sys,json,re; sys.path.insert(0,'/workspace/dorothy-docs/_build')
-from shell import *
-D=json.load(open('/workspace/dorothy-docs/_build/pstack_desc.json'))
-H='190d28736eff128ec94f502a22c7fe0c4b56cd37'; GH=f'https://github.com/cursor/plugins/blob/{H[:7]}/pstack/'
-def L(p,t=None): return f'<a href="{GH}{p}">{t or p}</a>'
-def sk(n): return L(f'skills/{n}/SKILL.md',f'<code>/{n}</code>')
-def split(d):
-    m=re.search(r'\s(Use (?:for|when|only when)|Apply (?:when|before|after|during|to))\b',' '+d)
-    if d.startswith('Apply') or d.startswith('Use'):
-        s=re.split(r"(?<=\.)\s",d,maxsplit=1); return (s[1] if len(s)>1 else '—', s[0])
-    if m: i=m.start()-1; return d[:i].strip(), d[i:].strip()
-    return d,'Type the slash command.'
-G=[('Route and configure',['poteto-mode','poteto-help','setup-pstack','automate-me']),
-('Understand and restate',['how','why','teach','recall','ketchup','in-your-own-words','bro','sharpen']),
-('Design and fan out',['architect','arena','swarm','figure-it-out']),
-('Review and verify',['interrogate','blast-radius','no-comments','correct','benchmark-checklist','tdd','create-verification-skill','maintain-verification-skill','create-formal-verification-skill','maintain-formal-verification-skill']),
-('Write',['unslop','technical-writing','typescript-best-practices']),
-('Long runs and learning',['show-me-your-work','reflect']),
-('Grok Bot',['make-bot-ui'])]
-P=[('Core',['laziness-protocol','foundational-thinking','redesign-from-first-principles','attack-the-premise','subtract-before-you-add','minimize-reader-load','outcome-oriented-execution','experience-first','exhaust-the-design-space','build-the-lever']),
-('Architecture',['model-the-domain','boundary-discipline','type-system-discipline','make-operations-idempotent','migrate-callers-then-delete-legacy-apis','separate-before-serializing-shared-state']),
-('Verification',['prove-it-works','fix-root-causes','sequence-verifiable-units','test-behavior-not-implementation','explain-the-number']),
-('Delegation',['guard-the-context-window','never-block-on-the-human']),('Meta',['encode-lessons-in-structure'])]
-assert sum(len(x) for _,x in G)==32 and sum(len(x) for _,x in P)==24
-NEW={'create-formal-verification-skill','maintain-formal-verification-skill'}
-def band(cls,g,n): return f'<div class="gband {cls}"><span>{g}</span><span class="gcount">{n}</span></div>'
-rows=''
-for g,ns in G:
-    rows+=band('gb-cmd',g,len(ns))+'<div class="cards">'
-    for n in ns:
-        w,u=split(D[n]); rows+=f'<article class="card"><div class="ch">{sk(n)}<span class="kt kt-cmd">command</span>{"<span class=\"tag\">new</span>" if n in NEW else ""}</div><dl><dt>What</dt><dd>{esc(w)}</dd><dt>When</dt><dd>{esc(u)}</dd></dl></article>'
-    rows+='</div>'
-prow=''
-for g,ns in P:
-    prow+=band('gb-pr',g,len(ns))+'<div class="cards">'
-    for n in ns:
-        d=D['principle-'+n]; prow+=f'<article class="card c-pr"><div class="ch">{L(f"skills/principle-{n}/SKILL.md","<code>"+n+"</code>")}<span class="kt kt-pr">principle</span></div><dl><dt>When it applies</dt><dd>{esc(d)}</dd></dl></article>'
-    prow+='</div>'
-PB=[('investigation','read-only question'),('bug-fix','repro → root cause → fix'),('perf-issue','measured slowness vs baseline'),('hillclimb','one metric, hypothesis loop'),('runtime-forensics','live symptom'),('trace-forensics','captured profile'),('feature','new behavior from a data shape'),('refactoring','behavior-preserving'),('prototype','throwaway sketch decides a fork'),('visual-parity','pixel-exact UI'),('authoring-a-skill','writing a SKILL.md'),('eval','blinded skill/prompt eval'),('babysit','PR to merge-ready'),('shipping','land verified stack'),('autonomous-run','long task, no stops'),('orchestrate','multi-day coordinator'),('autopilot-full','independent PRs to merged'),('autopilot-stack','one linear stack'),('session-pickup','resume prior work'),('pause-safely','suspend cleanly'),('multi-phase-plan','phased / stacked'),('worktree-cleanup','prune worktrees'),('opening-a-pr','ends every playbook')]
-pbt=band('gb-pb','All playbooks',len(PB))+'<div class="cards cards-sm">'+''.join(f'<article class="card c-pb"><div class="ch">{L(f"skills/poteto-mode/playbooks/{p}.md","<code>"+p+"</code>")}<span class="kt kt-pb">playbook</span></div><dl><dt>For</dt><dd>{d}</dd></dl></article>' for p,d in PB)+'</div>'
-nav=[('top','Overview'),('tldr','TL;DR'),('why','Why it exists'),('model','Mental model'),('how','How it works'),('workflow','Workflow skills'),('principles','Principles'),('playbooks','Playbooks'),('install','Install and setup'),('examples','Examples'),('gotchas','Gotchas and findings'),('new','What\'s new'),('next','Where to go next')]
+# Builds /workspace/dorothy-docs/pstack/index.html from the pstack source tree plus the per-item data in pstack_data/.
+import sys,os,re,glob,json,subprocess
+sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
+from shell import page, esc, code
+from explorer import explorer, data_js
+SRC='/workspace/src/plugins-latest'; PS=SRC+'/pstack'; DD=os.path.join(os.path.dirname(os.path.abspath(__file__)),'pstack_data')
+def sh(c): return subprocess.run(c,shell=True,capture_output=True,text=True,cwd=SRC).stdout.strip()
+H=sh('git rev-parse HEAD'); h7=H[:7]; VER=json.load(open(PS+'/plugin.json'))['version']
+HDATE=sh('git log -1 --format=%cs')
+GH=f'https://github.com/cursor/plugins/blob/{h7}/pstack/'; GT=f'https://github.com/cursor/plugins/tree/{h7}/pstack/'
+def L(p,t=None): return f'<a href="{GH}{p}">{t or esc(p)}</a>'
+def rd(p): return open(os.path.join(PS,p)).read()
+def norm(s): return re.sub(r'\s+',' ',s).strip()
+def wc(p): return int(subprocess.run(['wc','-w',os.path.join(PS,p)],capture_output=True,text=True).stdout.split()[0])
+BAD=[]
+def check(q,path):
+    if norm(q) not in norm(rd(path)): BAD.append((path,q))
+    return q
+def md(s):  # escape, then render `code` spans the way the source writes them
+    return re.sub(r'`([^`]+)`',r'<code>\1</code>',esc(s))
+def load(f):
+    ns={}; exec(open(os.path.join(DD,f)).read(),ns); return ns
+# ---------- skills ----------
+S=[];A=[]
+for f in sorted(glob.glob(DD+'/s*.py'),key=lambda x:int(re.findall(r'\d+',os.path.basename(x))[0])):
+    ns=load(os.path.basename(f)); S+=ns['S']; A=ns.get('A',A)
+CATS={'entry':'Entry and setup','understand':'Understand','build':'Design and build','verify':'Review and verify','write':'Writing','learn':'Learning loop','agent':'Subagents'}
+skill_dirs=sorted(d for d in os.listdir(PS+'/skills') if not d.startswith('principle-'))
+assert sorted(s['id'] for s in S)==skill_dirs, set(skill_dirs)^{s['id'] for s in S}
+DMI={}
+for d in os.listdir(PS+'/skills'):
+    fm=rd(f'skills/{d}/SKILL.md').split('---')[1]; DMI[d]='disable-model-invocation: true' in fm
+for s in S:
+    p=f'skills/{s["id"]}/SKILL.md'; s['words']=wc(p)
+    s['files']=sorted(os.path.relpath(os.path.join(r,f),PS+'/skills/'+s['id']) for r,_,fs in os.walk(PS+'/skills/'+s['id']) for f in fs)
+    s['rules']=[md(check(q,p)) for q in s['rules']]; s['dmi']=DMI[s['id']]; s['src']=GT+'skills/'+s['id']
+    assert s['cat'] in CATS and 4<=len(s['how'])<=6 and 2<=len(s['rules'])<=4, s['id']
+for a in A:
+    a.update(cat='agent',isAgent=True,words=wc(a['file']),files=[a['file']],src=GH+a['file'],invoke='')
+    a['rules']=[md(check(q,a['file'])) for q in a['rules']]
+ALL=S+A
+# ---------- playbooks ----------
+pb=load('playbooks.py'); PB={}
+for key,label,ids in pb['G']:
+    for i in ids:
+        p=f'skills/poteto-mode/playbooks/{i}.md'; t=rd(p); b=pb['B'][i]
+        st=re.search(r'\*\*(You own[^*]*)\*\*',t); rp=re.search(r'^\*\*Reply:\*\*\s*(.+)$',t,re.M)
+        PB[i]=dict(id=i,group=label,words=wc(p),steps=b['steps'],quotes=[md(check(q,p)) for q in b['quotes']],
+                   stance=md(st.group(1)) if st else '',reply=md(rp.group(1)) if rp else '')
+pb_files=sorted(f[:-3] for f in os.listdir(PS+'/skills/poteto-mode/playbooks') if f.endswith('.md'))
+assert sorted(PB)==pb_files
+PBG=[[label,ids] for _,label,ids in pb['G']]
+# ---------- principles ----------
+pr=load('principles.py'); TEST,STUBS=pr['P'],pr['STUBS']
+idx=rd('skills/poteto-mode/SKILL.md').split('## Principles',1)[1]
+idx=re.split(r'\n## ',idx)[0]; PR=[]; grp=None
+for line in idx.splitlines():
+    g=re.match(r'^\*\*(\w+)\*\*\s*$',line)
+    if g: grp=g.group(1); continue
+    m=re.match(r'^- \*\*(.+?)\.\*\*(?: \(\*\*principle-([a-z-]+)\*\*\)\.)?\s*(.+)$',line) or re.match(r'^- \*\*(.+?)\*\* \(\*\*principle-([a-z-]+)\*\*\)\.\s*(.+)$',line)
+    if not m: continue
+    name,leaf,rest=m.group(1).rstrip('.'),m.group(2),m.group(3)
+    leaf=leaf or re.sub(r'[^a-z0-9-]','',name.lower().replace(' ','-'))
+    when,_,rule=rest.partition('. ')
+    PR.append(dict(group=grp,leaf=leaf,name=name,when=when+'.',rule=rule,test=md(check(TEST[leaf],f'skills/principle-{leaf}/SKILL.md')),words=wc(f'skills/principle-{leaf}/SKILL.md'),stub=STUBS.get(leaf)))
+pdirs=sorted(d[10:] for d in os.listdir(PS+'/skills') if d.startswith('principle-'))
+assert sorted(p['leaf'] for p in PR)==pdirs==sorted(TEST), set(pdirs)^{p['leaf'] for p in PR}
+# ---------- verified facts ----------
+NSK=len(os.listdir(PS+'/skills')); NDMI=sum(DMI.values()); NOT_DMI=[k for k,v in DMI.items() if not v]
+NCOMMITS=int(sh('git log --oneline -- pstack | wc -l')); FIRST=sh("git log --reverse --format=%cs -- pstack | head -1")
+NAUTH=int(sh("git log --format=%an -- pstack | grep -c '^lauren$'"))
+SLOC=int(sh("find pstack/skills -path '*scripts*' -type f \\( -name '*.ts' -o -name '*.mjs' -o -name '*.sh' \\) -not -name '*.test.ts' -not -path '*node_modules*' | xargs cat | wc -l"))
+TLOC=int(sh("find pstack/skills -type f -name '*.test.ts' -not -path '*node_modules*' | xargs cat | wc -l"))
+RUNS=json.load(open(DD+'/runs.json'))
+MODELS=re.findall(r'^([a-z][a-z ,/-]+): ((?:claude|grok)[^\n]*)$',rd('skills/setup-pstack/SKILL.md'),re.M)
+assert len(MODELS)==17, len(MODELS)
+NRULE=len(re.findall(r'^\| \d+ \|',rd('skills/unslop/SKILL.md'),re.M))
+small=min((p for p in PR if not p['stub']),key=lambda p:p['words'])
+# ---------- quote checks for prose sections ----------
+README='README.md'; G2='docs/guide/02-poteto-mode.md'; G7='docs/guide/07-overnight.md'
+Q=lambda q,p: md(check(q,p))
+# ---------- sections ----------
+def head(i,eyebrow,h2,p=''): return f'<div class="sec-head"><div class="eyebrow">{eyebrow}</div><h2>{h2}</h2>{f"<p>{p}</p>" if p else ""}</div>'
 hero=f'''<header class="hero" id="top">
-<div class="eyebrow">A skill reference · pstack v0.15.29 · cursor/plugins @ {L("", H[:7])} (20 Oct 2026) · read 21 Oct 2026</div>
-<h1>pstack</h1>
-<p class="thesis">“if you want to go fast, go deep first.”</p>
-<p class="lede">pstack is Lauren Tan’s (poteto) pack of agent skills for Cursor, MIT licensed, living in <code>cursor/plugins/pstack</code>. One router skill, <code>/poteto-mode</code>, picks a playbook for your task and pulls in the other skills and principles as its steps need them. The README’s goal: “pstack helps you write less, but higher quality code.” This page covers the tree as of the latest commit and checks its scripts by running them.</p>
+<div class="eyebrow">A research report · pstack v{VER} · cursor/plugins @ {L("",h7)} ({HDATE}) · compiled 22 Oct 2026</div>
+<h1><span class="p">p</span>stack</h1>
+<p class="thesis">“<mark>{Q("if you want to go fast, go deep first.",README)}</mark>”</p>
+<p class="lede">pstack is the pack of agent skills Lauren Tan (poteto) ships in <code>cursor/plugins</code> under the MIT license. One router skill, <code>/poteto-mode</code>, picks a playbook for the task and pulls in the other skills as each step needs them. The README states the aim: “{Q("pstack helps you write less, but higher quality code.",README)}” This report reads every SKILL.md, playbook and agent file at commit {h7}, runs the pack’s own scripts and checks, and explains how each piece is built and which parts are worth reusing.</p>
 <div class="facts" role="list">
-<div class="fact" role="listitem"><b>56</b><span>SKILL.md files: 32 commands + 24 principles</span></div>
-<div class="fact" role="listitem"><b>23</b><span>playbooks in <code>poteto-mode/playbooks/</code></span></div>
-<div class="fact" role="listitem"><b>2</b><span>subagents: <code>poteto-agent</code>, <code>comment-sicko</code></span></div>
-<div class="fact" role="listitem"><b>68</b><span>Bun tests over the router scripts, all passing on rerun</span></div>
-<div class="fact" role="listitem"><b>146</b><span>commits touching <code>pstack/</code> since 23 May 2026</span></div>
-<div class="fact" role="listitem"><b>18</b><span>commits since the reference’s v0.15.25 (14 Oct)</span></div>
-</div></header>'''
-tldr=f'''<section id="tldr"><div class="sec-head"><div class="eyebrow">TL;DR</div><h2>TL;DR</h2></div>
-<ul><li>Install with <code>/add-plugin pstack</code>, run <code>/setup-pstack</code> once, then start real work with <code>/poteto-mode</code>.</li>
-<li>Every one of the 56 skills sets <code>disable-model-invocation: true</code>. Nothing fires on its own: you type a slash command, or <code>/poteto-mode</code> reads a skill file by path when a step needs it.</li>
-<li>Work is split by model: code delegates go to Grok (<code>grok-4.7-xhigh-fast</code>), judgment and prose go to Opus (<code>claude-opus-5-5-xhigh</code>). Panels (arena, architect, interrogate) run one subagent per listed model.</li>
-<li>The rule that runs through all of it: prove it on the real artifact. Tests alone don’t count as verification.</li>
-<li>New since v0.15.25: formal verification (<code>/create-formal-verification-skill</code>, <code>/maintain-formal-verification-skill</code>), a Claude Code install, a docs-vs-tree check, and a reworked <code>/sharpen</code> and <code>/ketchup</code>.</li></ul></section>'''
-why=f'''<section id="why"><div class="sec-head"><div class="eyebrow">{L("README.md")}</div><h2>Why it exists</h2></div>
-<p>The README begins with a complaint: “ai writes too much slop code… throughput without quality is not a goal i aspire to.” Her answer has two parts. First, go deep on one agent so you can trust its output. Second, once you trust it, run many agents in parallel (“fearless parallelism”). A model is chosen for each role because “every frontier model has its strengths and weaknesses.”</p>
-<div class="note"><h4>No planning skill, on purpose</h4><p>“personally, i don’t believe in planning. the best spec is code.” Cursor’s plan mode covers planning, and <code>poteto-mode</code> has a multi-phase-plan playbook, but planning isn’t the default.</p></div></section>'''
-svg='''<div class="figure"><svg viewBox="0 0 1000 300" role="img" aria-labelledby="mT"><title id="mT">pstack mental model: prompt to router to playbook to skills and principles to proof and PR</title>
+<div class="fact" role="listitem"><b>{len(S)}</b><span>command skills</span></div>
+<div class="fact" role="listitem"><b>{len(PR)}</b><span>one-rule principles</span></div>
+<div class="fact" role="listitem"><b>{len(PB)}</b><span>playbooks in the router</span></div>
+<div class="fact" role="listitem"><b>{len(A)}</b><span>subagent definitions</span></div>
+<div class="fact" role="listitem"><b>{SLOC/1000:.1f}k</b><span>lines of script code, plus {TLOC/1000:.1f}k of tests</span></div>
+<div class="fact" role="listitem"><b>{NCOMMITS}</b><span>commits since {FIRST}</span></div></div>
+<div class="where">
+<div class="note"><h4>Where it lives</h4><p>The public copy is <code>cursor/plugins/pstack</code>. It installs in Cursor with <code>/add-plugin pstack</code>, and in Claude Code from a generated <code>harness/pstack/</code> tree (<code>/plugin install pstack@cursor-plugins</code>). Of the {NCOMMITS} commits touching <code>pstack/</code>, {NAUTH} are authored as “lauren”.</p></div>
+<div class="note"><h4>What a skill is here</h4><p>A folder with a <code>SKILL.md</code> (YAML frontmatter plus Markdown), sometimes with <code>references/</code> and <code>scripts/</code>. {NDMI} of the {NSK} skills set <code>disable-model-invocation: true</code>; the exception is <code>/{NOT_DMI[0]}</code>. Nothing loads because a word in a prompt matched.</p></div>
+<div class="note"><h4>No planning skill, on purpose</h4><p>The README: “{Q("personally, i don't believe in planning. the best spec is code.",README)}” Planning lives in Cursor’s plan mode and in the multi-phase-plan playbook, not in a default step.</p></div></div></header>'''
+svg='''<div class="figure"><svg viewBox="0 0 1000 300" role="img" aria-labelledby="mT"><title id="mT">pstack: prompt to router to playbook to workflow skills, subagents and principles, then proof and a PR</title>
 <defs><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs>
 <rect class="bx" x="10" y="115" width="150" height="70" rx="8"/><text class="t" x="24" y="143">Your prompt</text><text class="tm" x="24" y="165">goal + done check</text>
-<rect class="bx-hot" x="200" y="115" width="170" height="70" rx="8"/><text class="t" x="214" y="143">/poteto-mode</text><text class="tm" x="214" y="165">router + 24-principle index</text>
+<rect class="bx-hot" x="200" y="115" width="170" height="70" rx="8"/><text class="t" x="214" y="143">/poteto-mode</text><text class="tm" x="214" y="165">router + principle index</text>
 <rect class="bx-skin" x="410" y="115" width="160" height="70" rx="8"/><text class="t" x="424" y="143">1 of 23 playbooks</text><text class="tm" x="424" y="165">steps → todo list</text>
 <rect class="bx" x="610" y="20" width="200" height="70" rx="8"/><text class="t" x="624" y="48">workflow skills</text><text class="tm" x="624" y="70">how · architect · arena · swarm</text>
 <rect class="bx" x="610" y="115" width="200" height="70" rx="8"/><text class="t" x="624" y="143">subagents per role</text><text class="tm" x="624" y="165">pstack-models.mdc</text>
@@ -72,88 +108,113 @@ svg='''<div class="figure"><svg viewBox="0 0 1000 300" role="img" aria-labelledb
 <rect class="bx-hot" x="850" y="115" width="140" height="70" rx="8"/><text class="t" x="864" y="143">Proof → PR</text><text class="tm" x="864" y="165">opening-a-pr</text>
 <path class="ar" d="M160 150 H198" marker-end="url(#m1)"/><path class="ar" d="M370 150 H408" marker-end="url(#m1)"/>
 <path class="ar" d="M570 140 L608 60" marker-end="url(#m1)"/><path class="ar" d="M570 150 H608" marker-end="url(#m1)"/><path class="ar" d="M570 160 L608 240" marker-end="url(#m1)"/>
-<path class="ar" d="M810 55 L848 135" marker-end="url(#m1)"/><path class="ar" d="M810 150 H848" marker-end="url(#m1)"/><path class="ar-d" d="M810 245 L848 165" marker-end="url(#m1)"/>
-</svg></div>'''
-model=f'''<section id="model"><div class="sec-head"><div class="eyebrow">{L("skills/poteto-mode/SKILL.md")}</div><h2>Mental model</h2><p>Think of it as a router, playbooks, tools, and rules. The playbook picks the steps, the workflow skills do the heavy work through subagents, the principles constrain the choices, and nothing counts until it’s proven.</p></div>{svg}
-<p class="figcap">Bundled skills resolve as <code>../&lt;name&gt;/SKILL.md</code> from the router, so the router hands its own absolute path to every <code>poteto-agent</code> prompt.</p></section>'''
-how=f'''<section id="how"><div class="sec-head"><div class="eyebrow">poteto-mode “Non-negotiables”</div><h2>How it works</h2></div>
-<ol><li><b>Match a playbook.</b> The router opens a todo list whose first items are the playbook’s steps, copied in word for word.</li>
-<li><b>Fire triggers.</b> A nontrivial change triggers <code>how</code>. Code that crosses a function boundary triggers <code>architect</code>. A contested design triggers <code>interrogate</code>. Parallel work goes to <code>swarm</code> or <code>arena</code>. Any prose triggers <code>unslop</code>. A measured number triggers <code>benchmark-checklist</code>. Before review, <code>no-comments</code> runs. Long or unattended work triggers <code>show-me-your-work</code>.</li>
-<li><b>Don’t ask what you can observe.</b> Before asking “which approach?”, the router checks whether running something would answer it. If so, it builds a sketch with the prototype playbook. Only real product or preference calls go to the human.</li>
-<li><b>Cite principles.</b> The reply names each principle that changed a decision. It may cite only principles whose leaf SKILL.md it read in this session.</li>
-<li><b>Prove and ship.</b> <code>check-plan.mjs</code> enforces the rule that “a PR is verified only when its unit, live, and perf boxes are all checked”. Every playbook ends with <code>opening-a-pr</code>.</li></ol>
-<div class="tablewrap"><table class="dense"><thead><tr><th>Script</th><th>What it does (verified)</th></tr></thead><tbody>
-<tr><td>{L("skills/poteto-mode/scripts/check-plan.mjs","<code>check-plan.mjs</code>")}</td><td>Lints a plan.md for the required sub-blocks (Depends on, Files, Build, Verify unit/live/perf, Review gate, Merge). Run with no arguments, it prints usage.</td></tr>
-<tr><td><code>scripts/orch/</code>, <code>scripts/watch-pr/</code></td><td>Bun/TS for orchestrating subagents and polling PRs (the babysit cadence). Covered by 68 tests.</td></tr>
-<tr><td>{L("skills/poteto-mode/scripts/worktree-audit.sh","<code>worktree-audit.sh</code>")}</td><td>A read-only audit table (SIZE, AGE, MERGED, DIRTY, REMOTE, PR, LAST_CHAT, BUCKET). It never deletes anything. Without <code>-b</code> it warns and uses origin/main.</td></tr>
-<tr><td>{L("skills/show-me-your-work/scripts/log.sh","<code>log.sh</code>")}</td><td>Appends a row to the decision TSV. In my run it removed tabs inside cells and prefixed <code>=cmd</code> with <code>'</code> to block spreadsheet formula injection.</td></tr></tbody></table></div></section>'''
-wf=f'''<section id="workflow"><div class="sec-head"><div class="eyebrow">skills/* · 32 commands</div><h2>Workflow skills</h2><p>The “what” and “when” text comes from each skill’s own frontmatter <code>description</code>. Click a name to open the file at this commit.</p></div>
-{rows}</section>'''
-pr=f'''<section id="principles"><div class="sec-head"><div class="eyebrow">skills/principle-* · 24</div><h2>Principles</h2><p>Each principle is a short rule, 9 to 34 lines long. The router groups them into the five headings below. Each one is invoked as <code>principle-&lt;name&gt;</code>.</p></div>
-{prow}</section>'''
-pb=f'''<section id="playbooks"><div class="sec-head"><div class="eyebrow">skills/poteto-mode/playbooks/ · 23</div><h2>Playbooks</h2></div>
-{pbt}</section>'''
-inst=f'''<section id="install"><div class="sec-head"><div class="eyebrow">README · {L("skills/setup-pstack/SKILL.md")}</div><h2>Install and setup</h2></div>
-{code("""/add-plugin pstack                      # Cursor
-/plugin marketplace add cursor/plugins  # Claude Code
-/plugin install pstack@cursor-plugins   # → commands become /pstack:<name>""")}
-<p><code>/setup-pstack</code> does the following:</p><ol><li>Detects which model slugs you can pass to a Task subagent.</li><li>Asks for a budget: <code>unlimited</code>=max, <code>large</code>=xhigh (the default), <code>medium</code>=high, <code>small</code>=medium.</li><li>Shows each role with its model and asks you to confirm.</li><li>Validates that every slug was detected.</li><li>Overwrites <code>~/.cursor/rules/pstack-models.mdc</code> with <code>alwaysApply: true</code>.</li><li>Offers <code>/create-verification-skill</code> once, then <code>/create-formal-verification-skill</code> once.</li></ol>
-{code("""# budget: large (xhigh)
-feature, refactoring: grok-4.7-xhigh-fast
-judgment and prose: claude-opus-5-5-xhigh
-arena runners: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
-interrogate reviewers: claude-opus-5-5-xhigh, grok-4.7-xhigh-fast
-swarm workers: grok-4.7-xhigh-fast""","An excerpt of the default rule shape (17 role lines in full). Grok tops out at xhigh, so <code>unlimited</code> keeps Grok at xhigh.")}
-<div class="note"><h4>Stale defaults</h4><p>A rule file written before a default changed still pins the old default. Delete those role lines, or the whole file, and run <code>/setup-pstack</code> again. A rerun keeps any role you set to something other than the default.</p></div>
-<div class="note"><h4>Not bundled</h4><p><code>deslop</code>, <code>control-cli</code> and <code>control-ui</code> ship in <code>cursor-team-kit</code>. <code>/create-skill</code> is built into Cursor. The router calls all of them, so install cursor-team-kit to get the full set.</p></div></section>'''
-ex=f'''<section id="examples"><div class="sec-head"><div class="eyebrow">README, guide</div><h2>Examples</h2></div>
-{code("/poteto-mode this pr has a subtle bug where the scroll drifts every 750ms even when idle. repro first, then fix and verify.","README: routes to the bug-fix playbook.")}
-{code("/poteto-mode i'm going to bed. land the stack even if ci flakes. i want everything merged by morning.","README: autonomous run, with a show-me-your-work decision trail.")}
-{code("/how do we cancel runs? do we have an n+1 when we look up every run to cancel?")}
-{code("/interrogate review this pr.")}
-<p>To keep poteto-mode active across turns, pick it from the <code>/</code> menu and press <b>option+enter</b>. That makes it a Custom Mode. The README says it pairs with Cursor’s <code>/loop</code> for runs that last hours.</p></section>'''
-got=f'''<section id="gotchas"><div class="sec-head"><div class="eyebrow">Checked 21 Oct 2026 on the box</div><h2>Gotchas and findings</h2></div><div class="callouts">
-<div class="callout"><span class="n">1</span><p><b>“Use when…” never triggers on its own.</b> All 56 SKILL.md files set <code>disable-model-invocation: true</code>, including <code>typescript-best-practices</code> (“Use when reading or editing any .ts”) and <code>tdd</code>. Those descriptions read like auto-triggers, but these skills only run from a slash command or when the router reads them. This is a gap between the docs and the behavior.</p></div>
-<div class="callout"><span class="n">2</span><p><b>Three principles say only when, not what.</b> The descriptions of <code>model-the-domain</code>, <code>never-block-on-the-human</code> and <code>redesign-from-first-principles</code> give the trigger but not the rule. The router’s index fills that in.</p></div>
-<div class="callout"><span class="n">3</span><p><b>One flaky cold test run.</b> The first <code>bun test</code> (Bun 1.4.2) reported 59 pass, 1 fail and 1 error across 60 tests. Five reruns all passed 68/68. I didn’t capture the failing test, so I can’t say which one it was.</p></div>
-<div class="callout"><span class="n">4</span><p><b>Side effects.</b> <code>/setup-pstack</code> overwrites <code>~/.cursor/rules/pstack-models.mdc</code>, which applies to every project. The <code>log.sh</code> script creates the parent directory of the log file. The verification skills generate new project-local skills and open PRs. Babysit stops at merge-ready and never merges. Shipping merges when you ask it to land (bottom-up, <code>gh pr merge --squash</code>, may arm auto-merge and <code>--force-with-lease</code> the next PR). Autopilot-full owners merge granted queue items after swarm verification; autopilot-stack never merges.</p></div>
-<div class="callout"><span class="n">5</span><p><b>Grok Bot–specific skill.</b> <code>/make-bot-ui</code> builds a webhook UI that wakes a Grok Bot, with optional Tailscale exposure. It’s the only skill tied to a product other than Cursor.</p></div>
-<div class="callout"><span class="n">6</span><p><b>Docs are consistent.</b> The repo’s own <code>scripts/check-pstack-docs.mjs</code> reports “56 skills (32 commands, 24 principles), 23 playbooks, 2 agents … 0 problems”. <code>generate-pstack-harness-trees.mjs --check</code> reports “harness/pstack is up to date”. Every skill name matches its folder (fixed in #702).</p></div></div></section>'''
-new=f'''<section id="new"><div class="sec-head"><div class="eyebrow">6ce45c5 (v0.15.25) → {H[:7]} (v0.15.29)</div><h2>What’s new vs the reference</h2><p>The saved “Inside pstack” report describes v0.15.25 (14 Oct) with 54 skills. Since then, 18 commits changed 35 files (+366/−142).</p></div>
-<div class="tablewrap"><table class="dense"><thead><tr><th>Commit</th><th>Change</th></tr></thead><tbody>
-<tr><td>#709, #721</td><td>New <code>/create-formal-verification-skill</code>: picks the riskiest code, uses TLA+ by default for ordering bugs, falls back to generated-input tests when no verifier exists, and must show each property failing on a broken variant.</td></tr>
-<tr><td>#716</td><td>New <code>/maintain-formal-verification-skill</code>: brings the model back in line after the code changes.</td></tr>
-<tr><td>#715</td><td><code>/setup-pstack</code> now offers formal verification too (step 8).</td></tr>
-<tr><td>#637, #705</td><td>Claude Code install from a generated <code>harness/pstack/</code> tree. CI fails when the tree is stale. See {L("docs/harness/claude-code.md","claude-code.md")}.</td></tr>
-<tr><td>#704</td><td>Docs refresh plus the <code>check-pstack-docs.mjs</code> docs-vs-tree check.</td></tr>
-<tr><td>#628, #692, #708</td><td><code>/ketchup</code> now uses screenshots, videos and diagrams, and lists every item waiting on you, never cutting one to save words.</td></tr>
-<tr><td>#712, #729</td><td><code>/sharpen</code> went back to its original prompt and now returns only the rewrite.</td></tr>
-<tr><td>#633, #634</td><td>Four principles (attack-the-premise, fix-root-causes, make-operations-idempotent, test-behavior-not-implementation) were restated as reasoning rather than rules. Marginal sections were cut from four skills.</td></tr>
-<tr><td>#700, #702</td><td>Brand types now use a type guard instead of <code>as</code>. Every skill is named after its folder.</td></tr></tbody></table></div>
-<div class="note"><h4>Installed copy = upstream</h4><p>The plugin cache at <code>~/agent-data/plugins/cache/cursor-public/pstack/{H[:7]}…</code> is identical to the fresh clone. <code>diff -r</code> shows only a <code>.cache-complete</code> marker.</p></div></section>'''
-nxt=f'''<section id="next"><div class="sec-head"><div class="eyebrow">Sources</div><h2>Where to go next</h2></div><div class="srcs"><ul>
-<li>{L("docs/guide/README.md","The pstack guide")}: ten chapters, from setup to recipes and pitfalls.</li>
-<li>{L("README.md","README")} · {L("skills/poteto-mode/SKILL.md","poteto-mode SKILL.md")} · {L("skills/poteto-help/SKILL.md","/poteto-help")} (ask it which skill fits)</li>
-<li>{L("skills/automate-me/SKILL.md","/automate-me")}: draft your own <code>&lt;name&gt;-mode</code> from your transcripts.</li>
-<li>{L("automations/benny/README.md","benny")}: a dormant Slack triage-and-fix automation pack that only runs on Cursor.</li>
-<li>Upstream: <a href="https://github.com/cursor/plugins/tree/main/pstack">github.com/cursor/plugins/tree/main/pstack</a> · plugin install <code>/home/box/agent-data/plugins/pstack</code></li></ul></div></section>'''
-foot=f'Built 21 Oct 2026 from cursor/plugins @ {H[:7]} (commit 20 Oct 2026, 7:05 PM EDT), pstack v0.15.29. All facts come from the repo files, git log and local script runs.'
-extra='''<style>.tag{font:600 .62rem var(--f-mono,monospace);background:var(--gold-soft);color:#7a5208;padding:1px 6px;border-radius:9px;text-transform:uppercase}
-:root{--b-cmd:#8a2a46;--b-cmd-ink:#f2f6fa;--b-pr:#fcefcc;--b-pr-ink:#5e3f05;--b-pr-rule:#d9971a;--b-pb:#c7e2f5;--b-pb-ink:#173f5f;--k-cmd:#8a2a46;--k-cmd-ink:#fff;--k-pr:#d9971a;--k-pr-ink:#1f1a2c;--k-pb:#c7e2f5;--k-pb-ink:#173f5f;--tag-ink:#7a5208}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--b-cmd:#5a1c30;--b-cmd-ink:#fbe9ef;--b-pr:#3a2f17;--b-pr-ink:#f6d48a;--b-pr-rule:#f1bd4f;--b-pb:#1f3447;--b-pb-ink:#bfe2fa;--k-cmd:#e88ca6;--k-cmd-ink:#1f1a2c;--k-pr:#f1bd4f;--k-pr-ink:#1f1a2c;--k-pb:#9fd0f2;--k-pb-ink:#14121c;--tag-ink:#f1bd4f}}
-:root[data-theme="dark"]{--b-cmd:#5a1c30;--b-cmd-ink:#fbe9ef;--b-pr:#3a2f17;--b-pr-ink:#f6d48a;--b-pr-rule:#f1bd4f;--b-pb:#1f3447;--b-pb-ink:#bfe2fa;--k-cmd:#e88ca6;--k-cmd-ink:#1f1a2c;--k-pr:#f1bd4f;--k-pr-ink:#1f1a2c;--k-pb:#9fd0f2;--k-pb-ink:#14121c;--tag-ink:#f1bd4f}
-.tag{color:var(--tag-ink)}
-.gband{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:22px 0 10px;padding:9px 14px;border-radius:9px;font-family:var(--f-display);font-weight:700;font-size:.95rem;letter-spacing:.01em}
-.gcount{font-size:.75rem;font-weight:700;padding:1px 9px;border-radius:999px;background:rgba(255,255,255,.18)}
-.gb-cmd{background:var(--b-cmd);color:var(--b-cmd-ink)}
-.gb-pr{background:var(--b-pr);color:var(--b-pr-ink);border-left:6px solid var(--b-pr-rule)}.gb-pr .gcount{background:var(--b-pr-rule);color:#1f1a2c}
-.gb-pb{background:var(--b-pb);color:var(--b-pb-ink);border-left:6px solid var(--sky-ink)}.gb-pb .gcount{background:var(--sky-ink);color:var(--panel)}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;min-width:0}.cards-sm{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
-.card{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--k-cmd);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow);min-width:0;overflow-wrap:anywhere}
-.card.c-pr{border-top-color:var(--k-pr)}.card.c-pb{border-top-color:var(--sky-ink)}
-.card .ch{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:6px}.card .ch a{margin-right:auto;font-weight:600}.card .ch code{font-size:.86rem;white-space:normal}
-.kt{font-family:var(--f-display);font-size:.64rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:999px;white-space:nowrap}
-.kt-cmd{background:var(--k-cmd);color:var(--k-cmd-ink)}.kt-pr{background:var(--k-pr);color:var(--k-pr-ink)}.kt-pb{background:var(--k-pb);color:var(--k-pb-ink)}
-.card dl{margin:0}.card dt{font-family:var(--f-display);font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-top:6px}.card dd{margin:2px 0 0;font-size:.88rem;color:var(--ink-2);line-height:1.45}</style>'''
-h=page('pstack','pstack',nav,extra+hero+tldr+why+model+how+wf+pr+pb+inst+ex+got+new+nxt,footer=foot)
-open('/workspace/dorothy-docs/pstack/index.html','w').write(h);print(len(h))
+<path class="ar" d="M810 55 L848 135" marker-end="url(#m1)"/><path class="ar" d="M810 150 H848" marker-end="url(#m1)"/><path class="ar-d" d="M810 245 L848 165" marker-end="url(#m1)"/></svg></div>'''
+smap=f'''<section id="map">{head("map",L("skills/poteto-mode/SKILL.md","poteto-mode/SKILL.md"),"One router, many playbooks, a small set of multi-agent workflows","A prompt names a goal and a check that can pass or fail. The router picks a playbook and copies its steps into the todo list. Those steps call workflow skills, which fan out to subagents on the model assigned to each role. Principles constrain the choices, and nothing counts as done until it is proven on the real artifact.")}{svg}
+<p class="figcap">Subagents spawned inside playbook steps run as <code>poteto-agent</code>, which loads poteto-mode first. Panels (arena, architect, interrogate) run one subagent per model listed for the role.</p></section>'''
+pf=f'skills/principle-{small["leaf"]}/SKILL.md'
+anat=f'''<section id="anatomy">{head("anatomy","Anatomy of a skill","How the files are shaped","A few strict conventions carry most of the design. They are the part to copy into another pack.")}
+<div class="twocol"><div class="codecard"><span class="c"># the entire {esc(pf)} ({small["words"]} words, the shortest non-stub principle)</span>
+{esc(rd(pf).strip())}</div>
+<div class="callouts">
+<div class="callout"><span class="n">1</span><p><b>The name is the folder.</b> The frontmatter <code>name</code> matches the directory, and other files cite a principle as <code>principle-&lt;name&gt;</code> instead of pasting it.</p></div>
+<div class="callout"><span class="n">2</span><p><b>The description carries the trigger.</b> Principles open with “Apply when…”, so the router’s index can quote the trigger and the rule in one line.</p></div>
+<div class="callout"><span class="n">3</span><p><b>Explicit invocation only.</b> {NDMI} of {NSK} SKILL.md files set <code>disable-model-invocation: true</code>. A skill runs when typed or when a playbook step reads it by path.</p></div>
+<div class="callout"><span class="n">4</span><p><b>Orchestrators delegate to references.</b> Multi-agent skills keep subagent prompts in <code>references/</code>, one file per receiving role. The Files list in each explorer entry below is computed from the tree.</p></div></div></div></section>'''
+sk=f'''<section id="skills">{head("skills",f"skills/* · {len(S)} commands + {len(A)} agents","Every command is a folder with one SKILL.md","Pick a skill to see how to call it, how it works, a few lines quoted from its file, its files and the design lesson. Word counts are <code>wc -w</code> of the SKILL.md at this commit.")}
+{explorer("skill","skills")}</section>'''
+spb=f'''<section id="playbooks">{head("playbooks","skills/poteto-mode/playbooks/ · 23","Each playbook is a stance, numbered steps and a reply contract","The router copies a playbook’s steps into the todo list verbatim. Steps here are paraphrased; stances, quotes and Reply lines are copied from the files.")}
+{explorer("pb","playbooks")}
+<div class="note" style="margin-top:16px"><h4>Who may merge</h4><p>Re-checked at {h7}. Babysit never merges: “{Q("Babysitting never authorizes merging.","skills/poteto-mode/playbooks/babysit.md")}” Shipping lands on request, bottom-up, one PR at a time. Autopilot-full owners merge only what the swarm verified: “{Q("The owner merges only what you verified, tested on the trunk it lands on.","skills/poteto-mode/playbooks/autopilot-full.md")}” Autopilot-stack owners never “{Q("retarget, merge, close a PR, or arm auto-merge","skills/poteto-mode/playbooks/autopilot-stack.md")}”.</p></div></section>'''
+GN={'Core':'how to think','Architecture':'how to shape code','Verification':'how to know it works','Delegation':'how to use agents','Meta':'how to improve the system'}
+pc=''
+for g in GN:
+    lst=[p for p in PR if p['group']==g]
+    pc+=f'<div class="gname"><h3>{g}</h3><span>{len(lst)} · {GN[g]}</span></div><div class="pgrid">'
+    for p in lst:
+        stub=f'<span class="stub" title="Leaf trimmed to a fragment by {esc(p["stub"])}">stub</span>' if p['stub'] else ''
+        pc+=f'<article class="pcard"><h4>{L("skills/principle-"+p["leaf"]+"/SKILL.md",esc(p["name"]))}{stub}</h4><p class="when">{md(p["when"])}</p><p>{md(p["rule"])}</p><p class="test">{p["test"]}</p></article>'
+    pc+='</div>'
+spr=f'''<section id="principles">{head("principles",f"skills/principle-* · {len(PR)}",f"{len(PR)} rules, one per file","Each card gives the trigger and rule from the router’s index, then a line from the leaf file that works as the test. Cards marked stub point at leaves that were cut down to a fragment (see the findings).")}{pc}</section>'''
+mrows=''.join(f'<tr><td>{esc(r)}</td><td><code>{esc(m)}</code></td></tr>' for r,m in MODELS)
+smod=f'''<section id="models">{head("models",L("skills/setup-pstack/SKILL.md","setup-pstack/SKILL.md"),"Assign each role the model that suits it","<code>/setup-pstack</code> writes one line per role into <code>~/.cursor/rules/pstack-models.mdc</code> (an always-apply rule for every project). Fast Grok models do the reading and mechanical edits; Opus judges, writes and takes the hardest work; panels list both families.")}
+<div class="tablewrap"><table class="dense"><thead><tr><th>Role line</th><th>Default</th></tr></thead><tbody>{mrows}</tbody></table></div>
+{code("/add-plugin pstack                      # Cursor\n/plugin marketplace add cursor/plugins  # Claude Code\n/plugin install pstack@cursor-plugins","Install, then run /setup-pstack once.")}
+<div class="note"><h4>Stale defaults</h4><p>A rule file written before a default changed still pins the old model. A rerun keeps roles set to something other than the default, so delete stale lines (or the file) and run <code>/setup-pstack</code> again.</p></div></section>'''
+sc=f'''<section id="scripts">{head("scripts","skills/*/scripts · run on the box 22 Oct 2026","The rules that run as code",f"About {SLOC/1000:.1f}k lines of Bun, TypeScript, Node and shell, with {TLOC/1000:.1f}k lines of tests. Each script turns a rule the agent could forget into a check that exits non-zero.")}
+<div class="tablewrap"><table class="dense"><thead><tr><th>Script</th><th>Used by</th><th>What it enforces (verified)</th></tr></thead><tbody>
+<tr><td>{L("skills/poteto-mode/scripts/check-plan.mjs","<code>check-plan.mjs</code>")}</td><td>multi-phase-plan</td><td>Lints a plan file against the required skeleton. Exits 1 when it finds problems and 2 on bad usage.</td></tr>
+<tr><td><code>scripts/watch-pr/</code></td><td>babysit, shipping</td><td>Polls a PR and returns a typed verdict. Exit codes in <code>policy.ts</code>: 0 ready or complete, 2 merge conflicts, 3 review threads, 4 failing checks, 6 merge gate, 7 query failure, 5 timeout.</td></tr>
+<tr><td><code>scripts/orch/</code></td><td>orchestrate</td><td>File-backed state for the coordinator, “{Q("one command in and one line out","skills/poteto-mode/playbooks/orchestrate.md")}”. “{Q("The CLI never spawns, waits, or wakes anything.","skills/poteto-mode/playbooks/orchestrate.md")}”</td></tr>
+<tr><td>{L("skills/poteto-mode/scripts/worktree-audit.sh","<code>worktree-audit.sh</code>")}</td><td>worktree-cleanup</td><td>Read-only table (SIZE AGE MERGED DIRTY REMOTE PR LAST_CHAT BUCKET) sorting worktrees into hold-wip, hold-open-pr, verify-recent-chat, safe and review. Without <code>-b</code> it warns and uses origin/main. “{Q("The bucket is advice, not permission.","skills/poteto-mode/playbooks/worktree-cleanup.md")}”</td></tr>
+<tr><td>{L("skills/show-me-your-work/scripts/log.sh","<code>log.sh</code>")}</td><td>show-me-your-work</td><td>Appends a timestamped TSV row. In a test run it stripped tabs inside cells and prefixed <code>=cmd</code> with <code>'</code>, blocking spreadsheet formula injection.</td></tr>
+<tr><td>{L("skills/poteto-mode/scripts/bootstrap.ts","<code>bootstrap.ts</code>")}</td><td>watch-pr, orch</td><td>Installs the scripts’ dependency keyed on <code>package.json</code> and <code>bun.lock</code>.</td></tr></tbody></table></div>
+<div class="note"><h4>Test results</h4><p>{RUNS["bun"]}</p></div></section>'''
+drv=f'''<section id="driving">{head("driving",L("docs/guide/02-poteto-mode.md","docs/guide")+" · poteto-help/references/prompting.md","Short prompts with a check that can pass or fail","The guide says a prompt carries up to five things, each one sentence long.")}
+<ol class="steal"><li><p><b>The goal.</b> What is wrong, or what is wanted.</p></li><li><p><b>The done check.</b> “{Q("It must be able to pass or fail.",G2)}” “{Q('"Make it better" and "work on it for an hour" aren\'t checks.',G2)}”</p></li><li><p><b>The proof.</b> Real command output, a video, the stored value, or a before-and-after number.</p></li><li><p><b>What is already known.</b> A symptom, repro step, log line or link.</p></li><li><p><b>Real constraints.</b> “repro first”, “don't change any code yet”, “zero behavior change”.</p></li></ol>
+{code("/poteto-mode the csv export drops its last row since yesterday's deploy. failing job id is 4812. repro first, then fix. done means the 60k-row fixture exports every row. show me the row counts before and after.","All five in one prompt, from docs/guide/02-poteto-mode.md.")}
+<p>Two things stay out: a list of skills, because “{Q("a hand-written sequence usually reorders or drops steps the playbook would have kept",G2)}”, and a theory of the cause, because “{Q("A stated guess narrows the search to wherever you pointed.",G2)}”</p>
+{code("/poteto-mode im going to bed. migrate every caller to the new parser in a fresh worktree off <base>.\ndone means zero old callers, all parser fixtures pass, old api deleted.\nkeep a decision log. don't ask me before committing.\n/loop until done. if you're truly stuck after a few hours, stop and write up why.","The overnight contract, from docs/guide/07-overnight.md.")}
+<blockquote class="pull"><p>“{Q("A loop you don't trust just produces unchecked work faster, and the mess compounds with every iteration.",G7)}”</p><cite>docs/guide/07-overnight.md, “Earn the trust before the loop”</cite></blockquote></section>'''
+FIND=RUNS['findings']
+fnd=f'''<section id="findings">{head("findings",f"Checked on the box at {h7}","Where the docs and the code disagree","Gaps found while reading every file, plus the results of the repo’s own consistency checks.")}<div class="callouts">'''+''.join(f'<div class="callout"><span class="n">{i+1}</span><p>{x}</p></div>' for i,x in enumerate(FIND))+'</div></section>'
+ver=f'''<section id="verdict">{head("verdict","An assessment","Strong ideas that travel, an orchestration that costs","A reading of the files and history, not a benchmark.")}
+<div class="where">
+<div class="note"><h4><span class="verdict v-good">Copy</span> Evidence at every step</h4><p>Replies label claims, playbooks end in proof on the real artifact, and scripts such as watch-pr and check-plan exit non-zero instead of trusting prose.</p></div>
+<div class="note"><h4><span class="verdict v-good">Copy</span> The author is never the critic</h4><p>Comment Sicko, cross-family arena judges and the swarm that “never wrote the code” separate building from reviewing.</p></div>
+<div class="note"><h4><span class="verdict v-good">Copy</span> Skills get shorter</h4><p>The history is full of cut passes (#419, #538, #571). The shortest non-stub principle is {small["words"]} words.</p></div>
+<div class="note"><h4><span class="verdict v-cost">Cost</span> Tokens and ceremony</h4><p>Panels, swarms and cross-model reviews multiply model calls, and the playbooks are heavy for small changes even with <code>skip: &lt;reason&gt;</code>.</p></div>
+<div class="note"><h4><span class="verdict v-cost">Cost</span> Prose only guides</h4><p>Outside the scripts, every rule depends on the model following text. The cut passes also leave fragments behind (see the stubs).</p></div>
+<div class="note"><h4><span class="verdict v-port">Port</span> One person’s stack</h4><p>Defaults assume Opus 5.5 plus Grok 4.7, GitHub or Origin, and Bugbot. <code>/automate-me</code> exists to draft a personal mode instead.</p></div></div></section>'''
+yours=f'''<section id="yours">{head("yours","Build your own","What to copy first","Ordered by payback for effort, judged from which skills the rest of the pack depends on.")}
+<ol class="steal">
+<li><p><b>A scripted way to prove behavior per app.</b> <code>/create-verification-skill</code> is what “verified” means everywhere else in the pack.</p></li>
+<li><p><b>Reply rules that demand evidence.</b> Failing-then-passing output pasted verbatim, and claims labeled.</p></li>
+<li><p><b>Author and critic in separate agents.</b> Start with a comment-stripping critic and a judge who never sees model names.</p></li>
+<li><p><b>One router, small playbooks.</b> A stance line, numbered steps copied into todos, and a <code>Reply:</code> contract.</p></li>
+<li><p><b>Turn repeated corrections into structure.</b> <code>/correct</code>’s ladder: architecture, then types or lint, then a test, then docs.</p></li>
+<li><p><b>Explicit-only skills with the rule in the description.</b> <code>disable-model-invocation: true</code> plus “Apply when…”.</p></li>
+<li><p><b>Prune and re-test.</b> Delete instructions the current model follows unprompted, then check the stubs that pruning leaves.</p></li></ol></section>'''
+TL=[("23 May 2026","24bd6eb","“Add pstack plugin” lands in cursor/plugins."),("26 May – 13 Jun","#86–#133","Versions 0.2 to 0.9.1; per-role models via <code>/setup-pstack</code> (#121); the hillclimb playbook."),("Jul","#147–#178","model-the-domain principle; create- and maintain-verification-skill (#150); a parity sweep with the private skill tree (#156); the swarm skill."),("1–2 Aug","0.13, 0.14","Autopilot playbooks, <code>/no-comments</code> with Comment Sicko, <code>/technical-writing</code>, bro, babysit, shipping, orchestrate and worktree-cleanup."),("7 Sep","#333","0.15.0. Defaults move to Opus 5.5 and Grok 4.7 on 22 Sep (#414); #419 cuts “19 more instructions Opus 5.5 does not need”."),("3–14 Oct","#494–#617","<code>/correct</code>, <code>/poteto-help</code>, <code>/ketchup</code>; Sol dropped (#511); distill pass (#538); #571 cuts sections from seven skills."),("18–19 Oct","#710–#729","0.15.26 to 0.15.29: formal verification skills, Claude Code harness, <code>/sharpen</code> restored to its original prompt."),("21 Oct","eb4db2b · #741",f"0.15.30 adds <code>/statechart</code>, which draws TLA+ models as charts.")]
+hist=f'''<section id="history">{head("history",f"git log -- pstack · {NCOMMITS} commits","How it got here")}
+<ol class="timeline">'''+''.join(f'<li><b>{d}</b> <span class="mono">{c}</span><p>{t}</p></li>' for d,c,t in TL)+'</ol></section>'
+srcs=f'''<section id="sources">{head("sources","Sources","Where to read further")}<ol class="srcs">
+<li>{L("README.md","README")} and {L("docs/guide/README.md","the ten-chapter guide")}</li>
+<li>{L("skills/poteto-mode/SKILL.md","poteto-mode SKILL.md")} and {L("skills/poteto-mode/playbooks/investigation.md","the playbooks folder")}</li>
+<li>{L("skills/poteto-help/references/prompting.md","poteto-help prompting reference")}</li>
+<li>{L("skills/automate-me/SKILL.md","/automate-me")}, for drafting a personal mode</li>
+<li>Upstream tree: <a href="{GT}">github.com/cursor/plugins/tree/{h7}/pstack</a></li></ol></section>'''
+nav=[('top','Overview'),('map','How it fits'),('anatomy','Anatomy'),('skills','Skills'),('playbooks','Playbooks'),('principles','Principles'),('models','Models'),('scripts','Scripts'),('driving','Prompting'),('findings','Findings'),('verdict','Assessment'),('yours','Build your own'),('history','History'),('sources','Sources')]
+JSX=data_js('SKILLS',ALL)+data_js('CATS',CATS)+data_js('PLAYBOOKS',PB)+data_js('PBG',PBG)+r'''
+const skById=Object.fromEntries(SKILLS.map((s)=>[s.id,s]));
+makeExplorer({prefix:"skill",key:"pstack-skill",groups:Object.entries(CATS).map(([k,l])=>[l,SKILLS.filter((s)=>s.cat===k)]),
+ getText:(s)=>[s.id,s.tag,...s.how,...s.rules].join(" ").replace(/<[^>]+>/g,""),
+ renderItem:(s,on)=>`<button class="item" type="button" role="option" data-id="${s.id}" aria-selected="${on}"><span>${s.isAgent?"":"/"}${xesc(s.id)}</span><small>${s.isAgent?"agent":s.words+" w"}</small></button>`,
+ renderDetail:(id)=>{const s=skById[id];const m=[`<span class="pill">${xesc(CATS[s.cat])}</span>`,`<span class="pill skin">${s.words} words in ${s.isAgent?xesc(s.files[0]):"SKILL.md"}</span>`];
+  if(!s.isAgent)m.push(`<span class="pill">${s.dmi?"disable-model-invocation":"model-invocable"}</span>`);
+  let h=`<div class="d-top"><div class="d-name">${s.isAgent?"":"/"}${xesc(s.id)}</div><div class="d-meta">${m.join("")}</div><p class="d-tag">${s.tag}</p></div>`;
+  if(s.invoke)h+=`<div class="d-sec"><h4>Try it</h4><div class="invoke">${xesc(s.invoke)}</div></div>`;
+  h+=`<div class="d-sec"><h4>How it works</h4><ol>${s.how.map((x)=>`<li>${x}</li>`).join("")}</ol></div>`;
+  h+=`<div class="d-sec"><h4>In its own words</h4>${s.rules.map((r)=>`<p class="quote">“${r}”</p>`).join("")}</div>`;
+  h+=`<div class="d-sec"><h4>Files</h4><div class="files">${s.files.map((f)=>`<code>${xesc(f)}</code>`).join("")}</div></div>`;
+  h+=`<div class="d-sec"><h4>Design lesson</h4><p class="lesson">${s.lesson}</p></div>`;
+  return h+`<div class="d-sec"><p style="font-size:.85rem"><a href="${s.src}">Read the source on GitHub</a></p></div>`}});
+const pbGroups=PBG.map(([g,ids])=>[g,ids.map((i)=>PLAYBOOKS[i])]);
+makeExplorer({prefix:"pb",key:"pstack-pb",groups:pbGroups,
+ getText:(p)=>[p.id,p.stance,...p.steps,...p.quotes,p.reply].join(" ").replace(/<[^>]+>/g,""),
+ renderItem:(p,on)=>`<button class="item" type="button" role="option" data-id="${p.id}" aria-selected="${on}"><span>${xesc(p.id)}</span><small>${p.words} w</small></button>`,
+ renderDetail:(id)=>{const p=PLAYBOOKS[id];
+  let h=`<div class="d-top"><div class="d-name">playbooks/${xesc(p.id)}.md</div><div class="d-meta"><span class="pill">${xesc(p.group)}</span><span class="pill skin">${p.words} words</span></div><p class="d-tag">${p.stance?`<b>${p.stance}</b>`:`<i>This file has no “You own…” stance line.</i>`}</p></div>`;
+  h+=`<div class="d-sec"><h4>Steps (paraphrased)</h4><ol>${p.steps.map((x)=>`<li>${x}</li>`).join("")}</ol></div>`;
+  h+=`<div class="d-sec"><h4>In its own words</h4>${p.quotes.map((q)=>`<p class="quote">“${q}”</p>`).join("")}</div>`;
+  h+=`<div class="d-sec"><h4>Reply</h4><p class="lesson">${p.reply||"<i>No <code>**Reply:**</code> line in this file.</i>"}</p></div>`;
+  return h+`<div class="d-sec"><p style="font-size:.85rem"><a href="https://github.com/cursor/plugins/blob/'''+h7+r'''/pstack/skills/poteto-mode/playbooks/${p.id}.md">Read the source on GitHub</a></p></div>`}});
+'''
+if BAD:
+    for p,q in BAD: print('QUOTE NOT FOUND',p,repr(q[:90]))
+    sys.exit(1)
+foot=f'Compiled 22 Oct 2026 from cursor/plugins @ {h7} (pstack v{VER}, committed {HDATE}) · every quote is checked against its source file at build time · not affiliated with Cursor or Lauren Tan.'
+html=page('Inside pstack','pstack',nav,hero+smap+anat+sk+spb+spr+smod+sc+drv+fnd+ver+yours+hist+srcs,footer=foot,extra_js=JSX)
+os.makedirs('/workspace/dorothy-docs/pstack',exist_ok=True)
+open('/workspace/dorothy-docs/pstack/index.html','w').write(html)
+json.dump(dict(version=VER,commit=h7,skills=len(S),agents=len(A),playbooks=len(PB),principles=len(PR),dmi=f'{NDMI}/{NSK}',sloc=SLOC,tloc=TLOC,commits=NCOMMITS,bytes=len(html)),open('/tmp/pst_counts.json','w'))
+print(open('/tmp/pst_counts.json').read())
