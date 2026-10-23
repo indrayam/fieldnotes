@@ -3,6 +3,7 @@ import os
 from explorer import CSS as XCSS, JS as XJS
 CSS=open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'base.css')).read()
 CSS+="""
+.docs-home{display:inline-block;margin:18px 0 0;font-family:var(--f-display);font-size:.8rem;color:var(--ink-3);text-decoration:none}.docs-home:hover{color:var(--ink);text-decoration:underline}
 .v-bad{background:#f6dcdc;color:#7a1f1f}.v-warn{background:var(--gold-soft);color:#7a5208}
 :root[data-theme="dark"] .v-bad{background:#3a1f22;color:#f0a8a8}:root[data-theme="dark"] .v-warn{color:var(--gold)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .v-bad{background:#3a1f22;color:#f0a8a8}:root:not([data-theme="light"]) .v-warn{color:var(--gold)}}
@@ -42,6 +43,6 @@ def page(title,eyebrow,nav,body,footer=None,extra_js=''):
 <style>{CSS}</style></head><body><div class="shell">
 <nav class="rail" aria-label="Sections"><div class="eyebrow">{eyebrow}</div><ol id="railList">{lis}</ol>
 <button class="theme-btn" id="themeBtn" type="button">Theme: system</button></nav>
-<main><details class="toc"><summary>{eyebrow}</summary><ol>{toc}</ol></details>{body}
+<main><a class="docs-home" href="https://docs.indrayam.com/">&larr; Docs home</a><details class="toc"><summary>{eyebrow}</summary><ol>{toc}</ol></details>{body}
 <footer>{footer or DEFAULT_FOOT}</footer>
 </main></div><div class="backdrop" id="backdrop"></div><script>{JS}{extra_js}</script></body></html>'''
