@@ -15,8 +15,16 @@ DOCS=[
 ("pretty-mermaid","Pretty Mermaid","2026-10-20","AI tooling","Renders Mermaid diagrams to themed SVG/PNG with the beautiful-mermaid package. No headless browser needed."),
 ("excalidraw","Excalidraw","2026-10-20","AI tooling","An MCP server plus skill: a live Excalidraw canvas, REST and WebSocket sync, and headless PNG/SVG export."),
 ]
+# Separate homepage section (Sutra's steer): one doc per skill from github.com/mattpocock/skills.
+MP=[
+("mattpocock-grill-with-docs","mattpocock/grill-with-docs","2026-10-23","Matt Pocock skills","A relentless design interview that writes a glossary and ADRs as you go. Two lines that load grilling and domain-modeling."),
+("mattpocock-wayfinder","mattpocock/wayfinder","2026-10-23","Matt Pocock skills","Plans work too big for one session as a map of decision tickets on your issue tracker, resolved one ticket per session."),
+("mattpocock-to-spec-to-tickets","mattpocock/to-spec → to-tickets","2026-10-23","Matt Pocock skills","Turns a finished conversation into a published spec, then a graph of tracer-bullet tickets that implement-spec builds."),
+("mattpocock-handoff","mattpocock/handoff","2026-10-23","Matt Pocock skills","Compacts a conversation into a temp-folder note a fresh agent can pick up, with suggested skills and links instead of copies."),
+("mattpocock-setup-matt-pocock-skills","mattpocock/setup-matt-pocock-skills","2026-10-23","Matt Pocock skills","A one-time interview that tells the engineering skills where your tracker, triage labels and glossary live."),
+]
 BLOCK={'ai-native-assessment','ai-harness-setup'}
-assert not BLOCK & {d[0] for d in DOCS}
+assert not BLOCK & {d[0] for d in DOCS+MP}
 import datetime
 def fmt(d): return datetime.date.fromisoformat(d).strftime('%B %-d, %Y')
 DOCS.sort(key=lambda d:d[2],reverse=True)
@@ -27,6 +35,8 @@ E=html.escape
 HEADER=open(os.path.join(BUILD,'header.html')).read()
 items="\n".join(f'''<li class="doc-entry"><h4 class="doc-title"><a href="/{s}/">{E(t)}</a></h4>
 <p class="doc-meta"><time datetime="{d}">{fmt(d)}</time> &mdash; {E(tp)}</p><p class="doc-summary">{E(sm)}</p></li>''' for s,t,d,tp,sm in DOCS)
+mp_items="\n".join(f'''<li class="doc-entry"><h4 class="doc-title"><a href="/{s}/">{E(t)}</a></h4>
+<p class="doc-meta"><time datetime="{d}">{fmt(d)}</time></p><p class="doc-summary">{E(sm)}</p></li>''' for s,t,d,tp,sm in MP)
 topics=sorted({d[3] for d in DOCS})
 desc="Anand Sharma’s docs: long-form explainers on AI tooling, agent skills and whatever else I’m learning."
 page=f'''<!DOCTYPE html>
@@ -68,7 +78,12 @@ page=f'''<!DOCTYPE html>
 <ul class="doc-list">
 {items}
 </ul>
-<p class="docs-topics">Topics: {", ".join(E(t) for t in topics)} &middot; {len(DOCS)} docs</p>
+<h2 id="matt-pocock-skills" style="margin-top:28px">Matt Pocock skills</h2>
+<p class="docs-intro">One explainer per skill from <a href="https://github.com/mattpocock/skills">github.com/mattpocock/skills</a>, read at commit 5beb35b, with notes on pairing each with pstack.</p>
+<ul class="doc-list">
+{mp_items}
+</ul>
+<p class="docs-topics">Topics: {", ".join(E(t) for t in topics+["Matt Pocock skills"])} &middot; {len(DOCS)+len(MP)} docs</p>
 </main>
 <p></p>
 <div class="copyright">
