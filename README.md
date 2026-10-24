@@ -1,4 +1,4 @@
-# docs.indrayam.com
+# cribsheets.indrayam.com
 
 Single-page explainers, each a self-contained HTML file. Edited from more than one machine and agent, so follow the sync rules in `AGENTS.md`.
 

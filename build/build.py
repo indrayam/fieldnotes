@@ -1,4 +1,4 @@
-"""Build docs.indrayam.com.  Usage: python3 build/build.py [slug|index|all]   (default: all)
+"""Build cribsheets.indrayam.com.  Usage: python3 build/build.py [slug|index|all]   (default: all)
 Each doc is written to site/<slug>/index.html; 'index' rebuilds site/index.html."""
 import os, sys, subprocess, re
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
