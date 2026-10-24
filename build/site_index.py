@@ -33,6 +33,12 @@ os.makedirs(site+'/images',exist_ok=True)
 for f in ('favicon.ico','me.gif','blue-dash.gif'): shutil.copy(f'{IMG}/{f}',site+'/images/'+f)
 E=html.escape
 HEADER=open(os.path.join(BUILD,'header.html')).read()
+def li(s,t,d,tp,sm): return f'''<li class="doc-entry"><h4 class="doc-title"><a href="/{s}/">{E(t)}</a></h4>
+<p class="doc-meta"><time datetime="{d}">{fmt(d)}</time></p><p class="doc-summary">{E(sm)}</p></li>'''
+POTETO=[d for d in DOCS if d[0]=='pstack']
+STORY=[d for d in DOCS if d[0]!='pstack']
+poteto_items="\n".join(li(*d) for d in POTETO)
+story_items="\n".join(li(*d) for d in STORY)
 items="\n".join(f'''<li class="doc-entry"><h4 class="doc-title"><a href="/{s}/">{E(t)}</a></h4>
 <p class="doc-meta"><time datetime="{d}">{fmt(d)}</time> &mdash; {E(tp)}</p><p class="doc-summary">{E(sm)}</p></li>''' for s,t,d,tp,sm in DOCS)
 mp_items="\n".join(f'''<li class="doc-entry"><h4 class="doc-title"><a href="/{s}/">{E(t)}</a></h4>
@@ -75,15 +81,22 @@ page=f'''<!DOCTYPE html>
 <main class="post archives-page">
 <h2>Notes &amp; Explainers</h2>
 <p class="docs-intro">Single-page explainers on things I’m using and learning: how they work, what they measure, where they fall short.</p>
+<h2 id="poteto-skills" style="margin-top:28px">poteto Skills</h2>
+<p class="docs-intro">Agent skills from Lauren Tan (poteto).</p>
 <ul class="doc-list">
-{items}
+{poteto_items}
 </ul>
 <h2 id="matt-pocock-skills" style="margin-top:28px">Matt Pocock skills</h2>
 <p class="docs-intro">One explainer per skill from <a href="https://github.com/mattpocock/skills">github.com/mattpocock/skills</a>, read at commit 5beb35b, with notes on pairing each with pstack.</p>
 <ul class="doc-list">
 {mp_items}
 </ul>
-<p class="docs-topics">Topics: {", ".join(E(t) for t in topics+["Matt Pocock skills"])} &middot; {len(DOCS)+len(MP)} docs</p>
+<h2 id="storytelling-skills" style="margin-top:28px">Storytelling Skills</h2>
+<p class="docs-intro">Skills for diagrams, illustrations and visual explanation.</p>
+<ul class="doc-list">
+{story_items}
+</ul>
+<p class="docs-topics">Topics: {", ".join(E(t) for t in ["poteto Skills","Matt Pocock skills","Storytelling Skills"])} &middot; {len(DOCS)+len(MP)} docs</p>
 </main>
 <p></p>
 <div class="copyright">
