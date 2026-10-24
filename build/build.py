@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from config import BUILD, SITE
 DOCS = {'pstack': 'pst.py', 'diagram-design': 'diagram-design_data/doc.py', 'illo': 'illo_data/doc.py',
         'drawio': 'drawio_data/doc.py', 'pretty-mermaid': 'pretty-mermaid_data/doc.py', 'excalidraw': 'excalidraw_data/doc.py',
+        **{f'mattpocock-{k}': f'mattpocock_data/{k}.py' for k in ('grill-with-docs', 'wayfinder', 'to-spec-to-tickets', 'handoff', 'setup-matt-pocock-skills')},
         'index': 'site_index.py'}
 LEAK = re.compile(r'hello-skills|ai-native-assessment|ai-harness-setup|detect\.py', re.I)
 def run(slug):

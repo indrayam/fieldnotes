@@ -12,6 +12,7 @@ SOURCES = {  # env var: (default, what to clone)
     'DRAWIO_SRC': ('/home/box/drawio-skill', 'github.com/jgraph/drawio-mcp @ 05c1747'),
     'PRETTY_MERMAID_SRC': ('/home/box/pretty-mermaid-skills', 'github.com/imxv/Pretty-mermaid-skills @ e234ab7'),
     'EXCALIDRAW_SRC': ('/home/box/mcp_excalidraw', 'github.com/yctimlin/mcp_excalidraw @ 774a70c'),
+    'MATTPOCOCK_SKILLS_SRC': ('/workspace/dorothy-docs/_scratch/mattpocock-skills', 'github.com/mattpocock/skills @ 5beb35b'),
     'INDRAYAM_V1_SRC': ('/workspace/dorothy-docs/_src/indrayam-site/v1', 'the v1 folder of the indrayam.com site repo (needs style.css)'),
 }
 def src(var):
