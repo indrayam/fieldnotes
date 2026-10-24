@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>mattpocock/to-spec → to-tickets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Literata:ital,opsz,wght@0,7..72,400..700;1,7..72,400..700&family=JetBrains+Mono:wght@400;600&display=swap">
+<script>(function(){try{var t=localStorage.getItem('dd-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<style>
+:root{--paper:#f2f6fa;--panel:#fff;--ink:#1f1a2c;--ink-2:#4b4562;--ink-3:#6f6987;--line:#d5dce6;--skin:#8a2a46;--skin-soft:#f6e3e9;--gold:#d9971a;--gold-soft:#fcefcc;--sky:#c7e2f5;--sky-ink:#1f5a85;--code-bg:#eef2f7;--shadow:0 1px 2px rgba(31,26,44,.06),0 8px 24px rgba(31,26,44,.06);
+--f-display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;--f-body:"Literata","Iowan Old Style",Georgia,serif;--f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;--measure:68ch;--ease:cubic-bezier(.45,.05,.25,1);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#14121c;--panel:#1d1a28;--ink:#ece8f4;--ink-2:#b4aec8;--ink-3:#8e88a5;--line:#322d44;--skin:#e88ca6;--skin-soft:#3a2230;--gold:#f1bd4f;--gold-soft:#3a2f17;--sky:#1f3447;--sky-ink:#9fd0f2;--code-bg:#24202f;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#14121c;--panel:#1d1a28;--ink:#ece8f4;--ink-2:#b4aec8;--ink-3:#8e88a5;--line:#322d44;--skin:#e88ca6;--skin-soft:#3a2230;--gold:#f1bd4f;--gold-soft:#3a2f17;--sky:#1f3447;--sky-ink:#9fd0f2;--code-bg:#24202f;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);color-scheme:dark}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.62;padding-inline:16px}
+a{color:var(--skin);text-underline-offset:3px;text-decoration-thickness:1px}a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+code,.mono{font-family:var(--f-mono);font-size:.86em}
+code{background:var(--code-bg);padding:.08em .35em;border-radius:4px;overflow-wrap:anywhere}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.7rem,3.2vw,2.3rem);font-weight:800;letter-spacing:-.01em}h3{font-size:1.22rem;font-weight:600}h4{font-size:1rem;font-weight:600}
+p{margin:0}
+.eyebrow{font-family:var(--f-display);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.shell{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:200px minmax(0,1fr);gap:48px;padding-block:0 96px}
+.rail{position:sticky;top:24px;align-self:start;padding-top:40px;font-family:var(--f-display);font-size:.88rem}
+.rail ol{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:2px}
+.rail a{display:block;padding:5px 10px;border-radius:6px;color:var(--ink-2);text-decoration:none;border-left:2px solid transparent;transition:background .4s var(--ease),color .4s var(--ease),border-color .4s var(--ease)}
+.rail a:hover{background:var(--panel);color:var(--ink)}.rail a.on{color:var(--ink);border-left-color:var(--gold);background:var(--panel)}
+.theme-btn{margin-top:18px;font:inherit;font-size:.8rem;color:var(--ink-3);background:none;border:1px solid var(--line);border-radius:999px;padding:4px 12px;cursor:pointer}
+main{min-width:0}section{padding-top:72px;scroll-margin-top:16px}
+.sec-head{display:grid;gap:10px;margin-bottom:26px;max-width:var(--measure)}.sec-head p{color:var(--ink-2)}
+.prose{max-width:var(--measure);display:grid;gap:14px}.prose ul,.prose ol{margin:0;padding-left:1.2em;display:grid;gap:6px}
+.hero{padding-top:56px;display:grid;gap:22px}
+.hero h1{font-size:clamp(3rem,8vw,5.6rem);font-weight:800;letter-spacing:-.035em;line-height:.92}.hero h1 .p{color:var(--skin)}
+.thesis{font-style:italic;font-size:clamp(1.25rem,2.4vw,1.6rem);line-height:1.35;max-width:30ch}
+.thesis mark{background:linear-gradient(transparent 58%,var(--gold-soft) 58%);color:inherit;padding:0 .1em}
+.lede{max-width:var(--measure);color:var(--ink-2);font-size:1.06rem}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:8px}
+.fact{padding:14px 14px 14px 0;display:grid;gap:2px}
+.fact b{font-family:var(--f-display);font-size:1.9rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.fact span{font-family:var(--f-display);font-size:.8rem;color:var(--ink-3)}
+.where{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:6px}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:8px;align-content:start;min-width:0}
+.note h4{font-size:.95rem}.note p{font-size:.95rem;color:var(--ink-2)}
+.figure{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;overflow-x:auto}
+.figure svg{display:block;min-width:760px;width:100%;height:auto}
+.figcap{font-family:var(--f-display);font-size:.82rem;color:var(--ink-3);margin-top:10px;max-width:var(--measure)}
+svg .bx{fill:var(--panel);stroke:var(--line);stroke-width:1.2}svg .bx-hot{fill:var(--gold-soft);stroke:var(--gold);stroke-width:1.4}
+svg .bx-sky{fill:var(--sky);stroke:none}svg .bx-skin{fill:var(--skin-soft);stroke:var(--skin);stroke-width:1.2}
+svg .zone{fill:none;stroke:var(--line);stroke-dasharray:5 4}
+svg .t{fill:var(--ink);font-family:var(--f-display);font-size:14px;font-weight:600}
+svg .ts{fill:var(--ink-2);font-family:var(--f-display);font-size:11.5px}
+svg .tm{fill:var(--ink-2);font-family:var(--f-mono);font-size:11px}
+svg .lab{fill:var(--ink-3);font-family:var(--f-display);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+svg .ar{stroke:var(--ink-3);stroke-width:1.3;fill:none}svg .ar-d{stroke:var(--ink-3);stroke-width:1.2;fill:none;stroke-dasharray:4 4}
+svg .ar-h{stroke:var(--skin);stroke-width:1.6;fill:none}svg .ah{fill:var(--ink-3)}svg .ahh{fill:var(--skin)}
+svg .mask{fill:var(--panel)}
+.anat{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px;align-items:start}
+.codecard{background:var(--code-bg);border-radius:10px;padding:16px 18px;font-family:var(--f-mono);font-size:.76rem;line-height:1.6;overflow-x:auto;white-space:pre;color:var(--ink);min-width:0;margin:0}
+.codecard .c{color:var(--ink-3)}.codecard .k{color:var(--skin)}.codecard .g{background:var(--gold-soft);border-radius:3px}
+.callouts{display:grid;gap:12px}.callout{display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px}
+.callout .n{width:22px;height:22px;border-radius:50%;background:var(--gold);color:#1f1a2c;font-family:var(--f-display);font-weight:800;font-size:.75rem;display:grid;place-items:center;margin-top:2px}
+.callout p{font-size:.95rem}
+.code{position:relative;min-width:0}.card>*,.twocol>*{min-width:0}
+.code pre{margin:0}
+.copy{position:absolute;top:8px;right:8px;font-family:var(--f-display);font-size:.72rem;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);border-radius:999px;padding:2px 10px;cursor:pointer}
+.copy.ok{color:var(--sky-ink);border-color:var(--sky-ink)}
+.search{width:100%;max-width:420px;font:inherit;font-family:var(--f-display);font-size:.92rem;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.chip{font-family:var(--f-display);font-size:.78rem;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);padding:4px 10px;border-radius:999px;cursor:pointer;transition:background .35s var(--ease),color .35s var(--ease)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.count{font-family:var(--f-display);font-size:.82rem;color:var(--ink-3);margin-bottom:8px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-display);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--code-bg)}
+tr:last-child td{border-bottom:0}td code{font-size:.78rem;white-space:nowrap}
+td.nm{font-family:var(--f-display);font-weight:600;white-space:nowrap}
+.pill{font-family:var(--f-display);font-size:.72rem;padding:2px 9px;border-radius:999px;background:var(--sky);color:var(--sky-ink);white-space:nowrap}
+.twocol{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:grid;gap:10px;align-content:start;min-width:0}
+.card p,.card li{font-size:.95rem}.card ul{margin:0;padding-left:1.1em;display:grid;gap:6px}
+.verdict{display:inline-block;font-family:var(--f-display);font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:4px;justify-self:start}
+.v-good{background:#d7efdc;color:#1d5b2c}.v-cost{background:var(--gold-soft);color:#7a5208}.v-port{background:var(--sky);color:var(--sky-ink)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .v-good{background:#1f3a27;color:#a6e0b4}:root:not([data-theme="light"]) .v-cost{color:var(--gold)}}
+:root[data-theme="dark"] .v-good{background:#1f3a27;color:#a6e0b4}:root[data-theme="dark"] .v-cost{color:var(--gold)}
+blockquote.pull{margin:0;padding:18px 22px;background:var(--panel);border-radius:12px;border:1px solid var(--line);display:grid;gap:8px;max-width:var(--measure)}
+blockquote.pull p{font-style:italic;font-size:1.05rem}blockquote.pull cite{font-style:normal;font-family:var(--f-display);font-size:.8rem;color:var(--ink-3)}
+.timeline{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);margin-left:6px}
+.timeline li{position:relative;padding:0 0 18px 22px;max-width:var(--measure)}
+.timeline li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--panel);border:2px solid var(--gold)}
+.timeline .when{font-family:var(--f-display);font-weight:600;font-size:.85rem;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.srcs{columns:2 320px;column-gap:32px;font-size:.9rem;padding-left:1.1em}.srcs li{break-inside:avoid;margin-bottom:6px;overflow-wrap:anywhere}
+.steal{list-style:none;padding:0;margin:0;display:grid;gap:12px;max-width:80ch;counter-reset:st}
+.steal li{counter-increment:st;display:grid;grid-template-columns:36px minmax(0,1fr);gap:10px}
+.steal li::before{content:counter(st);font-family:var(--f-display);font-weight:800;font-size:1.3rem;color:var(--gold);line-height:1.3}
+.unc{font-family:var(--f-display);font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--gold-soft);color:#7a5208;border-radius:4px;padding:1px 6px;white-space:nowrap}
+:root[data-theme="dark"] .unc{color:var(--gold)}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .unc{color:var(--gold)}}
+.flowsteps{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.stepdetail{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:grid;gap:10px;max-width:90ch;min-height:170px;box-shadow:var(--shadow)}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.gcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:grid;grid-template-rows:auto 1fr;min-width:0}
+.gimg{display:block;width:100%;border:0;padding:12px;cursor:zoom-in;background:#f5f5f5;border-bottom:1px solid var(--line)}
+.gimg img{display:block;width:100%;height:190px;object-fit:contain}
+.gimg .gi-d{display:none}
+:root[data-theme="dark"] .gimg{background:#2d3142}:root[data-theme="dark"] .gi-l{display:none}:root[data-theme="dark"] .gimg .gi-d{display:block}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .gimg{background:#2d3142}:root:not([data-theme="light"]) .gi-l{display:none}:root:not([data-theme="light"]) .gimg .gi-d{display:block}}
+.gbody{padding:14px 16px 16px;display:grid;gap:8px;align-content:start}
+.gbody h3{font-size:1.05rem;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.gbody p{font-size:.88rem;color:var(--ink-2);line-height:1.5}
+.gbody .lim{font-family:var(--f-display);font-size:.8rem;color:var(--ink);background:var(--code-bg);border-radius:6px;padding:6px 9px}
+.gbody .avoid{font-size:.82rem;color:var(--ink-3)}.gbody .avoid b{font-family:var(--f-display);color:var(--skin);font-weight:600}
+.glinks{font-family:var(--f-display);font-size:.8rem;display:flex;gap:12px;flex-wrap:wrap}
+dialog.lb{border:0;padding:0;background:transparent;max-width:94vw;max-height:94vh}
+dialog.lb::backdrop{background:rgba(20,18,28,.78)}
+.lbin{background:#f5f5f5;border-radius:12px;padding:16px;display:grid;gap:10px}
+.lbin.dk{background:#2d3142}
+.lbin img{max-width:90vw;max-height:80vh;object-fit:contain;display:block;margin:auto}
+.lbbar{display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:var(--f-display);font-size:.85rem;color:#2d3142}
+.lbin.dk .lbbar{color:#f5f5f5}
+.lbbar button{font:inherit;border:1px solid currentColor;background:none;color:inherit;border-radius:999px;padding:3px 12px;cursor:pointer}
+footer{margin-top:80px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--f-display);font-size:.8rem;color:var(--ink-3);max-width:var(--measure)}
+@media (max-width:980px){.shell{grid-template-columns:minmax(0,1fr);gap:0}.rail{display:none}.anat{grid-template-columns:minmax(0,1fr)}}
+.docs-home{display:inline-block;margin:18px 0 0;font-family:var(--f-display);font-size:.8rem;color:var(--ink-3);text-decoration:none}.docs-home:hover{color:var(--ink);text-decoration:underline}
+.v-bad{background:#f6dcdc;color:#7a1f1f}.v-warn{background:var(--gold-soft);color:#7a5208}
+:root[data-theme="dark"] .v-bad{background:#3a1f22;color:#f0a8a8}:root[data-theme="dark"] .v-warn{color:var(--gold)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .v-bad{background:#3a1f22;color:#f0a8a8}:root:not([data-theme="light"]) .v-warn{color:var(--gold)}}
+td.c,th.c{text-align:center}.tablewrap{max-width:100%;min-width:0}section{min-width:0}td code,th code{font-size:.8em}
+table.dense{width:100%}table.dense td.nm{white-space:normal}table.dense td code{white-space:normal}table.fx{table-layout:fixed}table.dense td,table.dense th{overflow-wrap:anywhere;font-size:.86rem;vertical-align:top}
+table.mx th{letter-spacing:0;font-size:.64rem;text-transform:none}table.mx td.y{background:var(--sky);color:var(--sky-ink);font-weight:600;text-align:center}
+table.mx td.n{color:var(--ink-3);text-align:center}
+tr.grp td{background:var(--code-bg);font-family:var(--f-display);font-weight:700;font-size:.82rem;letter-spacing:.04em}
+.code pre{overflow-x:auto;max-width:100%}.code{max-width:100%}
+.s0{color:var(--ink-3)}.s4{color:var(--sky-ink);font-weight:700}
+
+.rail{top:calc(env(safe-area-inset-top,0px) + 24px)}
+.toc{display:none}
+@media (max-width:980px){.toc{display:block;position:sticky;top:0;z-index:30;margin:0 -4px;padding:calc(env(safe-area-inset-top,0px) + 8px) 4px 8px;background:var(--paper);border-bottom:1px solid var(--line);font-family:var(--f-display)}
+.toc summary{cursor:pointer;font-size:.9rem;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}.toc summary::-webkit-details-marker{display:none}
+.toc summary::after{content:"Jump to ▾";font-weight:400;color:var(--ink-3);font-size:.82rem}.toc[open] summary::after{content:"Close ▴"}
+.toc ol{list-style:none;margin:8px 0 2px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 10px}.toc a{display:block;padding:5px 6px;font-size:.88rem;color:var(--ink-2);text-decoration:none;border-radius:6px}.toc a:hover{background:var(--panel)}
+.toc .theme-btn{margin-top:6px}}
+section[id],header[id]{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 64px)}
+.explorer{display:grid;grid-template-columns:minmax(250px,320px) minmax(0,1fr);gap:18px;height:min(80vh,780px);min-height:520px}
+.ex-list{display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:10px;min-width:0;min-height:0}
+.search{width:100%;font:inherit;font-family:var(--f-display);font-size:.92rem;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--f-display);font-size:.78rem;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);padding:4px 10px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--skin);border-color:var(--skin);color:#fff}
+.items{overflow-y:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel);min-height:0;overscroll-behavior:contain}
+.grp{font-family:var(--f-display);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);padding:12px 14px 4px;font-weight:600}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:baseline;width:100%;text-align:left;background:none;border:0;border-left:3px solid transparent;padding:8px 14px 8px 11px;cursor:pointer;color:var(--ink);font-family:var(--f-mono);font-size:.82rem;transition:background .35s var(--ease),border-color .35s var(--ease)}
+.item span{overflow-wrap:anywhere}.item:hover{background:var(--code-bg)}
+.item[aria-selected="true"]{background:var(--gold-soft);border-left-color:var(--gold)}
+.item small{font-family:var(--f-display);color:var(--ink-3);font-size:.72rem;font-variant-numeric:tabular-nums}
+.empty{padding:16px;color:var(--ink-3);font-family:var(--f-display);font-size:.88rem}
+.ex-detail{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);min-width:0;min-height:0;overflow:hidden}
+.ex-pane{position:absolute;inset:0;overflow-y:auto;padding:26px 30px 34px;transition:opacity .22s var(--ease);overscroll-behavior:contain}
+.ex-pane.fading{opacity:0}
+.d-top{display:grid;gap:8px;margin-bottom:18px}
+.d-name{font-family:var(--f-mono);font-size:1.35rem;font-weight:600;color:var(--ink);overflow-wrap:anywhere}
+.d-tag{font-size:1.04rem;color:var(--ink-2);max-width:62ch}
+.d-meta{display:flex;flex-wrap:wrap;gap:6px}
+.pill.skin{background:var(--skin-soft);color:var(--skin)}
+.d-sec{margin-top:20px;display:grid;gap:8px}
+.d-sec h4{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.d-sec ol,.d-sec ul{margin:0;padding-left:1.25em;display:grid;gap:7px;max-width:70ch}
+.d-sec li{font-size:.97rem}
+.invoke{font-family:var(--f-mono);font-size:.82rem;background:var(--code-bg);border-radius:8px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere}
+.quote{border-left:3px solid var(--skin);padding:2px 0 2px 14px;font-style:italic;font-size:.97rem;max-width:68ch;color:var(--ink)}
+.files{display:flex;flex-wrap:wrap;gap:6px}.files code{font-size:.76rem}
+.lesson{background:var(--gold-soft);border-radius:10px;padding:12px 14px;font-size:.96rem;max-width:70ch}
+.lesson b{font-family:var(--f-display)}
+.sheet-close,.backdrop{display:none}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:10px}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:6px;align-content:start;min-width:0;overflow-wrap:anywhere}
+.pcard h4{font-size:.98rem}.pcard p{font-size:.92rem;color:var(--ink-2)}
+.pcard .when{font-size:.84rem;color:var(--ink-3)}
+.pcard .test{font-size:.88rem;color:var(--ink);font-style:italic;border-top:1px dashed var(--line);padding-top:6px}
+.gname{display:flex;align-items:baseline;gap:10px;margin-top:22px}.gname span{font-family:var(--f-display);font-size:.8rem;color:var(--ink-3)}
+.stub{font-family:var(--f-display);font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:var(--gold-soft);color:#7a5208;padding:1px 7px;border-radius:999px;margin-left:6px;vertical-align:middle}
+@media (max-width:860px){
+.explorer{grid-template-columns:minmax(0,1fr);height:62vh;min-height:420px}
+.ex-detail{position:fixed;left:0;right:0;bottom:0;height:86vh;border-radius:16px 16px 0 0;z-index:50;transform:translateY(105%);transition:transform .6s var(--ease);padding-bottom:env(safe-area-inset-bottom,0px)}
+.ex-detail.open{transform:translateY(0)}
+.ex-pane{padding:52px 20px 34px}
+.sheet-close{display:block;position:absolute;top:10px;right:12px;z-index:2;font-family:var(--f-display);font-size:.85rem;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 14px;cursor:pointer}
+.backdrop{display:block;position:fixed;inset:0;background:rgba(20,18,28,.45);z-index:40;opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
+.backdrop.open{opacity:1;pointer-events:auto}}
+</style></head><body><div class="shell">
+<nav class="rail" aria-label="Sections"><div class="eyebrow">mattpocock-to-spec-to-tickets</div><ol id="railList"><li><a href="#top" class="on">Overview</a></li><li><a href="#why">Why it exists</a></li><li><a href="#model">Mental model</a></li><li><a href="#parts">The parts</a></li><li><a href="#flow">The flow</a></li><li><a href="#findings">Gotchas</a></li><li><a href="#pstack">Pairs with pstack</a></li><li><a href="#next">Where to go next</a></li></ol>
+<button class="theme-btn" id="themeBtn" type="button">Theme: system</button></nav>
+<main><a class="docs-home" href="https://docs.indrayam.com/">&larr; Docs home</a><details class="toc"><summary>mattpocock-to-spec-to-tickets</summary><ol><li><a href="#top">Overview</a></li><li><a href="#why">Why it exists</a></li><li><a href="#model">Mental model</a></li><li><a href="#parts">The parts</a></li><li><a href="#flow">The flow</a></li><li><a href="#findings">Gotchas</a></li><li><a href="#pstack">Pairs with pstack</a></li><li><a href="#next">Where to go next</a></li></ol></details><style>.gimg.one .gi-l{display:block!important}.gimg.one .gi-d{display:none!important}
+.gal.sm{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}.gal.sm .gimg img{height:150px}.gal.sm .gbody{padding:10px 12px 12px;gap:4px}.gal.sm .gbody h3{font-size:.95rem}.gal.sm .gbody p{font-size:.78rem;line-height:1.4}
+.gal.wide{grid-template-columns:repeat(auto-fill,minmax(360px,1fr))}.gal.wide .gimg img{height:230px}
+.gimg.dark{background:#1e1e1e!important}.gbody .meta{font-family:var(--f-display);font-size:.74rem;color:var(--ink-3)}
+pre.ascii{font-size:.72rem;line-height:1.2;max-height:340px;overflow:auto;margin:0;padding:12px;background:var(--code-bg);border-radius:8px}
+dialog.lb img{max-height:80vh}</style><style>.d-img{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;cursor:zoom-in}.d-img.dk{background:#1e1e1e}.d-img img{display:block;width:100%;max-height:300px;object-fit:contain}
+.qsrc{display:block;font-style:normal;font-family:var(--f-display);font-size:.72rem;color:var(--ink-3);margin-top:3px}.hero h1 .p{color:var(--skin)}
+.thesis mark{background:linear-gradient(transparent 55%,var(--gold-soft) 55%);color:inherit;padding:0 .1em}
+.pill.sky{background:var(--sky);color:var(--sky-ink)}.pill.gold{background:var(--gold-soft);color:#7a5208}:root[data-theme="dark"] .pill.gold{color:var(--gold)}</style><style>.hero h1,.hero .lede,.hero .thesis{overflow-wrap:anywhere}.hero{min-width:0}</style><header class="hero" id="top"><div class="eyebrow">Matt Pocock skill explainer · mattpocock/skills</div><h1>mattpocock/<span class="p">t</span>o-spec → to-tickets</h1>
+<p class="thesis">Two skills that turn a finished conversation into <mark>a published spec, then a graph of tracer-bullet tickets</mark>.</p><p class="lede">to-spec: Do NOT interview the user; just synthesize what you already know. to-tickets: Break a plan, spec, or conversation into a set of <b>tickets</b>: tracer-bullet vertical slices, each declaring the tickets that <b>block</b> it. implement-spec then builds the graph.</p><div class="facts" role="list"><div class="fact" role="listitem"><b>5beb35b</b><span>commit, 19 Oct 2026</span></div><div class="fact" role="listitem"><b>714K</b><span>to-spec installs (unlabeled row)</span></div><div class="fact" role="listitem"><b>710K</b><span>to-tickets installs</span></div><div class="fact" role="listitem"><b>282K</b><span>implement-spec installs</span></div><div class="fact" role="listitem"><b>0</b><span>scripts</span></div></div><div class="where"><div class="note"><h4>Who it is for</h4><p>You have already grilled the idea (or charted it with wayfinder) and want it on the tracker as work an agent can grab.</p></div><div class="note"><h4>What you get</h4><p>One spec issue, N ticket issues (or .scratch files) with blocking edges, all labelled ready-for-agent.</p></div></div></header><section id="why"><div class="sec-head"><div class="eyebrow">Why It Exists</div><h2>Talk First, Then Write It Down Once</h2><p>Both skills refuse to start from nothing: they synthesize what the conversation already holds.</p></div><div class="callouts"><div class="callout"><span class="n">1</span><p>This skill takes the current conversation context and codebase understanding and produces a spec.</p></div><div class="callout"><span class="n">2</span><p>Work from whatever is already in the conversation context.</p></div><div class="callout"><span class="n">3</span><p>"Make the change easy, then make the easy change."</p></div><div class="callout"><span class="n">4</span><p>Do NOT include specific file paths or code snippets. They may end up being outdated very quickly.</p></div></div></section><section id="model"><div class="sec-head"><div class="eyebrow">Mental Model</div><h2>A Spec Is The What; Tickets Are A Task Graph</h2></div><div class="where"><div class="note"><h4>Seams</h4><p>The fewer seams across the codebase, the better - the ideal number is one.</p></div><div class="note"><h4>Tracer bullets</h4><p>Each slice cuts a narrow but COMPLETE path through every layer (schema, API, UI, tests): vertical, NOT a horizontal slice of one layer</p></div><div class="note"><h4>Size</h4><p>Each slice is sized to fit in a single fresh context window</p></div><div class="note"><h4>Graph</h4><p>The tickets are not a list of steps. They are a <b>task graph</b> with blocking relationships between them.</p></div></div><div class="code"><pre>## Problem Statement
+## Solution
+## User Stories        (a LONG, numbered list)
+## Implementation Decisions
+## Testing Decisions
+## Out of Scope
+## Further Notes</pre></div><p class="figcap">The to-spec template headings.</p></section><section id="parts"><div class="sec-head"><div class="eyebrow">The Parts</div><h2>Spec, Tickets, Then Code</h2><p>Click a part. Quotes are checked against the file named under each.</p></div><div class="explorer" id="txExplorer">
+<div class="ex-list"><input class="search" id="txSearch" type="search" placeholder="Filter parts…" aria-label="Filter parts">
+<div class="chips" id="txChips"></div>
+<div class="items" id="txItems" role="listbox" aria-label="Parts"></div></div>
+<div class="ex-detail" id="txDetail" aria-live="polite"><button class="sheet-close" type="button" data-close>Close</button><div class="ex-pane" id="txPane"></div></div></div></section><section id="flow"><div class="sec-head"><div class="eyebrow">The Flow</div><h2>One Conversation Becomes A Merged Branch</h2></div><ol class="timeline"><li><b>grill</b> <span class="mono">Talk it through</span><p>grill-with-docs or a finished wayfinder map</p></li><li><b>/to-spec</b> <span class="mono">Publish the spec</span><p>template + ready-for-agent</p></li><li><b>/to-tickets</b> <span class="mono">Publish the graph</span><p>quiz, then blockers first</p></li><li><b>/implement-spec</b> <span class="mono">Build in parallel</span><p>worktrees + tdd + merger + code-review</p></li></ol></section><section id="findings"><div class="sec-head"><div class="eyebrow">Gotchas</div><h2>Where The Text Disagrees With Itself</h2><p>From reading every file at 5beb35b. No scripts ship, and nothing was run against a live tracker.</p></div><div class="where"><div class="note"><h4><span class="verdict v-warn">Gap</span> README says to-spec quizzes you</h4><p>The README’s workflow list says quizzes you about which modules you're touching before creating a spec, but its own skill list says No interview, just synthesizes what you've already discussed. The skill sits between: no interview, one seam check.</p></div><div class="note"><h4><span class="verdict v-warn">Gap</span> ready-for-agent may not exist</h4><p>Both skills apply <code>ready-for-agent</code>, but setup only writes the label vocabulary in Section B, and only when the triage skill is installed. Without it the label may be missing on your tracker.</p></div><div class="note"><h4><span class="verdict v-warn">Gap</span> “tracker doc’s operation” for sub-issues</h4><p>to-tickets says to make each ticket a sub-issue via the tracker doc, but only the GitHub tracker doc defines a sub-issue operation; the GitLab and local docs do not.</p></div><div class="note"><h4><span class="verdict v-cost">Cost</span> Context-window sizing is a judgment call</h4><p>“A single fresh context window” is not measured; size slices by feel or borrow wayfinder’s 100K-token yardstick.</p></div><div class="note"><h4><span class="verdict v-good">Copy</span> No file paths in specs</h4><p>Specs and tickets stay valid while code moves. Prototype snippets are the only allowed exception.</p></div></div></section><section id="pstack"><div class="sec-head"><div class="eyebrow">Pairs With pstack</div><h2>pstack Covers What Happens Inside Each Ticket</h2></div><div class="tablewrap"><table class="dense fx"><thead><tr><th>pstack skill</th><th>What pstack says it does</th><th>How it pairs</th></tr></thead><tbody><tr><td><a href="https://github.com/cursor/plugins/blob/eb4db2b/pstack/skills/architect/SKILL.md"><code>architect</code></a></td><td>“Sketch types, signatures, and module structure before code”</td><td>Run before to-spec to settle Implementation Decisions as real types.</td></tr><tr><td><a href="https://github.com/cursor/plugins/blob/eb4db2b/pstack/skills/blast-radius/SKILL.md"><code>blast-radius</code></a></td><td>“Find what a change could break somewhere else before it ships”</td><td>Sizes expand–contract batches; to-tickets even uses the phrase “blast radius”.</td></tr><tr><td><a href="https://github.com/cursor/plugins/blob/eb4db2b/pstack/skills/tdd/SKILL.md"><code>tdd</code></a></td><td>“Use only when the user explicitly asks for TDD”</td><td>implement-spec’s implementers call Matt’s tdd; pstack’s is narrower and opt-in.</td></tr><tr><td><a href="https://github.com/cursor/plugins/blob/eb4db2b/pstack/skills/interrogate/SKILL.md"><code>interrogate</code></a></td><td>“Multiple LLM reviewers challenge changes from independent angles”</td><td>A heavier swap for the final code-review step.</td></tr><tr><td><a href="https://github.com/cursor/plugins/blob/eb4db2b/pstack/skills/create-verification-skill/SKILL.md"><code>create-verification-skill</code></a></td><td>“Generate a project-local verification skill that drives your app the way a user does”</td><td>Gives “demoable or verifiable on its own” a real check.</td></tr></tbody></table></div><p class="quote">“the single most important skill that should be in your toolkit is verification”<span class="qsrc">Lauren Tan (poteto), <a href="https://www.youtube.com/watch?v=MN9dGgmLyso">stream with Matt Pocock</a>, 16:14</span></p></section><section id="next"><div class="sec-head"><div class="eyebrow">Where To Go Next</div><h2>Set Up The Tracker First</h2></div><ol class="srcs"><li><a href="https://github.com/mattpocock/skills/blob/5beb35b/skills/engineering/to-spec/SKILL.md">skills/engineering/to-spec/SKILL.md</a></li><li><a href="https://github.com/mattpocock/skills/blob/5beb35b/skills/engineering/to-tickets/SKILL.md">skills/engineering/to-tickets/SKILL.md</a></li><li><a href="https://github.com/mattpocock/skills/blob/5beb35b/skills/engineering/implement-spec/SKILL.md">skills/engineering/implement-spec/SKILL.md</a></li><li><a href="https://github.com/mattpocock/skills/blob/5beb35b/skills/engineering/setup-matt-pocock-skills/triage-labels.md">skills/engineering/setup-matt-pocock-skills/triage-labels.md</a></li><li><a href="/mattpocock-setup-matt-pocock-skills/">mattpocock/setup-matt-pocock-skills</a>: all three need it</li><li><a href="/mattpocock-wayfinder/">mattpocock/wayfinder</a>: produces the decisions a spec synthesizes</li><li><a href="https://github.com/mattpocock/skills">github.com/mattpocock/skills</a>: the repo and its README</li><li><a href="https://skills.sh/mattpocock/skills">skills.sh/mattpocock/skills</a>: install counts per skill</li><li><a href="https://docs.indrayam.com/pstack/">Inside pstack</a>: the pstack explainer on this site</li><li><a href="https://www.youtube.com/watch?v=MN9dGgmLyso">Matt Pocock with poteto, live</a>: the stream quoted here</li></ol></section><dialog class="lb" id="lb"><div class="lbin" id="lbin"><img id="lbimg" alt=""><div class="lbbar"><span id="lbcap"></span><span><button type="button" id="lbswap">Light / dark</button> <button type="button" id="lbx">Close</button></span></div></div></dialog>
+<footer>Compiled 23 Oct 2026 from mattpocock/skills @ 5beb35b (committed 19 Oct 2026) · install counts from skills.sh as of 23 Oct 2026 · every quote is checked against its source file at build time · not affiliated with Matt Pocock or Lauren Tan.</footer>
+</main></div><div class="backdrop" id="backdrop"></div><script>
+function mk(t,c,txt){const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e}
+document.querySelectorAll('.code').forEach(w=>{const b=mk('button','copy','Copy');b.type='button';b.onclick=async()=>{const t=w.querySelector('pre').innerText;try{await navigator.clipboard.writeText(t)}catch(e){const r=document.createElement('textarea');r.value=t;document.body.appendChild(r);r.select();document.execCommand('copy');r.remove()}b.textContent='Copied';b.classList.add('ok');setTimeout(()=>{b.textContent='Copy';b.classList.remove('ok')},1400)};w.appendChild(b)});
+const tbn=document.getElementById('themeBtn'),root=document.documentElement,order=['system','light','dark'];
+let th=root.getAttribute('data-theme')||'system';tbn.textContent='Theme: '+th;
+tbn.onclick=()=>{th=order[(order.indexOf(th)+1)%3];if(th==='system')root.removeAttribute('data-theme');else root.setAttribute('data-theme',th);try{localStorage.setItem('dd-theme',th)}catch(e){}tbn.textContent='Theme: '+th};
+document.querySelectorAll('[data-filter]').forEach(box=>{const tb=document.getElementById(box.dataset.filter);const chips=[...box.querySelectorAll('.chip')];chips.forEach(c=>c.onclick=()=>{chips.forEach(x=>x.setAttribute('aria-pressed',x===c));const k=c.dataset.k;[...tb.rows].forEach(r=>{r.style.display=(k==='all'||r.dataset.k===k)?'':'none'})})});
+const links=[...document.querySelectorAll('#railList a')],secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target);links.forEach((l,j)=>l.classList.toggle('on',i===j))}})},{rootMargin:'-20% 0px -70% 0px'});
+secs.forEach(s=>s&&io.observe(s));
+
+const xesc=(s)=>String(s).replace(/[&<>"]/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const xstore={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const xmobile=()=>window.matchMedia("(max-width: 860px)").matches;
+const xbackdrop=document.getElementById("backdrop");let xopen=null;
+function closeSheet(){if(!xopen)return;xopen.classList.remove("open");xbackdrop.classList.remove("open");xopen=null}
+if(xbackdrop)xbackdrop.addEventListener("click",closeSheet);
+document.addEventListener("keydown",(e)=>{if(e.key==="Escape")closeSheet()});
+document.querySelectorAll("[data-close]").forEach((b)=>b.addEventListener("click",closeSheet));
+document.querySelectorAll(".toc a").forEach((a)=>a.addEventListener("click",()=>a.closest("details").open=false));
+function makeExplorer({prefix,groups,getText,renderItem,renderDetail,key}){
+  const $=(s)=>document.getElementById(prefix+s);
+  const itemsEl=$("Items"),chipsEl=$("Chips"),searchEl=$("Search"),detailEl=$("Detail"),paneEl=$("Pane");
+  let filter="all",query="";const all=groups.flatMap(([,l])=>l);
+  let selected=xstore.get(key);if(!all.some((x)=>x.id===selected))selected=all[0].id;
+  chipsEl.innerHTML=[["all","All"],...groups.map(([g])=>[g,g])].map(([v,l])=>`<button class="chip" type="button" data-v="${xesc(v)}" aria-pressed="${v===filter}">${xesc(l)}</button>`).join("");
+  chipsEl.addEventListener("click",(e)=>{const b=e.target.closest(".chip");if(!b)return;filter=b.dataset.v;chipsEl.querySelectorAll(".chip").forEach((c)=>c.setAttribute("aria-pressed",c.dataset.v===filter));drawList()});
+  searchEl.addEventListener("input",()=>{query=searchEl.value.trim().toLowerCase();drawList()});
+  function drawList(){let h="",n=0;for(const [g,l] of groups){if(filter!=="all"&&filter!==g)continue;const rows=l.filter((x)=>!query||getText(x).toLowerCase().includes(query));if(!rows.length)continue;h+=`<div class="grp">${xesc(g)}</div>`;h+=rows.map((x)=>{n++;return renderItem(x,x.id===selected)}).join("")}
+    itemsEl.innerHTML=n?h:`<div class="empty">Nothing matches "${xesc(query)}".</div>`;itemsEl.dataset.count=n}
+  itemsEl.addEventListener("click",(e)=>{const b=e.target.closest(".item");if(b)select(b.dataset.id,true)});
+  itemsEl.addEventListener("keydown",(e)=>{if(e.key!=="ArrowDown"&&e.key!=="ArrowUp")return;const its=[...itemsEl.querySelectorAll(".item")];const i=its.findIndex((x)=>x.dataset.id===selected);const nx=its[Math.max(0,Math.min(its.length-1,i+(e.key==="ArrowDown"?1:-1)))];if(nx){e.preventDefault();select(nx.dataset.id,false);nx.focus()}});
+  function select(id,fromClick){const changed=id!==selected;selected=id;xstore.set(key,id);
+    itemsEl.querySelectorAll(".item").forEach((b)=>b.setAttribute("aria-selected",b.dataset.id===id));
+    if(changed){paneEl.classList.add("fading");setTimeout(()=>{paneEl.innerHTML=renderDetail(id);paneEl.scrollTop=0;paneEl.classList.remove("fading")},220)}
+    if(fromClick&&xmobile()){detailEl.classList.add("open");xbackdrop.classList.add("open");xopen=detailEl}}
+  drawList();paneEl.innerHTML=renderDetail(selected);
+}
+const IT_tx=[{"id": "spec", "name": "to-spec", "group": "The pipeline", "small": "3 steps", "pills": ["user-invoked", "no interview"], "tag": "Turn the current conversation into a spec and publish it to the project issue tracker: no interview, just synthesis of what you've already discussed.", "invoke": "/to-spec", "how": ["Explore the repo; use glossary words; respect ADRs.", "Sketch the test seams, highest first; confirm them with the user.", "Write the template and publish; apply ready-for-agent."], "quotes": [["Check with the user that these seams match their expectations.", "skills/engineering/to-spec/SKILL.md"], ["Apply the <code>ready-for-agent<\/code> triage label - no need for additional triage.", "skills/engineering/to-spec/SKILL.md"], ["This list of user stories should be extremely extensive and cover all aspects of the feature.", "skills/engineering/to-spec/SKILL.md"]], "files": ["skills/engineering/to-spec/SKILL.md"], "lesson": "Agree the test seams before writing the spec; everything else is synthesis.", "src": "https://github.com/mattpocock/skills/blob/5beb35b/skills/engineering/to-spec/SKILL.md"}, {"id": "tix", "name": "to-tickets", "group": "The pipeline", "small": "5 steps", "pills": ["user-invoked", "quiz"], "tag": "Break a plan, spec, or the current conversation into a set of tracer-bullet tickets, each declaring its blocking edges", "invoke": "/to-tickets <spec issue URL>", "how": ["Gather context; fetch the spec if passed by reference.", "Optionally explore and look for prefactors.", "Draft vertical slices with blocking edges.", "Quiz the user on granularity and edges; iterate.", "Publish in dependency order, blockers first."], "quotes": [["Iterate until the user approves the breakdown.", "skills/engineering/to-tickets/SKILL.md"], ["Do NOT close or modify any parent issue.", "skills/engineering/to-tickets/SKILL.md"], ["Use the per-ticket file template below: one ticket per file, never a single combined file.", "skills/engineering/to-tickets/SKILL.md"]], "files": ["skills/engineering/to-tickets/SKILL.md"], "lesson": "Publish blockers first so later tickets can reference real ids.", "src": "https://github.com/mattpocock/skills/blob/5beb35b/skills/engineering/to-tickets/SKILL.md"}, {"id": "ec", "name": "Expand–contract", "group": "The pipeline", "small": "exception", "pills": ["wide refactors"], "tag": "<b>Wide refactors are the exception to vertical slicing.<\/b>", "invoke": "(inside to-tickets)", "how": ["Expand: add the new form beside the old.", "Migrate call sites in batches, each blocked by the expand.", "Contract: delete the old form, blocked by every batch."], "quotes": [["Don't force it into a tracer bullet; sequence it as <b>expand–contract<\/b>.", "skills/engineering/to-tickets/SKILL.md"], ["green is promised only there.", "skills/engineering/to-tickets/SKILL.md"]], "files": ["skills/engineering/to-tickets/SKILL.md"], "lesson": "When a slice cannot land green, change the shape of the graph, not the rule.", "src": "https://github.com/mattpocock/skills/blob/5beb35b/skills/engineering/to-tickets/SKILL.md"}, {"id": "impl", "name": "implement-spec", "group": "The handoff", "small": "9 steps", "pills": ["user-invoked", "subagents"], "tag": "Implement the result of /to-spec and /to-tickets in code.", "invoke": "/implement-spec <spec URL>", "how": ["Read spec and tickets; optional exploration subagent saves notes outside the repo.", "Create one integration branch.", "Implementer subagents, one worktree each, call tdd per ticket.", "A merger subagent merges each finished branch; new frontier tickets start.", "code-review on the integration branch at the end; one fixer subagent."], "quotes": [["Communicate primarily through <b>context pointers<\/b>: to the spec, tickets, research notes, and previous commits.", "skills/engineering/implement-spec/SKILL.md"], ["calls the Skill tool with <code>tdd<\/code> to build the ticket;", "skills/engineering/implement-spec/SKILL.md"], ["Once all tickets are complete, call the Skill tool with <code>code-review<\/code> on the integration branch.", "skills/engineering/implement-spec/SKILL.md"]], "files": ["skills/engineering/implement-spec/SKILL.md"], "lesson": "Pass pointers, not pasted context, between subagents.", "src": "https://github.com/mattpocock/skills/blob/5beb35b/skills/engineering/implement-spec/SKILL.md"}];
+const GR_tx=["The pipeline", "The handoff"];
+
+(()=>{const I=IT_tx,by=Object.fromEntries(I.map((x)=>[x.id,x]));
+makeExplorer({prefix:"tx",key:"mp-tst",groups:GR_tx.map((g)=>[g,I.filter((x)=>x.group===g)]),
+ getText:(s)=>[s.name,s.tag,...(s.how||[]),...(s.quotes||[]).map((q)=>q[0])].join(" ").replace(/<[^>]+>/g,""),
+ renderItem:(s,on)=>`<button class="item" type="button" role="option" data-id="${xesc(s.id)}" aria-selected="${on}"><span>${xesc(s.name)}</span><small>${xesc(s.small||"")}</small></button>`,
+ renderDetail:(id)=>{const s=by[id];let h=`<div class="d-top"><div class="d-name">${xesc(s.name)}</div><div class="d-meta">${(s.pills||[]).map((p,i)=>`<span class="pill${i==1?" skin":i==2?" sky":""}">${p}</span>`).join("")}</div><p class="d-tag">${s.tag}</p></div>`;
+  if(s.img){const el=document.getElementById(s.img);if(el)h+=`<div class="d-sec"><button type="button" class="d-img${s.dark?" dk":""}" data-g="${s.img}" aria-label="Enlarge"><img src="${el.src}" alt="${xesc(s.name)} render"></button></div>`}
+  if(s.invoke)h+=`<div class="d-sec"><h4>Try it</h4><div class="invoke">${xesc(s.invoke)}</div></div>`;
+  if(s.how&&s.how.length)h+=`<div class="d-sec"><h4>How it works</h4><ol>${s.how.map((x)=>`<li>${x}</li>`).join("")}</ol></div>`;
+  if(s.quotes&&s.quotes.length)h+=`<div class="d-sec"><h4>In its own words</h4>${s.quotes.map((q)=>`<p class="quote">“${q[0]}”<span class="qsrc">${xesc(q[1])}</span></p>`).join("")}</div>`;
+  if(s.extra)h+=s.extra;
+  if(s.files&&s.files.length)h+=`<div class="d-sec"><h4>Files</h4><div class="files">${s.files.map((f)=>`<code>${xesc(f)}</code>`).join("")}</div></div>`;
+  if(s.lesson)h+=`<div class="d-sec"><h4>Design lesson</h4><p class="lesson">${s.lesson}</p></div>`;
+  return h+(s.src?`<div class="d-sec"><p style="font-size:.85rem"><a href="${s.src}">Read the source on GitHub</a></p></div>`:"")}});
+document.getElementById("txPane").addEventListener("click",(e)=>{const b=e.target.closest(".d-img");if(!b)return;const g=document.getElementById(b.dataset.g);if(g)g.closest(".gimg").click()});})();
+
+(function(){const lb=document.getElementById('lb');if(!lb)return;const im=document.getElementById('lbimg'),cap=document.getElementById('lbcap'),sw=document.getElementById('lbswap'),lbin=document.getElementById('lbin');let cur=null,dk=false;
+function isDark(){const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)}
+function show(){const l=cur.querySelector('.gi-l'),d=cur.querySelector('.gi-d');const useD=dk&&d;im.src=(useD?d:l).src;im.alt=(useD?d:l).alt;lbin.classList.toggle('dk',!!(useD||cur.classList.contains('dark')));cap.textContent=cur.dataset.cap+(d?(useD?' · dark':' · light'):'');sw.style.display=d?'':'none'}
+document.querySelectorAll('.gimg').forEach(b=>b.onclick=()=>{cur=b;dk=isDark();show();lb.showModal()});
+sw.onclick=()=>{dk=!dk;show()};document.getElementById('lbx').onclick=()=>lb.close();lb.addEventListener('click',e=>{if(e.target===lb)lb.close()});
+document.querySelectorAll('[data-gfilter]').forEach(box=>{const g=document.getElementById(box.dataset.gfilter);const cs=[...box.querySelectorAll('.chip')];cs.forEach(c=>c.onclick=()=>{cs.forEach(x=>x.setAttribute('aria-pressed',x===c));const k=c.dataset.k;[...g.children].forEach(a=>{a.style.display=(k==='all'||a.dataset.k.split(' ').includes(k))?'':'none'})})});})();
+</script></body></html>
