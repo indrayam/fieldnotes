@@ -3,7 +3,7 @@ sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from skdoc import *
 from config import src, asset
 R=src('DRAWIO_SRC')
-D=Doc('drawio',R,'https://github.com/jgraph/drawio-mcp/blob/05c1747/')
+D=Doc('drawio',R,'https://github.com/jgraph/drawio-mcp/blob/3a74f70/')
 S='plugins/cursor/skills/drawio/SKILL.md'; T='mcp-tool-server/src/index.js'
 OLD=json.load(open(asset('drawio','gallery.json')))
 gi=[]
@@ -102,5 +102,5 @@ nav=[('top','Overview'),('how','How it works'),('pipeline','Pipeline'),('gallery
 JS=explorer_js('pp','dr-pp',P,['Author','Layout','Output'])+explorer_js('md','dr-md',M,['Shared modules','MCP tools'])
 D.finish()
 n=build('drawio','Inside Draw.io',nav,hro+s_how+s_pipe+s_gal+s_mod+s_find+s_steal+s_src,
- 'Compiled 22 Oct 2026 from jgraph/drawio-mcp @ 05c1747 · every quote is checked against its source file at build time · not affiliated with draw.io Ltd.',JS)
+ 'Compiled 22 Oct 2026, updated 25 Oct 2026 to jgraph/drawio-mcp @ 3a74f70 (style reference synced with drawio.com: `multiple`, `cloudPerimeter`, `opacityGroup`, `stylePlaceholders`/`styleRules`; run results are from 05c1747; draw.io desktop on the box is 32.6.1, which adds Explore mode to the action dialog) · every quote is checked against its source file at build time · not affiliated with draw.io Ltd.',JS)
 print('built',n,len(P),len(M),len(gi))
