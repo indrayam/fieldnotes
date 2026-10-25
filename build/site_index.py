@@ -23,8 +23,14 @@ MP=[
 ("mattpocock-handoff","mattpocock/handoff","2026-10-23","Matt Pocock skills","Compacts a conversation into a temp-folder note a fresh agent can pick up, with suggested skills and links instead of copies."),
 ("mattpocock-setup-matt-pocock-skills","mattpocock/setup-matt-pocock-skills","2026-10-23","Matt Pocock skills","A one-time interview that tells the engineering skills where your tracker, triage labels and glossary live."),
 ]
+# Design Skills: one builder per project. Order fixed: Impeccable, Hallmark, UI/UX Pro Max.
+DS=[
+("pbakaus-impeccable","pbakaus/impeccable","2026-10-24","Design Skills","One skill, 24 commands and a no-LLM detector for app UI: PRODUCT.md, DESIGN.md, audit, critique, polish, bolder, quieter, animate."),
+("nutlope-hallmark","nutlope/hallmark","2026-10-24","Design Skills","A landing-page skill with 48 themes, a 16-rule Floor and sloplint, a linter that fails AI tells before you ship."),
+("nextlevelbuilder-ui-ux-pro-max","nextlevelbuilder/ui-ux-pro-max","2026-10-24","Design Skills","A searchable design reference, not a builder: when to search it and when to hand off to Impeccable or Hallmark."),
+]
 BLOCK={'ai-native-assessment','ai-harness-setup'}
-assert not BLOCK & {d[0] for d in DOCS+MP}
+assert not BLOCK & {d[0] for d in DOCS+MP+DS}
 import datetime
 def fmt(d): return datetime.date.fromisoformat(d).strftime('%B %-d, %Y')
 DOCS.sort(key=lambda d:d[2],reverse=True)
@@ -39,6 +45,7 @@ POTETO=[d for d in DOCS if d[0]=='pstack']
 STORY=[d for d in DOCS if d[0]!='pstack']
 poteto_items="\n".join(li(*d) for d in POTETO)
 story_items="\n".join(li(*d) for d in STORY)
+ds_items="\n".join(li(*d) for d in DS)
 items="\n".join(f'''<li class="doc-entry"><h4 class="doc-title"><a href="/{s}/">{E(t)}</a></h4>
 <p class="doc-meta"><time datetime="{d}">{fmt(d)}</time> &mdash; {E(tp)}</p><p class="doc-summary">{E(sm)}</p></li>''' for s,t,d,tp,sm in DOCS)
 mp_items="\n".join(f'''<li class="doc-entry"><h4 class="doc-title"><a href="/{s}/">{E(t)}</a></h4>
@@ -96,7 +103,12 @@ page=f'''<!DOCTYPE html>
 <ul class="doc-list">
 {story_items}
 </ul>
-<p class="docs-topics">Topics: {", ".join(E(t) for t in ["poteto Skills","Matt Pocock skills","Storytelling Skills"])} &middot; {len(DOCS)+len(MP)} docs</p>
+<h2 id="design-skills" style="margin-top:28px">Design Skills</h2>
+<p class="docs-intro">Skills that build and review frontends. Pick one builder per project.</p>
+<ul class="doc-list">
+{ds_items}
+</ul>
+<p class="docs-topics">Topics: {", ".join(E(t) for t in ["poteto Skills","Matt Pocock skills","Storytelling Skills","Design Skills"])} &middot; {len(DOCS)+len(MP)+len(DS)} docs</p>
 </main>
 <p></p>
 <div class="copyright">
