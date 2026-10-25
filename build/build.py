@@ -6,6 +6,7 @@ from config import BUILD, SITE
 DOCS = {'pstack': 'pst.py', 'diagram-design': 'diagram-design_data/doc.py', 'illo': 'illo_data/doc.py',
         'drawio': 'drawio_data/doc.py', 'pretty-mermaid': 'pretty-mermaid_data/doc.py', 'excalidraw': 'excalidraw_data/doc.py',
         **{f'mattpocock-{k}': f'mattpocock_data/{k}.py' for k in ('grill-with-docs', 'wayfinder', 'to-spec-to-tickets', 'handoff', 'setup-matt-pocock-skills')},
+        **{k: f'design_data/{f}.py' for k,f in (('pbakaus-impeccable','impeccable'),('nutlope-hallmark','hallmark'),('nextlevelbuilder-ui-ux-pro-max','ui-ux-pro-max'))},
         'index': 'site_index.py'}
 LEAK = re.compile(r'hello-skills|ai-native-assessment|ai-harness-setup|detect\.py', re.I)
 def run(slug):

@@ -13,6 +13,9 @@ SOURCES = {  # env var: (default, what to clone)
     'PRETTY_MERMAID_SRC': ('/home/box/pretty-mermaid-skills', 'github.com/imxv/Pretty-mermaid-skills @ e234ab7'),
     'EXCALIDRAW_SRC': ('/home/box/mcp_excalidraw', 'github.com/yctimlin/mcp_excalidraw @ 774a70c'),
     'MATTPOCOCK_SKILLS_SRC': ('/workspace/dorothy-docs/_scratch/mattpocock-skills', 'github.com/mattpocock/skills @ 5beb35b'),
+    'IMPECCABLE_SRC': ('/workspace/dorothy-docs/_scratch/impeccable', 'github.com/pbakaus/impeccable @ 9368675'),
+    'HALLMARK_SRC': ('/workspace/dorothy-docs/_scratch/hallmark', 'github.com/nutlope/hallmark @ 7ec8682'),
+    'UIUXPROMAX_SRC': ('/workspace/dorothy-docs/_scratch/ui-ux-pro-max-skill', 'github.com/nextlevelbuilder/ui-ux-pro-max-skill @ d14efff'),
     'INDRAYAM_V1_SRC': ('/workspace/dorothy-docs/_src/indrayam-site/v1', 'the v1 folder of the indrayam.com site repo (needs style.css)'),
 }
 def src(var):
