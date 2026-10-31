@@ -4,7 +4,7 @@ import sys,os
 sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from skdoc import *
 from config import src
-PINS={'IMPECCABLE_SRC':('pbakaus/impeccable','9368675'),'HALLMARK_SRC':('nutlope/hallmark','7ec8682'),'UIUXPROMAX_SRC':('nextlevelbuilder/ui-ux-pro-max-skill','d14efff')}
+PINS={'IMPECCABLE_SRC':('pbakaus/impeccable','9368675'),'HALLMARK_SRC':('nutlope/hallmark','7ec8682'),'UIUXPROMAX_SRC':('nextlevelbuilder/ui-ux-pro-max-skill','9a3f14f')}
 def repo(slug,var):
     r,pin=PINS[var]; D=Doc(slug,src(var),f'https://github.com/{r}/blob/{pin}/'); D.pin=pin; D.repo=r; return D
 # The cross-cutting rule, on every sheet (Usha UX's brief for Anand's fleet).
