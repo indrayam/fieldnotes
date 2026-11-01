@@ -3,7 +3,7 @@ sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from skdoc import *
 from config import src, asset
 R=src('DIAGRAM_DESIGN_SRC'); SK='skills/diagram-design/'
-D=Doc('diagram-design',R,'https://github.com/cathrynlavery/diagram-design/blob/0b9b10c/')
+D=Doc('diagram-design',R,'https://github.com/cathrynlavery/diagram-design/blob/0cf73c3/')
 SKM=SK+'SKILL.md'; skill=D.rd(SKM)
 # --- parse §3 guide
 rows=re.findall(r'^\| (.+?) \| \*\*(.+?)\*\* \| \[type-([\w-]+)\.md\]',skill,re.M)
@@ -42,7 +42,7 @@ H={ # hand-written invoke + lesson per type
 'heatmap':("Heatmap of deploys by weekday and hour.","Fill encodes value; one sequential scale, labeled."),
 'line':("Line chart of weekly active users, or a slopegraph of before/after.","Pick the variant by the question: trend, two states, distribution, or rank."),
 'gantt':("Gantt of the Q3 launch plan.","Bars on a real time axis; dependencies only where they constrain."),
-'scatter':("Scatter of latency vs payload size.","Two continuous variables; bubble adds a third, beeswarm drops to one."),
+'scatter':("Scatter of latency vs payload size.","Two continuous variables; bubble adds a third, beeswarm drops to one. New in 2.6.136: a box plot variant compares five-number summaries for a few groups, checked by verify-box-plot.py."),
 'high-level':("High-level view of the data stack on Kubernetes.","An executive overview: fewer nodes, bigger groupings."),
 'process':("Process diagram of the data handoffs from intake to report.","Actors and sequential steps; the handoff artifact gets named."),
 'medallion':("Medallion diagram: bronze, silver, gold with access policies.","Tiers are quality levels; policies attach to tiers, not tables."),
@@ -131,7 +131,7 @@ uaprows=[[D.Q(a,SKM),D.Q(b,SKM)] for a,b in uap]
 hro=hero('Skill explainer · cathrynlavery/diagram-design','Diagram Design',8,
  '<mark>Forty-five editorial diagram types</mark>, one rule above all: delete until nothing can be removed.',
  f'A Claude/Cursor skill that writes self-contained HTML with inline SVG in a skinnable editorial system. It routes a request through 9 semantic patterns to 45 type references, ships importers for draw.io, Excalidraw and Mermaid, and backs its charts with geometry verifiers. I read the skill, ran all 74 repository checks and the 6 shipped scripts. {D.Q("The highest-quality move is usually deletion.",SKM)}',
- [('v2.6.120','plugin version'),('0b9b10c','commit, 25 Oct 2026'),('45','visual types'),('6','commands'),('6','skill scripts'),('74/74','repo checks pass')],
+ [('v2.6.136','plugin version'),('0cf73c3','commit, 27 Oct 2026'),('45','visual types'),('6','commands'),('6','skill scripts'),('74/74','repo checks pass')],
  [('Who it is for','Anyone who wants a diagram that looks designed rather than generated: architecture, charts, journeys, maps.'),('What you get','One HTML file per diagram, optional SVG/PNG export, and a brand profile you can save and reload.')])
 s_how=sec('how','How It Works','It Picks A Pattern, Then A Type, Then Asks','The skill is a router. Behavior picks the pattern, the pattern picks the nearest layout, and the plan is confirmed before anything is drawn.',
  callouts([f'<b>Style gate.</b> {D.Q("If they are still the shipped defaults (paper `#f5f5f5`, ink `#2d3142`, accent `#bf4520`), **pause and ask the user**",SKM)}.',
@@ -154,7 +154,7 @@ s_find=sec('findings','What I Found Running It','The Code Is Solid; The Runner I
   ['git status after all runs','clean','No files written into the repo.']])+
  verdict([('Gap','Verifier flags disagree','Most verifiers take <code>--all</code>; verify-motion takes <code>--shipped</code> and rejects <code>--all</code>. Without a flag they print usage and exit 2, which reads like a failure in CI.'),
   ('Gap','Playwright is a silent prerequisite','Three tests and PNG export need a downloaded Chromium. The export command documents this; the test scripts just crash with a stack trace.'),
-  ('Gap','Version drift','plugin.json says 2.6.120; SKILL.md metadata says 2.6.'),
+  ('Gap','Version drift','plugin.json says 2.6.136; SKILL.md metadata says 2.6.'),
   ('Bug','Escaped IR headers','drawio_extract and excalidraw_extract print the file name markdown-escaped (<code>sample\\-architecture\\.drawio</code>); mermaid_extract does not.'),
   ('Copy','Untrusted-input stance in parsers','The Excalidraw and Mermaid extractors treat labels as data and discard links and payloads. That is the right default for anything an agent reads.'),
   ('Copy','Verifiers for the chart math','Waterfall, Sankey, beeswarm and others check the rendered geometry against declared values, so a plausible-but-wrong chart fails.')]))
@@ -167,5 +167,5 @@ nav=[('top','Overview'),('how','How it works'),('types','Types'),('gallery','Gal
 JS=explorer_js('ty','dd-ty',types,list(FAM))+explorer_js('cm','dd-cm',cmds,['Commands','Skill scripts'])
 D.finish()
 n=build('diagram-design','Inside Diagram Design',nav,hro+s_how+s_types+s_gal+s_cmd+s_ap+s_find+s_steal+s_src,
- 'Compiled 22 Oct 2026, updated 25 Oct 2026 to cathrynlavery/diagram-design @ 0b9b10c (v2.6.120: Mermaid import digest now lists else, and, and option regions; the run results are from 7a12007, and verify-mermaid-import passes at 0b9b10c) · every quote is checked against its source file at build time · not affiliated with the author.',JS)
+ 'Compiled 22 Oct 2026, updated 1 Nov 2026 to cathrynlavery/diagram-design @ 0cf73c3 (v2.6.136: box plot variant on scatter; self_check rejects a document that stopped early; dp-integration primary connectors get a focal_accent arrowhead; exploded type rejects CSS transforms on projected geometry; import fixes for Mermaid edge IDs, sequence autonumber, draw.io angle brackets and outer Excalidraw groups. 2.6.120: Mermaid import digest now lists else, and, and option regions; the run results are from 7a12007, and verify-mermaid-import passed at 0b9b10c) · every quote is checked against its source file at build time · not affiliated with the author.',JS)
 print('built',n,'types',len(types),'cmds',len(cmds),'gallery',len(GI),'uap',len(uaprows),'sp',len(sprows))

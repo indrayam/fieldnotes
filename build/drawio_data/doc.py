@@ -3,7 +3,7 @@ sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from skdoc import *
 from config import src, asset
 R=src('DRAWIO_SRC')
-D=Doc('drawio',R,'https://github.com/jgraph/drawio-mcp/blob/3a74f70/')
+D=Doc('drawio',R,'https://github.com/jgraph/drawio-mcp/blob/30c232a/')
 S='plugins/cursor/skills/drawio/SKILL.md'; T='mcp-tool-server/src/index.js'
 OLD=json.load(open(asset('drawio','gallery.json')))
 gi=[]
@@ -66,7 +66,7 @@ TL=[('open_drawio_xml','Opens the draw.io editor with a diagram from draw.io XML
  ('list_pages','Lists the pages (diagrams) in a local .drawio file without loading full page content. '),('get_page','Reads one page (diagram) from a local .drawio file and returns its raw mxGraphModel '),
  ('set_page','Replaces the content of one page (diagram) in a local .drawio file with new '),('search_shapes','Search the draw.io shape library by keywords. ')]
 for n,t in TL:
-    M.append(dict(id=n,name=n,group='MCP tools',small='tool',pills=['@drawio/mcp 1.10.0'],tag=D.Q(t.strip(),T),invoke=f'{n}(…)',how=[],quotes=[],lesson='The skill and the MCP server share modules; the skill is the file-writing path.',files=[T],src=D.blob+T,img=''))
+    M.append(dict(id=n,name=n,group='MCP tools',small='tool',pills=['@drawio/mcp 1.10.1'],tag=D.Q(t.strip(),T),invoke=f'{n}(…)',how=[],quotes=[],lesson='The skill and the MCP server share modules; the skill is the file-writing path.',files=[T],src=D.blob+T,img=''))
 # --- sections
 hro=hero('Skill explainer · jgraph/drawio-mcp','Draw.io',4,
  'Every diagram becomes a <mark>native .drawio file first</mark>, then whatever format you asked for.',
@@ -80,6 +80,13 @@ s_how=sec('how','How It Works','Author, Repair, Lay Out, Deliver','The skill is 
   f'<b>Lay out.</b> {Q("The CLI\'s `--layout` step auto-positions XML-authored diagrams with the same ELK layouts as the editor\'s *Arrange ▸ Layout* menu and the draw.io MCP app server.")}',
   f'<b>Deliver.</b> {Q("Exports use double extensions")} so the name says the XML is inside.']))
 s_pipe=f'<section id="pipeline">{head("The Pipeline","Fifteen Choices, One Artifact","Pick an authoring route, a layout or an output. Quotes are checked against SKILL.md at build time.")}{explorer("pp","pipeline")}</section>'
+s_icons=sec('icons','Shapes, Icons And macOS (1.2.6)','Look Up Icons, Find The Real Binary','New in plugin 1.2.6. Both fixes stop the agent from guessing.',
+ callouts([f'<b>Icon lookup.</b> {Q("never guess `mxgraph.*` names: look them all up in one call to `scripts/find-shapes.js` in this skill\'s folder (Node.js 18+, network), one query per icon, narrowed by library (`aws4`, `azure2`, `cisco19`).")} Why: a wrong stencil name renders as an empty box, and this works without the MCP server.',
+  f'<b>Output.</b> {Q("prints `title width×height style` lines; use a style as is:")}',
+  f'<b>macOS CLI.</b> {Q("this prints the first of `drawio` on PATH (Homebrew), `/Applications`, the per-user `~/Applications` and Spotlight, or nothing if draw.io is absent:")}',
+  f'<b>Use the real binary.</b> {Q("Call the binary inside the `.app`: a copy or symlink outside it dies with `Unable to find helper app`.")}',
+  '<b>File naming.</b> The File naming section no longer tells you to delete the <code>.mmd</code> or intermediate <code>.drawio</code>; the workflow steps above it still do.'])+
+ '<pre><code>node &lt;skill-folder&gt;/scripts/find-shapes.js "aws4 lambda" "github" "slack"\n\n# macOS: which draw.io will the skill use?\n{ command -v drawio; ls /Applications/draw.io.app/Contents/MacOS/draw.io ~/Applications/draw.io.app/Contents/MacOS/draw.io\n  mdfind "kMDItemCFBundleIdentifier == \'com.jgraph.drawio.desktop\'" | sed \'s|$|/Contents/MacOS/draw.io|\'; } 2&gt;/dev/null | head -1</code></pre>')
 s_gal=sec('gallery','Gallery','60 Renders','ELK layouts and Mermaid conversions rendered on this box, plus the repo’s own gallery. Click to enlarge.',gchips('gdr',GK)+gal('gdr',gi))
 s_mod=f'<section id="modules">{head("Under The Hood","Eight Shared Modules Feed Two Servers","The skill’s inline repair step is a small version of repair-xml.js. I imported each module and ran it on test input.")}{explorer("md","modules")}</section>'
 s_find=sec('findings','What I Found Running It','Thoroughly Tested; The CLI Is The Dependency','All runs used a copy of the repo in /tmp, with nice and timeout, at commit 05c1747.',
@@ -98,9 +105,9 @@ s_steal=sec('yours','Build Your Own','What To Steal','',steal([('One native arti
  ('Measure the model’s mistakes, then fix them in code.','repair-xml.js says its three fixes covered all 15 broken diagrams out of 473.'),('Detect the environment exhaustively.','The Windows chain checks PATH, install paths, registry and other drives before giving up.'),('Keep ports identical by CI.','')]))
 s_src=sec('sources','Sources','Everything Here Is Checked','Each quote on this page is compared with its source file at build time; the build fails on any mismatch.',
  srcs([D.L(S),D.L(T),D.L('shared/repair-xml.js'),D.L('.github/workflows/check-skill-sync.yml'),'<a href="https://github.com/jgraph/drawio-mcp">github.com/jgraph/drawio-mcp</a>']))
-nav=[('top','Overview'),('how','How it works'),('pipeline','Pipeline'),('gallery','Gallery'),('modules','Under the hood'),('findings','Findings'),('yours','Build your own'),('sources','Sources')]
+nav=[('top','Overview'),('how','How it works'),('pipeline','Pipeline'),('icons','Icons & macOS'),('gallery','Gallery'),('modules','Under the hood'),('findings','Findings'),('yours','Build your own'),('sources','Sources')]
 JS=explorer_js('pp','dr-pp',P,['Author','Layout','Output'])+explorer_js('md','dr-md',M,['Shared modules','MCP tools'])
 D.finish()
-n=build('drawio','Inside Draw.io',nav,hro+s_how+s_pipe+s_gal+s_mod+s_find+s_steal+s_src,
- 'Compiled 22 Oct 2026, updated 25 Oct 2026 to jgraph/drawio-mcp @ 3a74f70 (style reference synced with drawio.com: `multiple`, `cloudPerimeter`, `opacityGroup`, `stylePlaceholders`/`styleRules`; run results are from 05c1747; draw.io desktop on the box is 32.6.1, which adds Explore mode to the action dialog) · every quote is checked against its source file at build time · not affiliated with draw.io Ltd.',JS)
+n=build('drawio','Inside Draw.io',nav,hro+s_how+s_pipe+s_icons+s_gal+s_mod+s_find+s_steal+s_src,
+ 'Compiled 22 Oct 2026, updated 1 Nov 2026 to jgraph/drawio-mcp @ 30c232a (plugin 1.2.6, app-server 1.4.7, tool-server 1.10.1: find-shapes.js icon lookup, macOS CLI detection; 25 Oct: style reference synced with drawio.com: `multiple`, `cloudPerimeter`, `opacityGroup`, `stylePlaceholders`/`styleRules`; run results are from 05c1747; draw.io desktop on the box is 32.6.1, which adds Explore mode to the action dialog) · every quote is checked against its source file at build time · not affiliated with draw.io Ltd.',JS)
 print('built',n,len(P),len(M),len(gi))
