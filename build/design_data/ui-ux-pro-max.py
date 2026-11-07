@@ -16,7 +16,23 @@ s_when=sec('when','Search Or Hand Off','Ask It A Question; Let A Builder Build',
   ['An app, dashboard or existing screen','Hand off to <a href="/pbakaus-impeccable/">Impeccable</a>','PRODUCT.md / DESIGN.md plus a detector'],
   ['A whole design system','Builder\'s own system (<code>/impeccable document</code>)','<code>--design-system</code> output is generic, see below']])+
  notes([('Its own rule',Q('Build each query around **one dominant intent**, using **2–5 meaningful terms** and one useful constraint such as product, platform, or interaction.',SK)),('Its own skip list',Q('Skip it for pure backend logic, API/database design, non-visual performance work, infrastructure/DevOps, or non-visual scripts',SK)+'.')]))
-s_new=sec('new','What Changed In 2.15.0','Three Additions: A Native Style, An RTL Filter, Nuxt UI 4.12','Upstream 9a3f14f → b7d5353 (plugin 2.15.0). Every command below was run against an isolated scratch clone at b7d5353, 7 Nov 2026. The installed fleet copy is still the older 79-style version until it is re-copied, so these flags are not there yet.',
+MOBILE_CSS=('<style>'
+ 'main,section,.code,.tablewrap{min-width:0;max-width:100%}'
+ '.code{overflow:hidden}.code pre{overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:pre}'
+ '#new h2,#new .sec-head p{overflow-wrap:break-word;word-break:normal;hyphens:manual}'
+ '@media (max-width:640px){'
+ '#new .tablewrap{overflow-x:visible}'
+ '#new table.dense,#new table.dense tbody,#new table.dense tr,#new table.dense td{display:block;width:100%}'
+ '#new table.dense thead{display:none}'
+ '#new table.dense tr{padding:10px 12px;border-bottom:1px solid var(--line)}'
+ '#new table.dense td{border:0;padding:4px 0;overflow-wrap:break-word;word-break:normal}'
+ '#new table.dense td::before{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;opacity:.7;margin-bottom:2px}'
+ '#new table.dense td:nth-child(1)::before{content:"Change"}'
+ '#new table.dense td:nth-child(2)::before{content:"What it means for you"}'
+ '#new table.dense td:nth-child(3)::before{content:"Seen on the box"}'
+ '#new table.dense td code{overflow-wrap:anywhere}'
+ '}</style>')
+s_new=MOBILE_CSS+sec('new','What Changed In 2.15.0','Three Additions: A Native Style, An RTL Filter, Nuxt UI 4.12','Upstream 9a3f14f → b7d5353 (plugin 2.15.0). Every command below was run against an isolated scratch clone at b7d5353, 7 Nov 2026. The installed fleet copy is still the older 79-style version until it is re-copied, so these flags are not there yet.',
  table(['Change','What it means for you','Seen on the box'],[
   ['<b>Apple Native Experience</b> style (row 90, <code>apple-native-experience</code>)','A platform style for apps that should feel like iOS / iPadOS / macOS: system type, semantic adaptive colours, 44px targets. It explicitly does not require Liquid Glass or blur.','<code>"apple native" --domain style -n 1</code> → Status active, Type Platform/System, <code>rtl_level: full</code>'],
   ['Style count 79 → 80 searchable, 50 → 51 active','That one new style is the whole count change. 9 more rows are deprecated and stay out of search.','<code>catalog-summary.json</code>: total 89, searchable 80, active 51'],
