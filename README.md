@@ -27,7 +27,7 @@ Each doc quotes its source repo and checks every quote at build time (build fail
 | `MATTPOCOCK_SKILLS_SRC` | github.com/mattpocock/skills @ 5beb35b (the five `mattpocock-*` docs) |
 | `IMPECCABLE_SRC` | github.com/pbakaus/impeccable @ 9368675 (`pbakaus-impeccable`) |
 | `HALLMARK_SRC` | github.com/nutlope/hallmark @ 7ec8682 (`nutlope-hallmark`) |
-| `UIUXPROMAX_SRC` | github.com/nextlevelbuilder/ui-ux-pro-max-skill @ 9a3f14f (`nextlevelbuilder-ui-ux-pro-max`) |
+| `UIUXPROMAX_SRC` | github.com/nextlevelbuilder/ui-ux-pro-max-skill @ b7d5353 (`nextlevelbuilder-ui-ux-pro-max`) |
 | `INDRAYAM_V1_SRC` | the `v1/` folder of the indrayam.com site (for `style.css`) |
 
 A missing source stops the build with a message naming the var. You only need the sources for the docs you rebuild.
