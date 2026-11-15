@@ -3,7 +3,7 @@ sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from skdoc import *
 from config import src, asset
 R=src('DRAWIO_SRC')
-D=Doc('drawio',R,'https://github.com/jgraph/drawio-mcp/blob/639186a/')
+D=Doc('drawio',R,'https://github.com/jgraph/drawio-mcp/blob/87a7a2a/')
 S='plugins/cursor/skills/drawio/SKILL.md'; T='mcp-tool-server/src/index.js'
 OLD=json.load(open(asset('drawio','gallery.json')))
 gi=[]
@@ -66,7 +66,7 @@ TL=[('open_drawio_xml','Opens the draw.io editor with a diagram from draw.io XML
  ('list_pages','Lists the pages (diagrams) in a local .drawio file without loading full page content. '),('get_page','Reads one page (diagram) from a local .drawio file and returns its raw mxGraphModel '),
  ('set_page','Replaces the content of one page (diagram) in a local .drawio file with new '),('search_shapes','Search the draw.io shape library by keywords. ')]
 for n,t in TL:
-    M.append(dict(id=n,name=n,group='MCP tools',small='tool',pills=['@drawio/mcp 1.11.0'],tag=D.Q(t.strip(),T),invoke=f'{n}(…)',how=[],quotes=[],lesson='The skill and the MCP server share modules; the skill is the file-writing path.',files=[T],src=D.blob+T,img=''))
+    M.append(dict(id=n,name=n,group='MCP tools',small='tool',pills=['@drawio/mcp 1.12.0'],tag=D.Q(t.strip(),T),invoke=f'{n}(…)',how=[],quotes=[],lesson='The skill and the MCP server share modules; the skill is the file-writing path.',files=[T],src=D.blob+T,img=''))
 # --- sections
 hro=hero('Skill explainer · jgraph/drawio-mcp','Draw.io',4,
  'Every diagram becomes a <mark>native .drawio file first</mark>, then whatever format you asked for.',
@@ -85,15 +85,17 @@ s_icons=sec('icons','Shapes, Icons And macOS (1.2.6)','Look Up Icons, Find The R
   f'<b>Output.</b> {Q("prints `title width×height style` lines; use a style as is:")}',
   f'<b>macOS CLI.</b> {Q("this prints the first of `drawio` on PATH (Homebrew), `/Applications`, the per-user `~/Applications` and Spotlight, or nothing if draw.io is absent:")}',
   f'<b>Use the real binary.</b> {Q("Call the binary inside the `.app`: a copy or symlink outside it dies with `Unable to find helper app`.")}',
-  '<b>File naming.</b> The File naming section no longer tells you to delete the <code>.mmd</code> or intermediate <code>.drawio</code>; the workflow steps above it still do.'])+
- '<pre><code>node &lt;skill-folder&gt;/scripts/find-shapes.js "aws4 lambda" "github" "slack"\n\n# macOS: which draw.io will the skill use?\n{ command -v drawio; ls /Applications/draw.io.app/Contents/MacOS/draw.io ~/Applications/draw.io.app/Contents/MacOS/draw.io\n  mdfind "kMDItemCFBundleIdentifier == \'com.jgraph.drawio.desktop\'" | sed \'s|$|/Contents/MacOS/draw.io|\'; } 2&gt;/dev/null | head -1</code></pre>')
+  '<b>File naming.</b> The File naming section no longer tells you to delete the <code>.mmd</code> or intermediate <code>.drawio</code>; the workflow steps above it still do.',
+  '<b>MCP <code>icon=name</code> (not the plugin).</b> Plugin 1.2.6 is unchanged. On the MCP servers at 87a7a2a, a vertex style can name an icon instead of guessing an <code>mxgraph.*</code> stencil: <code>icon=aws lambda</code>. That is upstream source, not runtime-tested here; see Servers.'])+
+ code('node <skill-folder>/scripts/find-shapes.js "aws4 lambda" "github" "slack"\n\n# macOS: which draw.io will the skill use?\n{ command -v drawio; ls /Applications/draw.io.app/Contents/MacOS/draw.io ~/Applications/draw.io.app/Contents/MacOS/draw.io\n  mdfind "kMDItemCFBundleIdentifier == \'com.jgraph.drawio.desktop\'" | sed \'s|$|/Contents/MacOS/draw.io|\'; } 2>/dev/null | head -1'))
 AR='mcp-app-server/README.md'; AA='mcp-app-server/AGENTS.md'; TR='mcp-tool-server/README.md'
-s_srv=sec('servers','App Server 1.7.0 And Tool Server 1.11.0','Download, Layout Check, Self-Hosted Editor','Read from upstream source at 639186a. Neither server was installed or test-run on this box.',
- callouts([f'<b>PNG/SVG from the viewer.</b> {D.Q("Copy the diagram XML; download it as a `.drawio` file, PNG or SVG and copy it as a PNG where the host allows it",AR)}.',
-  f'<b>Rendering feedback.</b> {D.Q("The XML doesn\'t tell the model how wide a label comes out",AA)}. The viewer adds a layout check (and a PNG on hosts that take images) to model context.',
-  f'<b>One-click layout fix.</b> {D.Q('the toolbar shows a chip, "Fix N issues"',AA)} when the check found something and the host can take a follow-up.',
-  f'<b>Self-hosted editor.</b> {D.Q("Set `DRAWIO_BASE_URL` to a self-hosted draw.io",AR)} for Open in draw.io and the link given when the host has no inline viewer.',
-  f'<b>Link only.</b> {D.Q("Set `DRAWIO_BROWSER` to `off` to get only the URL.",TR)} Headless agents, CI and SSH skip launching a browser.']))
+IR='shared/icon-resolver.js'; SH='shared/diagram-shorthand.js'; EW='shared/edge-waypoints.js'
+s_srv=sec('servers','App Server 1.9.0 And Tool Server 1.12.0','Icons By Name, Table Shorthands, Connector Check','Read from upstream source at 87a7a2a. Plugin 1.2.6 is unchanged. Neither server was installed or test-run on this box.',
+ callouts([f'<b>PNG/SVG from the viewer.</b> {D.Q("Copy the diagram XML; download it as a `.drawio` file, PNG or SVG and copy it as a PNG or SVG where the host allows it",AR)}. {D.Q("Copy as SVG writes what draw.io\'s does",AA)}.',
+  f'<b>Icons by name.</b> {D.Q("`icon=aws lambda` in a vertex style stands for the official icon of that",IR)} service. Write <code>icon=aws lambda</code>, <code>icon=azure functions</code>, <code>icon=gcp pub sub</code>, or <code>icon=kubernetes pod</code>; the resolver fills in the official style. Upstream source only — not runtime-tested here.',
+  f'<b>Table-row and role XML.</b> {D.Q('rows="PK id|FK author_id|title"',SH)} expands into stacked table cells. {D.Q("role=step, decision, start, end, error, data,",SH)} plus <code>external</code> and <code>container</code>, pick the calm-theme shape and color.',
+  f'<b>Connector layout check.</b> {D.Q("one line per connector with everything found on it",AA)}. {D.Q("This pass moves such a waypoint onto the connection point\'s line",EW)} when it sits less than 3 px off a fixed port, so the router adds no jog at the shape.',
+  f'<b>Self-hosted / link only.</b> {D.Q("Set `DRAWIO_BASE_URL` to a self-hosted draw.io",AR)}. {D.Q("Set `DRAWIO_BROWSER` to `off` to get only the URL.",TR)} The layout-fix chip remains: {D.Q('the toolbar shows a chip, "Fix N issues"',AA)}.']))
 s_gal=sec('gallery','Gallery','60 Renders','ELK layouts and Mermaid conversions rendered on this box, plus the repo’s own gallery. Click to enlarge.',gchips('gdr',GK)+gal('gdr',gi))
 s_mod=f'<section id="modules">{head("Under The Hood","Eight Shared Modules Feed Two Servers","The skill’s inline repair step is a small version of repair-xml.js. I imported each module and ran it on test input.")}{explorer("md","modules")}</section>'
 s_find=sec('findings','What I Found Running It','Thoroughly Tested; The CLI Is The Dependency','All runs used a copy of the repo in /tmp, with nice and timeout, at commit 05c1747.',
@@ -102,7 +104,7 @@ s_find=sec('findings','What I Found Running It','Thoroughly Tested; The CLI Is T
   ['SKILL.md repair one-liner','fixed','Prose, fence, unescaped label and self-parented layer.'],['SKILL.md URL one-liner','round-trips','247-character link for a tiny diagram.'],
   ['Shared modules','work','repair, normalize, mermaid-elk and shape search all behaved as documented.'],['5 SKILL.md ports','byte-identical','A CI workflow enforces it.'],
   ['draw.io Desktop CLI','not on the box','Mermaid conversion, layout and export need it.'],
-  ['app-server 1.7.0, tool-server 1.11.0','upstream source only','Not installed or test-run here. PNG/SVG download and copy, layout-fix chip, rendering layout check, DRAWIO_BASE_URL, DRAWIO_BROWSER=off.']])+
+  ['app-server 1.9.0, tool-server 1.12.0','upstream source only','Not installed or test-run here. Icons by name (icon=aws lambda), table-row and role XML shorthands, connector layout check with waypoint snapping, Copy as SVG. Plugin 1.2.6 unchanged. Draw.io Desktop 32.6.10 unchanged and not CLI-tested on this box.']])+
  verdict([('Gap','Mermaid, layouts and export all need the desktop app','Without it the skill can only write XML and a URL. The skill says so and falls back cleanly.'),
   ('Gap','References load from main, unpinned','SKILL.md tells the agent to fetch xml-essentials.md and mermaid-reference.md from raw.githubusercontent.com/…/main, so a skill pinned at one commit reads rules from another.'),
   ('Cost','Two repair implementations','The inline one-liner and repair-xml.js do overlapping work; only the module reports what it changed or handles leaked tool-call tags.'),
@@ -112,10 +114,10 @@ s_find=sec('findings','What I Found Running It','Thoroughly Tested; The CLI Is T
 s_steal=sec('yours','Build Your Own','What To Steal','',steal([('One native artifact, many deliveries.','Write the source format first; derive the rest.'),('Prefer a layout engine to model coordinates.','Ask for structure, not positions.'),
  ('Measure the model’s mistakes, then fix them in code.','repair-xml.js says its three fixes covered all 15 broken diagrams out of 473.'),('Detect the environment exhaustively.','The Windows chain checks PATH, install paths, registry and other drives before giving up.'),('Keep ports identical by CI.','')]))
 s_src=sec('sources','Sources','Everything Here Is Checked','Each quote on this page is compared with its source file at build time; the build fails on any mismatch.',
- srcs([D.L(S),D.L(T),D.L('shared/repair-xml.js'),D.L(AR),D.L(TR),D.L(AA),D.L('.github/workflows/check-skill-sync.yml'),'<a href="https://github.com/jgraph/drawio-mcp">github.com/jgraph/drawio-mcp</a>']))
+ srcs([D.L(S),D.L(T),D.L('shared/repair-xml.js'),D.L(IR),D.L(SH),D.L(EW),D.L(AR),D.L(TR),D.L(AA),D.L('.github/workflows/check-skill-sync.yml'),'<a href="https://github.com/jgraph/drawio-mcp">github.com/jgraph/drawio-mcp</a>']))
 nav=[('top','Overview'),('how','How it works'),('pipeline','Pipeline'),('icons','Icons & macOS'),('servers','Servers'),('gallery','Gallery'),('modules','Under the hood'),('findings','Findings'),('yours','Build your own'),('sources','Sources')]
 JS=explorer_js('pp','dr-pp',P,['Author','Layout','Output'])+explorer_js('md','dr-md',M,['Shared modules','MCP tools'])
 D.finish()
 n=build('drawio','Inside Draw.io',nav,hro+s_how+s_pipe+s_icons+s_srv+s_gal+s_mod+s_find+s_steal+s_src,
- 'Compiled 22 Oct 2026, updated 8 Nov 2026 to jgraph/drawio-mcp @ 639186a (plugin 1.2.6 unchanged; app-server 1.7.0: PNG/SVG download and copy, one-click layout-fix chip, rendering layout check in model context, DRAWIO_BASE_URL for a self-hosted editor; tool-server 1.11.0: DRAWIO_BROWSER=off returns the link only. Skill still documents `--all-pages` as PDF only. Upstream draw.io Desktop 32.6.10 — not installed or CLI-tested on this box; last runtime-tested desktop was 32.6.1 — ships Electron 44.10.2, writes one SVG with a view per page for `--all-pages -f svg`, and stops a malformed PNG from hanging the CLI. Explore is already in 32.6.x, noted at 32.6.1, not new in 32.6.10. Server packages were not installed or test-run here; run results remain from 05c1747) · every quote is checked against its source file at build time · not affiliated with draw.io Ltd.',JS)
+ 'Compiled 22 Oct 2026, updated 15 Nov 2026 to jgraph/drawio-mcp @ 87a7a2a (plugin 1.2.6 unchanged; app-server 1.9.0 / tool-server 1.12.0: icons by name (`icon=aws lambda`), table-row and role XML shorthands, connector layout check with waypoint snapping, Copy as SVG. Skill still documents `--all-pages` as PDF only. Upstream draw.io Desktop 32.6.10 — not installed or CLI-tested on this box; last runtime-tested desktop was 32.6.1. Server packages were not installed or test-run here; run results remain from 05c1747) · every quote is checked against its source file at build time · not affiliated with draw.io Ltd.',JS)
 print('built',n,len(P),len(M),len(gi))

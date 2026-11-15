@@ -3,15 +3,15 @@ sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from skdoc import *
 from config import src, asset
 R=src('DIAGRAM_DESIGN_SRC'); SK='skills/diagram-design/'
-D=Doc('diagram-design',R,'https://github.com/cathrynlavery/diagram-design/blob/e57eda6/')
+D=Doc('diagram-design',R,'https://github.com/cathrynlavery/diagram-design/blob/f6db0de/')
 SKM=SK+'SKILL.md'; skill=D.rd(SKM)
 # --- parse §3 guide
 rows=re.findall(r'^\| (.+?) \| \*\*(.+?)\*\* \| \[type-([\w-]+)\.md\]',skill,re.M)
-assert len(rows)==45,len(rows)
-FAM={'Structure':'architecture architecture-delta it-state nested tree org-chart layers deployment dependency high-level medallion dp-integration dp-security-matrix uml-class er db-schema',
- 'Flow & behavior':'flowchart sequence state swimlane process data-flow loop sankey service-blueprint journey',
+assert len(rows)==50,len(rows)
+FAM={'Structure':'architecture architecture-delta it-state nested tree org-chart layers deployment dependency high-level medallion dp-integration dp-security-matrix uml-class er db-schema requirement-traceability',
+ 'Flow & behavior':'flowchart sequence state swimlane process data-flow loop sankey service-blueprint journey steps event-modeling sbgn',
  'Time & planning':'timeline gantt kanban story-map wardley fishbone',
- 'Charts':'bar waterfall line scatter heatmap treemap radar polar quadrant venn pyramid',
+ 'Charts':'bar waterfall line scatter heatmap treemap radar polar quadrant venn pyramid unit-grid',
  'Spatial':'exploded axonometric-plan'}
 fam={t:f for f,ts in FAM.items() for t in ts.split()}
 H={ # hand-written invoke + lesson per type
@@ -22,6 +22,7 @@ H={ # hand-written invoke + lesson per type
 'sequence':("Sequence diagram of the OAuth authorization-code flow between browser, app and IdP.","Time runs down, actors run across. Labels belong on messages, not on lifelines. New in 2.6.142: verify-sequence-oauth.py requires ordinary OAuth returns and a visible ALT operator in a two-region fragment."),
 'state':("State machine for an order: placed, paid, shipped, cancelled, refunded.","Guards on transitions are where the bugs live; label them."),
 'er':("ER diagram for users, teams, memberships and invites.","Model relationships, not storage. Cardinality markers do the talking."),
+'steps':("Draw a five-step method: frame, research, synthesize, decide, ship.","The rail is the order. Do not add arrows between adjacent stages, and do not space them as elapsed time."),
 'timeline':("Timeline of the product's releases since 2023.","Position encodes time; keep spacing honest to the dates."),
 'swimlane':("Swimlane of the hiring process across recruiter, manager and candidate.","Handoffs are the story. A lane crossing is a cost worth showing."),
 'quadrant':("Plot our roadmap items on effort vs impact.","Two axes, four regions, named. Without named quadrants it is just a scatter plot."),
@@ -42,7 +43,8 @@ H={ # hand-written invoke + lesson per type
 'heatmap':("Heatmap of deploys by weekday and hour.","Fill encodes value; one sequential scale, labeled."),
 'line':("Line chart of weekly active users, or a slopegraph of before/after.","Pick the variant by the question: trend, two states, distribution, or rank."),
 'gantt':("Gantt of the Q3 launch plan.","Bars on a real time axis; dependencies only where they constrain."),
-'scatter':("Scatter of latency vs payload size.","Two continuous variables; bubble adds a third, beeswarm drops to one. New in 2.6.136: a box plot variant compares five-number summaries for a few groups, checked by verify-box-plot.py."),
+'scatter':("Scatter of latency vs payload size.","Two continuous variables; bubble adds a third, beeswarm drops to one. Box plot (2.6.136) compares five-number summaries; later verifier fixes refuse a mark whose paint draws nothing, a label hidden by CSS, and attributes read as the HTML parser does."),
+'unit-grid':("Show release readiness as 64 of 100 checks complete.","One mark equals one unit: a 10×10 waffle of 100 cells, never a partial fill."),
 'high-level':("High-level view of the data stack on Kubernetes.","An executive overview: fewer nodes, bigger groupings."),
 'process':("Process diagram of the data handoffs from intake to report.","Actors and sequential steps; the handoff artifact gets named."),
 'medallion':("Medallion diagram: bronze, silver, gold with access policies.","Tiers are quality levels; policies attach to tiers, not tables."),
@@ -56,7 +58,10 @@ H={ # hand-written invoke + lesson per type
 'journey':("User journey for first-time onboarding with feelings per stage.","Actions and emotion on one stage axis."),
 'service-blueprint':("Service blueprint for returns, with the line of visibility.","What the customer sees vs what the service hides."),
 'deployment':("Deployment diagram: zones, hosts, replicas, ports.","Where things run, not what calls what."),
-'dependency':("Dependency graph of internal packages with cycles.","Fan-in and cycles are why it isn't a tree."),
+'dependency':("Dependency graph of internal packages with cycles.","Fan-in and cycles are why it isn't a tree. New in 2.6.148: an arc-diagram variant puts nodes on one rail; height is skip-span."),
+'sbgn':("SBGN process description of carotenoid cleavage: species, processes, one compartment.","Bipartite: species never connect to species. Process squares sit between them."),
+'requirement-traceability':("Trace account-access requirements from source through design to tests, with gaps explicit.","Four columns make an absent link visible. Do not invent a test ID."),
+'event-modeling':("Event-model checkout: place order, payment captured, order summary.","Command, event, and read model in three lanes. Stage order is not elapsed time."),
 'uml-class':("UML class diagram for the payment domain.","Operations and relationships; other UML routes elsewhere."),
 'story-map':("Story map of the MVP with the release cut line.","Backbone across, slices down, one cut line."),
 'db-schema':("Database schema with SQL types, constraints and FKs.","Physical, not logical: types and indexes belong on it."),
@@ -100,10 +105,10 @@ dict(id='export',name='/export-diagram',group='Commands',small='svg+png',pills=[
  quotes=D.qs(['**PNG requested but Playwright not installed** → surface the install instruction from the reference verbatim and stop. Do **not** auto-install.','**Source is `assets/index.html`** (the gallery, multiple SVGs in one file) → refuse and ask which specific diagram file.'],C+'export-diagram.md'),
  lesson='Write the refusals down. Eight numbered edge cases make the command predictable.',files=[C+'export-diagram.md',S+'export_svg.py',S+'export_png.py'],src=D.blob+C+'export-diagram.md'),
 ]
-for kind,ext,acc in [('drawio','draw.io','Accepts `.drawio`, `.drawio.xml`, `.xml`, `.drawio.png`, and `.drawio.svg`.'),('excalidraw','Excalidraw','PNG/SVG exports are rejected by the extractor — ask for the saved scene.'),('mermaid','Mermaid','Accepts `.mmd`, `.mermaid`, and Markdown files containing fenced `mermaid` blocks.')]:
+for kind,ext,acc in [('drawio','draw.io','Accepts `.drawio`, `.drawio.xml`, `.xml`, `.drawio.png`, and `.drawio.svg`.'),('excalidraw','Excalidraw','PNG/SVG exports are rejected by the extractor — ask for the saved scene.'),('mermaid','Mermaid','Accepts `.mmd`, `.mermaid`, and Markdown files containing fenced `mermaid` blocks.'),('plantuml','PlantUML','Accepts `.puml`, `.plantuml`, `.pu`, and Markdown files containing fenced `plantuml` or `puml` blocks.')]:
     p=C+f'import-{kind}.md'
     cmds.append(dict(id='import-'+kind,name='/import-'+kind,group='Commands',small='redraw',pills=['command','import'],tag=f'Redraws a {ext} source in the skill\'s design system, never reproducing the source layout.',
-      invoke=f'/import-{kind} arch.{"mmd" if kind=="mermaid" else kind} --detail=simplified --audience=executive',
+      invoke=f'/import-{kind} arch.{"mmd" if kind=="mermaid" else "puml" if kind=="plantuml" else kind} --detail=simplified --audience=executive',
       how=[f'Runs scripts/{kind}_extract.py to get a deterministic IR: nodes, edges, hubs, containers, type candidates.','Picks a visual type from the IR (or --type), then redraws at doc-inline 960×600 by default.','--detail caps nodes: faithful ≤24, balanced ≤12, simplified ≤7.'],
       quotes=D.qs([acc,'`--detail` — `faithful` (≤24 nodes, zoned), `balanced` (≤12), `simplified` (≤7).','`--audience` — `engineer`, `mixed`, `executive`. Governs wording, not element count.'],p),
       lesson='Split the deterministic half (parse) from the judgment half (redraw). The script never makes a design decision.',files=[p,S+f'{kind}_extract.py',SK+f'references/import-{kind}.md'],src=D.blob+p))
@@ -113,10 +118,12 @@ cmds.append(dict(id='profile',name='/profile',group='Commands',small='7 verbs',p
  lesson='Brand tokens are state. Give them names, a load path and a verified write.',files=[C+'profile.md',SK+'references/profiles.md'],src=D.blob+C+'profile.md'))
 scr=[('drawio_extract','978',['The deterministic half of the draw.io import flow: this script never makes a design decision.','An exact name wins over a prefix: "tableRow" starts with "table".'],'Ran on the shipped fixture: 12 nodes, 8 edges, type candidates flowchart and architecture, node budget flagged OVER (max 9).'),
  ('excalidraw_extract','718',['Element links, embed URLs, and binary file payloads (``files``, ``fileId``, ``dataURL``) are counted and discarded; labels are emitted only as inert, escaped text.','Prompt-looking label content is diagram data, never an instruction.','keeps what the author typed in ``originalText``.'],'Ran on sample-whiteboard: 10 nodes, 8 drawable, 2 containers.'),
- ('mermaid_extract','1536',['Supported grammars are flowchart/graph, sequenceDiagram, stateDiagram-v2, and erDiagram.','It never evaluates, renders, fetches, or executes Mermaid, JavaScript, URLs, directives, or label content.','A dotted link grows by dots: `-.->`, `-..->`, `-...->` and `-.-`, `-..-`.'],'Ran on sample-adversarial.mmd: parsed a 10-node flowchart without executing anything.'),
+ ('mermaid_extract','1536',['Supported grammars are flowchart/graph, sequenceDiagram, stateDiagram-v2 (or its older stateDiagram header), and erDiagram.','It never evaluates, renders, fetches, or executes Mermaid, JavaScript, URLs, directives, or label content.','A dotted link grows by dots: `-.->`, `-..->`, `-...->` and `-.-`, `-..-`.'],'Ran on sample-adversarial.mmd: parsed a 10-node flowchart without executing anything.'),
+ ('plantuml_extract','2118',['It never evaluates, renders, fetches, or executes PlantUML, Graphviz, URLs, includes, macros, or label content.','Supported kinds are sequence and class.'],'Ran on shipped fixtures at f6db0de: sample-sequence.puml 3 nodes / 8 edges (sequence); sample-class.puml 4 nodes / 3 edges (UML class); sample-adversarial.puml parsed 2 nodes / 1 edge and kept prompt-looking note text as data. Exit 0. Did not invoke plantuml.jar.'),
  ('export_svg','1610',['Class-styled diagrams keep their page ``<style>`` rules by embedding a scoped copy inside the SVG (otherwise every shape falls back to black).'],'Exported example-waterfall.html to a 9 KB standalone SVG.'),
  ('export_png','93',['Rasterize the first SVG in a diagram HTML file with Playwright.'],'Rasterized the same file to a 38 KB PNG at scale 2 once Chromium was installed.'),
- ('self_check','723',['Checks the accessible-SVG contract, the single-file safety rules'],'Run over all 217 shipped asset pages: 215 OK; it fails icons.html and index.html, which are not diagrams.')]
+ ('self_check','723',['Checks the accessible-SVG contract, the single-file safety rules'],'Run over all 217 shipped asset pages: 215 OK; it fails icons.html and index.html, which are not diagrams.'),
+ ('verify_geometry','696',['Verify no diagram label mask is clipped by a node painted after it.','It also checks connector routing'],'Ran --all at f6db0de from the skill scripts directory: 239 shipped HTML assets, 0 findings, exit 0. Stdlib only; no network.')]
 for n,l,qq,ran in scr:
     p=S+n+'.py'
     cmds.append(dict(id=n,name=n+'.py',group='Skill scripts',small=f'{D.lines(p)} l',pills=['script',f'{D.lines(p)} lines','stdlib' if n not in('export_png',) else 'Playwright'],
@@ -129,9 +136,9 @@ uap=re.findall(r'^\| ([^|]+?) \| ([^|]+?) \|$',secblock(skill,'4\\. Universal'),
 uaprows=[[D.Q(a,SKM),D.Q(b,SKM)] for a,b in uap]
 # --- sections
 hro=hero('Skill explainer · cathrynlavery/diagram-design','Diagram Design',8,
- '<mark>Forty-five editorial diagram types</mark>, one rule above all: delete until nothing can be removed.',
- f'A Claude/Cursor skill that writes self-contained HTML with inline SVG in a skinnable editorial system. It routes a request through 9 semantic patterns to 45 type references, ships importers for draw.io, Excalidraw and Mermaid, and backs its charts with geometry verifiers. I read the skill, ran all 74 repository checks and the 6 shipped scripts. {D.Q("The highest-quality move is usually deletion.",SKM)}',
- [('v2.6.142','plugin version'),('e57eda6','commit, 6 Nov 2026'),('45','visual types'),('6','commands'),('6','skill scripts'),('74/74','repo checks pass')],
+ '<mark>Fifty editorial diagram types</mark>, one rule above all: delete until nothing can be removed.',
+ f'A Claude/Cursor skill that writes self-contained HTML with inline SVG in a skinnable editorial system. It routes a request through 9 semantic patterns to 50 type references, ships importers for draw.io, Excalidraw, Mermaid and PlantUML, and backs its charts with geometry verifiers. I read the skill at f6db0de, ran plantuml_extract.py on the shipped fixtures and verify_geometry.py --all (239 assets, 0 findings). {D.Q("The highest-quality move is usually deletion.",SKM)}',
+ [('v2.6.164','plugin version'),('f6db0de','commit, 12 Nov 2026'),('50','visual types'),('7','commands'),('8','skill scripts'),('239/239','geometry check')],
  [('Who it is for','Anyone who wants a diagram that looks designed rather than generated: architecture, charts, journeys, maps.'),('What you get','One HTML file per diagram, optional SVG/PNG export, and a brand profile you can save and reload.')])
 s_how=sec('how','How It Works','It Picks A Pattern, Then A Type, Then Asks','The skill is a router. Behavior picks the pattern, the pattern picks the nearest layout, and the plan is confirmed before anything is drawn.',
  callouts([f'<b>Style gate.</b> {D.Q("If they are still the shipped defaults (paper `#f5f5f5`, ink `#2d3142`, accent `#bf4520`), **pause and ask the user**",SKM)}.',
@@ -141,20 +148,22 @@ s_how=sec('how','How It Works','It Picks A Pattern, Then A Type, Then Asks','The
   f'<b>Density.</b> {D.Q("**Target density: 4/10.** Enough to be technically complete. Not so dense it needs a guide. Above 9 nodes, it\'s probably two diagrams.",SKM)}'])+
  '<h3>The 9 Semantic Patterns</h3>'+table(['Behavioral trigger','Pattern','Nearest type'],sprows))
 s_types=f'<section id="types">{head("The Types","Every Type Is A Reference File With Rules And Anti-Patterns","Pick a type. The tag is the row from the SKILL.md §3 guide; How it works lists the reference file’s layout conventions; the quotes are its own anti-patterns, all checked at build time.")}{explorer("ty","types")}</section>'
-s_gal=sec('gallery','Gallery','The Repo’s Own Renders For 45 Types','Screenshots shipped in docs/screenshots, one per type. Click to enlarge.',gchips('gdd',FK)+gal('gdd',GI))
-s_cmd=f'<section id="commands">{head("Commands And Scripts","Importers Parse; The Skill Redraws","Six slash commands drive the workflow. Six stdlib-first scripts do the deterministic work, and I ran each one.")}{explorer("cm","commands")}</section>'
+s_gal=sec('gallery','Gallery','The Repo’s Own Renders For 50 Types','Screenshots shipped in docs/screenshots, one per type. Click to enlarge.',gchips('gdd',FK)+gal('gdd',GI))
+s_cmd=f'<section id="commands">{head("Commands And Scripts","Importers Parse; The Skill Redraws","Seven slash commands drive the workflow. Eight stdlib-first scripts do the deterministic work; I ran the two new ones at this pin, and the earlier six on a prior checkout.")}{explorer("cm","commands")}</section>'
 s_ap=sec('antipatterns','Taste','It Names The Slop It Refuses To Make','The universal anti-patterns from SKILL.md §4, verbatim.',table(['Anti-pattern','Why it fails'],uaprows))
-s_find=sec('findings','What I Found Running It','The Code Is Solid; The Runner Is Inconsistent','I ran 74 repository checks (every scripts/test-*.py and verify-*.py) plus the 6 skill scripts on the box, with nice and timeout, at commit 7a12007.',
+s_find=sec('findings','What I Found Running It','The Code Is Solid; The Runner Is Inconsistent','The 74 repository checks plus the original 6 skill scripts were run at commit 7a12007. At f6db0de I ran only the two new skill scripts (stdlib, no network). The repo now has 91 test-/verify- scripts; those were not re-run here.',
  table(['Run','Result','Note'],[
-  ['74 repo checks, first pass','59 pass, 15 fail','12 verifiers exit 2 when given no paths; 3 Playwright tests fail before Chromium is installed.'],
-  ['Same 15, rerun correctly','15/15 pass','After <code>playwright install chromium</code> and adding <code>--all</code> (or <code>--shipped</code> for verify-motion).'],
-  ['self_check.py over 217 assets','215 OK, 2 FAIL','icons.html and index.html are galleries, not diagrams; exit code 1 for the batch.'],
-  ['3 extractors on fixtures','pass','draw.io: 12 nodes / 8 edges, node budget flagged OVER (max 9).'],
-  ['export_svg / export_png','pass','9 KB SVG and 38 KB PNG from example-waterfall.html.'],
+  ['74 repo checks, first pass (7a12007)','59 pass, 15 fail','12 verifiers exit 2 when given no paths; 3 Playwright tests fail before Chromium is installed.'],
+  ['Same 15, rerun correctly (7a12007)','15/15 pass','After <code>playwright install chromium</code> and adding <code>--all</code> (or <code>--shipped</code> for verify-motion).'],
+  ['self_check.py over 217 assets (7a12007)','215 OK, 2 FAIL','icons.html and index.html are galleries, not diagrams; exit code 1 for the batch.'],
+  ['3 extractors on fixtures (7a12007)','pass','draw.io: 12 nodes / 8 edges, node budget flagged OVER (max 9).'],
+  ['export_svg / export_png (7a12007)','pass','9 KB SVG and 38 KB PNG from example-waterfall.html.'],
+  ['plantuml_extract.py fixtures (f6db0de)','pass','sequence 3n/8e, class 4n/3e, adversarial labels kept as data. No PlantUML runtime.'],
+  ['verify_geometry.py --all (f6db0de)','239 files, 0 findings','Label-mask paint order plus connector routing (diagonal, border-riding, corner ports, stacked trunks).'],
   ['git status after all runs','clean','No files written into the repo.']])+
  verdict([('Gap','Verifier flags disagree','Most verifiers take <code>--all</code>; verify-motion takes <code>--shipped</code> and rejects <code>--all</code>. Without a flag they print usage and exit 2, which reads like a failure in CI.'),
   ('Gap','Playwright is a silent prerequisite','Three tests and PNG export need a downloaded Chromium. The export command documents this; the test scripts just crash with a stack trace.'),
-  ('Gap','Version drift','plugin.json says 2.6.142; SKILL.md metadata says 2.6.'),
+  ('Gap','Version drift','plugin.json says 2.6.164; SKILL.md metadata says 2.6.'),
   ('Bug','Escaped IR headers','drawio_extract and excalidraw_extract print the file name markdown-escaped (<code>sample\\-architecture\\.drawio</code>); mermaid_extract does not.'),
   ('Copy','Untrusted-input stance in parsers','The Excalidraw and Mermaid extractors treat labels as data and discard links and payloads. That is the right default for anything an agent reads.'),
   ('Copy','Verifiers for the chart math','Waterfall, Sankey, beeswarm and others check the rendered geometry against declared values, so a plausible-but-wrong chart fails.')]))
@@ -167,5 +176,5 @@ nav=[('top','Overview'),('how','How it works'),('types','Types'),('gallery','Gal
 JS=explorer_js('ty','dd-ty',types,list(FAM))+explorer_js('cm','dd-cm',cmds,['Commands','Skill scripts'])
 D.finish()
 n=build('diagram-design','Inside Diagram Design',nav,hro+s_how+s_types+s_gal+s_cmd+s_ap+s_find+s_steal+s_src,
- 'Compiled 22 Oct 2026, updated 8 Nov 2026 to cathrynlavery/diagram-design @ e57eda6 (v2.6.142: Mermaid import reads longer dotted links; draw.io import classifies tableRow as table-row; Excalidraw import prefers originalText labels; sequence OAuth examples require ordinary returns and a visible ALT guard. 2.6.136: box plot variant on scatter. The 74 repo-check runs are from 7a12007; this refresh did not re-run them) · every quote is checked against its source file at build time · not affiliated with the author.',JS)
+ 'Compiled 22 Oct 2026, updated 15 Nov 2026 to cathrynlavery/diagram-design @ f6db0de (v2.6.164: five new types — unit grid, steps, event modeling, requirement traceability, SBGN — plus an arc-diagram variant on the existing dependency type; PlantUML import via plantuml_extract.py for sequence and class only; verify_geometry.py ships in the skill package. Import: Mermaid keeps hyphenated node ids, apostrophes in flowchart labels, ER cardinality word aliases, ER entity aliases, and the older stateDiagram header; compact dash/equals labels keep spaces and brackets. Box-plot verifier: refuses a bound mark whose paint draws nothing, a label hidden by a stylesheet rule, and attributes read as the HTML parser does (unquoted and valueless). plantuml_extract.py and verify_geometry.py were run at this pin; the 74 repo-check runs remain from 7a12007) · every quote is checked against its source file at build time · not affiliated with the author.',JS)
 print('built',n,'types',len(types),'cmds',len(cmds),'gallery',len(GI),'uap',len(uaprows),'sp',len(sprows))
