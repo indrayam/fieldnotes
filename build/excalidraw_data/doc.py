@@ -4,7 +4,7 @@ from skdoc import *
 from gal import uri
 from config import src, asset
 R=src('EXCALIDRAW_SRC')
-D=Doc('excalidraw',R,'https://github.com/yctimlin/mcp_excalidraw/blob/66b768b/')
+D=Doc('excalidraw',R,'https://github.com/yctimlin/mcp_excalidraw/blob/81720ac/')
 S='skills/excalidraw-skill/SKILL.md'; CS='skills/excalidraw-skill/references/cheatsheet.md'
 def Q(s,f=S): return D.Q(s,f)
 cs=D.rd(CS)
@@ -41,7 +41,7 @@ GC=list(dict.fromkeys(c['group'] for c in cli))
 hro=hero('Skill explainer · yctimlin/mcp_excalidraw','Excalidraw',0,
  'An agent draws on a <mark>live canvas, then screenshots its own work</mark> and fixes what it sees.',
  f'A skill, a CLI and an MCP server over one Excalidraw canvas. I read the skill and cheatsheet, ran the test suite, and drove every local CLI command against a private server. {Q("Pairing `describe` with `screenshot` is what makes this skill powerful.")}',
- [('66b768b','commit, 30 Oct 2026'),('v2.1.2','package'),(str(len(tools)),'MCP tools'),(str(len(cli)),'CLI commands'),('3','interfaces'),('5 suites','tests pass')],
+ [('81720ac','commit, 10 Nov 2026'),('v2.2.0','package'),(str(len(tools)),'MCP tools'),(str(len(cli)),'CLI commands'),('3','interfaces'),('5 suites','tests pass')],
  [('Who it is for','Agents drawing architecture or flow diagrams users will edit by hand.'),('What you get','An editable .excalidraw (or Obsidian .md) file, plus PNG or SVG.')])
 s_how=sec('how','How It Works','Plan The Grid, Draw, Screenshot, Fix','From SKILL.md.',callouts([
  f'<b>Pick an interface.</b> {Q("Three interfaces drive the same live canvas. Pick the first one that applies:")}',
@@ -69,5 +69,5 @@ s_src=sec('sources','Sources','Everything Here Is Checked','Each quote is compar
 nav=[('top','Overview'),('how','How it works'),('cli','CLI'),('gallery','Gallery'),('tools','MCP tools'),('findings','Findings'),('yours','Build your own'),('sources','Sources')]
 JS=explorer_js('cl','ex-cl',cli,GC)+explorer_js('mt','ex-mt',tools,GT)
 D.finish()
-n=build('excalidraw','Inside Excalidraw',nav,hro+s_how+s_cli+s_gal+s_mcp+s_find+s_steal+s_src,'Compiled 22 Oct 2026 from yctimlin/mcp_excalidraw @ 774a70c, updated 1 Nov 2026 to 66b768b (still v2.1.2: MCP file tools resolve symlinks and restrict file types; dark theme persists after copy link, copy as SVG and wrap in frame; ?element= links resolve after the scene loads; idle autosync loop fixed) · every quote is checked against its source file at build time · not affiliated with the author.',JS)
+n=build('excalidraw','Inside Excalidraw',nav,hro+s_how+s_cli+s_gal+s_mcp+s_find+s_steal+s_src,'Compiled 22 Oct 2026 from yctimlin/mcp_excalidraw @ 774a70c, updated 15 Nov 2026 to 81720ac (v2.2.0: MCP <code>get_selection</code> and CLI <code>selection</code> return the current canvas selection — selected element IDs and count; last selection change among connected tabs wins, in memory only. Not runtime-tested here; CLI session notes remain from the earlier private-port run) · every quote is checked against its source file at build time · not affiliated with the author.',JS)
 print('built',n,len(cli),len(tools),len(gi))
