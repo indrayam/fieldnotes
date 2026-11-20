@@ -3,7 +3,7 @@ sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from skdoc import *
 from config import src, asset
 R=src('DRAWIO_SRC')
-D=Doc('drawio',R,'https://github.com/jgraph/drawio-mcp/blob/87a7a2a/')
+D=Doc('drawio',R,'https://github.com/jgraph/drawio-mcp/blob/a7d1ead/')
 S='plugins/cursor/skills/drawio/SKILL.md'; T='mcp-tool-server/src/index.js'
 OLD=json.load(open(asset('drawio','gallery.json')))
 gi=[]
@@ -17,11 +17,11 @@ def row(name):
     m=re.search(r'^\| `%s` \| ([^|]+) \|$'%re.escape(name),D.rd(S),re.M); return m.group(1).strip()
 # --- pipeline explorer
 P=[]
-P.append(dict(id='mermaid',name='Mermaid',group='Author',small='preferred',pills=['needs desktop CLI','.mmd → .drawio'],tag=Q('The desktop CLI converts Mermaid to a native `.drawio` file and lays it out automatically, which is far more reliable than hand-positioning cells in XML.'),
- invoke='/drawio:drawio create a flowchart',how=[Q('**Prefer Mermaid** when the desktop CLI is available and the request is one of the standard types above.'),Q('Delete the `.mmd` afterward — the `.drawio` is the artifact.')],
- quotes=[[Q('**Always convert Mermaid to `.drawio` first, then export** — direct Mermaid → PNG export with `-e` is broken in current draw.io Desktop (the embedded-XML step crashes); the two-step path is reliable and produces an editable embed.'),S]],
+P.append(dict(id='mermaid',name='Mermaid',group='Author',small='preferred',pills=['CLI or Chrome','.mmd → .drawio'],tag=Q('Converted Mermaid is a native `.drawio` file, laid out automatically, which is far more reliable than hand-positioning cells in XML.'),
+ invoke='/drawio:drawio create a flowchart',how=[Q('**Prefer Mermaid** for the standard types above.'),Q('Delete the `.mmd` afterward — the `.drawio` is the artifact.')],
+ quotes=[[Q('**Always convert Mermaid to `.drawio` first, then export**: direct `.mmd` → PNG with `-e` crashes in current draw.io Desktop.'),S]],
  lesson='Let a real layout engine place nodes; ask the model only for structure.',files=[S,'shared/mermaid-reference.md'],src=D.blob+S,img='g4'))
-P.append(dict(id='xml',name='draw.io XML',group='Author',small='fallback',pills=['no CLI needed','repair pass'],tag=Q('**Use XML** for precise control, or as the universal fallback'),
+P.append(dict(id='xml',name='draw.io XML',group='Author',small='fallback',pills=['no CLI needed','repair pass'],tag=Q('**Use XML** for precise control, or when nothing can convert Mermaid'),
  invoke='/drawio:drawio pdf AWS architecture overview',how=[Q('Cell `id="0"` is the root layer'),Q('Cell `id="1"` is the default parent layer'),Q('Every edge needs a child `<mxGeometry relative="1" as="geometry" />` — a self-closing edge `mxCell` doesn\'t render')],
  quotes=[[Q('**NEVER include ANY XML comments (`<!-- -->`) in the output.**'),S]],
  extra='<div class="d-sec"><h4>What happened when I ran it</h4><p>I fed the SKILL.md repair one-liner a reply wrapped in prose and a code fence, with <code>R&amp;D &lt;b&gt;</code> in a label and layer 1 parented to itself. It stripped the text, escaped the attribute and re-parented the layer.</p></div>',
@@ -66,7 +66,7 @@ TL=[('open_drawio_xml','Opens the draw.io editor with a diagram from draw.io XML
  ('list_pages','Lists the pages (diagrams) in a local .drawio file without loading full page content. '),('get_page','Reads one page (diagram) from a local .drawio file and returns its raw mxGraphModel '),
  ('set_page','Replaces the content of one page (diagram) in a local .drawio file with new '),('search_shapes','Search the draw.io shape library by keywords. ')]
 for n,t in TL:
-    M.append(dict(id=n,name=n,group='MCP tools',small='tool',pills=['@drawio/mcp 1.12.0'],tag=D.Q(t.strip(),T),invoke=f'{n}(…)',how=[],quotes=[],lesson='The skill and the MCP server share modules; the skill is the file-writing path.',files=[T],src=D.blob+T,img=''))
+    M.append(dict(id=n,name=n,group='MCP tools',small='tool',pills=['@drawio/mcp 1.13.1'],tag=D.Q(t.strip(),T),invoke=f'{n}(…)',how=[],quotes=[],lesson='The skill and the MCP server share modules; the skill is the file-writing path.',files=[T],src=D.blob+T,img=''))
 # --- sections
 hro=hero('Skill explainer · jgraph/drawio-mcp','Draw.io',4,
  'Every diagram becomes a <mark>native .drawio file first</mark>, then whatever format you asked for.',
@@ -75,7 +75,7 @@ hro=hero('Skill explainer · jgraph/drawio-mcp','Draw.io',4,
  [('Who it is for','Agents in terminals (Claude Code, Codex, Copilot CLI) where diagrams cannot render inline.'),('What you get','A .drawio, an embedded-XML PNG/SVG/PDF, or an app.diagrams.net link.')])
 s_how=sec('how','How It Works','Author, Repair, Lay Out, Deliver','The skill is one pipeline with two ways in.',
  callouts([f'<b>Inline first.</b> {Q("**Inline viewer first.**")} In chats that render diagrams, the MCP create_diagram tool wins.',
-  f'<b>Author.</b> Mermaid when the desktop CLI exists; XML otherwise. {Q("If Mermaid was requested but no desktop CLI is available, author the same diagram as XML.")}',
+  f'<b>Author.</b> {Q("**Prefer Mermaid** for the standard types above.")} {Q("**Use XML** for precise control, or when nothing can convert Mermaid")}. {Q("PNG, SVG and PDF need the desktop CLI either way.")}',
   f'<b>Repair.</b> {Q("It changes nothing in a well-formed file, and needs only Node.js")}.',
   f'<b>Lay out.</b> {Q("The CLI\'s `--layout` step auto-positions XML-authored diagrams with the same ELK layouts as the editor\'s *Arrange ▸ Layout* menu and the draw.io MCP app server.")}',
   f'<b>Deliver.</b> {Q("Exports use double extensions")} so the name says the XML is inside.']))
@@ -86,14 +86,14 @@ s_icons=sec('icons','Shapes, Icons And macOS (1.2.6)','Look Up Icons, Find The R
   f'<b>macOS CLI.</b> {Q("this prints the first of `drawio` on PATH (Homebrew), `/Applications`, the per-user `~/Applications` and Spotlight, or nothing if draw.io is absent:")}',
   f'<b>Use the real binary.</b> {Q("Call the binary inside the `.app`: a copy or symlink outside it dies with `Unable to find helper app`.")}',
   '<b>File naming.</b> The File naming section no longer tells you to delete the <code>.mmd</code> or intermediate <code>.drawio</code>; the workflow steps above it still do.',
-  '<b>MCP <code>icon=name</code> (not the plugin).</b> Plugin 1.2.6 is unchanged. On the MCP servers at 87a7a2a, a vertex style can name an icon instead of guessing an <code>mxgraph.*</code> stencil: <code>icon=aws lambda</code>. That is upstream source, not runtime-tested here; see Servers.'])+
+  '<b>MCP <code>icon=name</code> (not the plugin).</b> Plugin 1.3.1. On the MCP servers at a7d1ead, a vertex style can name an icon instead of guessing an <code>mxgraph.*</code> stencil: <code>icon=aws lambda</code> (~1,750 AWS/Azure/GCP/K8s). Shipped in tool-server 1.13.0 and app-server 1.10.0; <code>create_diagram</code> and <code>open_drawio_xml</code> expand it. The plain CLI does not. Upstream source, not runtime-tested here; see Servers.'])+
  code('node <skill-folder>/scripts/find-shapes.js "aws4 lambda" "github" "slack"\n\n# macOS: which draw.io will the skill use?\n{ command -v drawio; ls /Applications/draw.io.app/Contents/MacOS/draw.io ~/Applications/draw.io.app/Contents/MacOS/draw.io\n  mdfind "kMDItemCFBundleIdentifier == \'com.jgraph.drawio.desktop\'" | sed \'s|$|/Contents/MacOS/draw.io|\'; } 2>/dev/null | head -1'))
 AR='mcp-app-server/README.md'; AA='mcp-app-server/AGENTS.md'; TR='mcp-tool-server/README.md'
 IR='shared/icon-resolver.js'; SH='shared/diagram-shorthand.js'; EW='shared/edge-waypoints.js'
-s_srv=sec('servers','App Server 1.9.0 And Tool Server 1.12.0','Icons By Name, Table Shorthands, Connector Check','Read from upstream source at 87a7a2a. Plugin 1.2.6 is unchanged. Neither server was installed or test-run on this box.',
- callouts([f'<b>PNG/SVG from the viewer.</b> {D.Q("Copy the diagram XML; download it as a `.drawio` file, PNG or SVG and copy it as a PNG or SVG where the host allows it",AR)}. {D.Q("Copy as SVG writes what draw.io\'s does",AA)}.',
-  f'<b>Icons by name.</b> {D.Q("`icon=aws lambda` in a vertex style stands for the official icon of that",IR)} service. Write <code>icon=aws lambda</code>, <code>icon=azure functions</code>, <code>icon=gcp pub sub</code>, or <code>icon=kubernetes pod</code>; the resolver fills in the official style. Upstream source only — not runtime-tested here.',
-  f'<b>Table-row and role XML.</b> {D.Q('rows="PK id|FK author_id|title"',SH)} expands into stacked table cells. {D.Q("role=step, decision, start, end, error, data,",SH)} plus <code>external</code> and <code>container</code>, pick the calm-theme shape and color.',
+s_srv=sec('servers','App Server 1.10.0 And Tool Server 1.13.1','Icons By Name, Table Shorthands, Connector Check','Read from upstream source at a7d1ead. Plugin 1.3.1. Neither server was installed or test-run on this box.',
+ callouts([f'<b>PNG/SVG from the viewer (app-server 1.9.0).</b> {D.Q("Copy the diagram XML; download it as a `.drawio` file, PNG or SVG and copy it as a PNG or SVG where the host allows it",AR)}. {D.Q("Copy as SVG writes what draw.io\'s does",AA)}.',
+  f'<b>Icons by name (tool-server 1.13.0, app-server 1.10.0).</b> {D.Q("`icon=aws lambda` in a vertex style stands for the official icon of that",IR)} service (~1,750 AWS, Azure, GCP and Kubernetes icons). Write <code>icon=aws lambda</code>, <code>icon=azure functions</code>, <code>icon=gcp pub sub</code>, or <code>icon=kubernetes pod</code>; the resolver fills in the official style. Expanded in MCP <code>create_diagram</code> and <code>open_drawio_xml</code>; the plain CLI does not expand them. Upstream source only — not runtime-tested here.',
+  f'<b>Table-row and role XML (app-server 1.10.0).</b> {D.Q('rows="PK id|FK author_id|title"',SH)} expands into stacked table cells. {D.Q("role=step, decision, start, end, error, data,",SH)} plus <code>external</code> and <code>container</code>, pick the calm-theme shape and color. Expanded in MCP <code>create_diagram</code> (and the viewer on the tool input); the tool server, the skill and the plain CLI do not. Upstream source only — not runtime-tested here.',
   f'<b>Connector layout check.</b> {D.Q("one line per connector with everything found on it",AA)}. {D.Q("This pass moves such a waypoint onto the connection point\'s line",EW)} when it sits less than 3 px off a fixed port, so the router adds no jog at the shape.',
   f'<b>Self-hosted / link only.</b> {D.Q("Set `DRAWIO_BASE_URL` to a self-hosted draw.io",AR)}. {D.Q("Set `DRAWIO_BROWSER` to `off` to get only the URL.",TR)} The layout-fix chip remains: {D.Q('the toolbar shows a chip, "Fix N issues"',AA)}.']))
 s_gal=sec('gallery','Gallery','60 Renders','ELK layouts and Mermaid conversions rendered on this box, plus the repo’s own gallery. Click to enlarge.',gchips('gdr',GK)+gal('gdr',gi))
@@ -104,7 +104,7 @@ s_find=sec('findings','What I Found Running It','Thoroughly Tested; The CLI Is T
   ['SKILL.md repair one-liner','fixed','Prose, fence, unescaped label and self-parented layer.'],['SKILL.md URL one-liner','round-trips','247-character link for a tiny diagram.'],
   ['Shared modules','work','repair, normalize, mermaid-elk and shape search all behaved as documented.'],['5 SKILL.md ports','byte-identical','A CI workflow enforces it.'],
   ['draw.io Desktop CLI','not on the box','Mermaid conversion, layout and export need it.'],
-  ['app-server 1.9.0, tool-server 1.12.0','upstream source only','Not installed or test-run here. Icons by name (icon=aws lambda), table-row and role XML shorthands, connector layout check with waypoint snapping, Copy as SVG. Plugin 1.2.6 unchanged. Draw.io Desktop 32.6.10 unchanged and not CLI-tested on this box.']])+
+  ['app-server 1.10.0, tool-server 1.13.1','upstream source only','Not installed or test-run here. Icons by name (icon=aws lambda, ~1,750 AWS/Azure/GCP/K8s) shipped in tool-server 1.13.0 and app-server 1.10.0; rows=/role= XML shorthands in app-server 1.10.0. Icons expand in create_diagram and open_drawio_xml; rows=/role= in create_diagram. The plain CLI expands neither. Copy as SVG is app-server 1.9.0. Plugin 1.3.1. Draw.io Desktop 32.7.4 (17 Nov 2026): PDF --width/--height and %pagecount% fixed; data sources removed from Desktop (web-only); Style Rules still work in Desktop. Not CLI-tested on this box.']])+
  verdict([('Gap','Mermaid, layouts and export all need the desktop app','Without it the skill can only write XML and a URL. The skill says so and falls back cleanly.'),
   ('Gap','References load from main, unpinned','SKILL.md tells the agent to fetch xml-essentials.md and mermaid-reference.md from raw.githubusercontent.com/…/main, so a skill pinned at one commit reads rules from another.'),
   ('Cost','Two repair implementations','The inline one-liner and repair-xml.js do overlapping work; only the module reports what it changed or handles leaked tool-call tags.'),
@@ -119,5 +119,5 @@ nav=[('top','Overview'),('how','How it works'),('pipeline','Pipeline'),('icons',
 JS=explorer_js('pp','dr-pp',P,['Author','Layout','Output'])+explorer_js('md','dr-md',M,['Shared modules','MCP tools'])
 D.finish()
 n=build('drawio','Inside Draw.io',nav,hro+s_how+s_pipe+s_icons+s_srv+s_gal+s_mod+s_find+s_steal+s_src,
- 'Compiled 22 Oct 2026, updated 15 Nov 2026 to jgraph/drawio-mcp @ 87a7a2a (plugin 1.2.6 unchanged; app-server 1.9.0 / tool-server 1.12.0: icons by name (`icon=aws lambda`), table-row and role XML shorthands, connector layout check with waypoint snapping, Copy as SVG. Skill still documents `--all-pages` as PDF only. Upstream draw.io Desktop 32.6.10 — not installed or CLI-tested on this box; last runtime-tested desktop was 32.6.1. Server packages were not installed or test-run here; run results remain from 05c1747) · every quote is checked against its source file at build time · not affiliated with draw.io Ltd.',JS)
+ 'Compiled 22 Oct 2026, updated 20 Nov 2026 to jgraph/drawio-mcp @ a7d1ead (plugin 1.3.1; app-server 1.10.0 / tool-server 1.13.1. Icons by name (`icon=aws lambda`, ~1,750 AWS/Azure/GCP/K8s) shipped in tool-server 1.13.0 and app-server 1.10.0; `rows=`/`role=` XML shorthands in app-server 1.10.0. Icons expand in MCP `create_diagram` and `open_drawio_xml`; `rows=`/`role=` in `create_diagram` (and the viewer). The plain CLI expands neither. Copy as SVG is app-server 1.9.0. Connector layout check with waypoint snapping remains. Skill still documents `--all-pages` as PDF only. Upstream draw.io Desktop 32.7.4 (17 Nov 2026): PDF export `--width`/`--height` and `%pagecount%` fixed; data sources removed from Desktop (web-only; they could never load there); Style Rules still work in Desktop — not installed or CLI-tested on this box; last runtime-tested desktop was 32.6.1. Server packages were not installed or test-run here; run results remain from 05c1747) · every quote is checked against its source file at build time · not affiliated with draw.io Ltd.',JS)
 print('built',n,len(P),len(M),len(gi))

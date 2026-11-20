@@ -21,7 +21,7 @@ Each doc quotes its source repo and checks every quote at build time (build fail
 | `PSTACK_SRC` | github.com/cursor/plugins (contains `pstack/`, full history) |
 | `DIAGRAM_DESIGN_SRC` | github.com/cathrynlavery/diagram-design @ f6db0de |
 | `ILLO_SRC` | github.com/tmchow/illo-skill @ 0b0abee |
-| `DRAWIO_SRC` | github.com/jgraph/drawio-mcp @ 87a7a2a |
+| `DRAWIO_SRC` | github.com/jgraph/drawio-mcp @ a7d1ead |
 | `PRETTY_MERMAID_SRC` | github.com/imxv/Pretty-mermaid-skills @ e234ab7 |
 | `EXCALIDRAW_SRC` | github.com/yctimlin/mcp_excalidraw @ 81720ac |
 | `MATTPOCOCK_SKILLS_SRC` | github.com/mattpocock/skills @ 5beb35b (the five `mattpocock-*` docs) |
