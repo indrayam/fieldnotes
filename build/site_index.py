@@ -92,6 +92,7 @@ body {{ background-image: none !important; background-color: #ffffff; }}
 .page-masthead {{ text-align: center; padding-bottom: 0.45rem; }}
 .page-masthead-name {{ font-family: "Source Sans Pro", Arial, sans-serif; font-weight: 900; font-size: clamp(2.5rem, 5vw, 3.85rem); letter-spacing: 0; line-height: 1.02; color: #333333; margin: 0; padding: 0; border: 0; }}
 .page-masthead-tagline {{ font-family: Newsreader, Georgia, "Times New Roman", serif; font-size: 0.92rem; letter-spacing: 0.02em; line-height: 1.6; color: #555555; margin: 0.15rem 0 0; }}
+.page-masthead + * {{ margin-top: 1em; }}
 .page-masthead-rule {{ height: 0; border: none; border-top: 4px double #808080; margin: 1.1rem 0 0.32rem; }}
 @media screen and (max-width: 899px) {{ .site-header {{ max-width: none; margin-left: 10px; margin-right: 10px; }} }}
 .docs-topics{{font-family:var(--font-ui);font-size:.85rem;color:var(--color-muted);margin-top:14px;border-top:1px dashed var(--color-border-light);padding-top:8px}}
@@ -103,8 +104,6 @@ body {{ background-image: none !important; background-color: #ffffff; }}
 <main class="post archives-page">
 <header class="page-masthead">
     <h1 class="page-masthead-name">Cribsheets</h1>
-    <p class="page-masthead-tagline">Explainers on what I’m using and learning</p>
-    <hr class="page-masthead-rule">
 </header>
 <p class="docs-intro">Single-page explainers on things I’m using and learning: how they work, what they measure, where they fall short.</p>
 <h2 id="poteto-skills" style="margin-top:28px">poteto Skills</h2>
