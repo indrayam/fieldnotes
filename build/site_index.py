@@ -1,10 +1,10 @@
 """Build cribsheets.indrayam.com home: 4th sibling of indrayam.com / dailydiff / resume.
-Shares v1 style.css (shipped verbatim as /style.css) + blog header/nav/copyright."""
+Shares the blog's style.css (shipped verbatim as /style.css) + blog header/nav/copyright."""
 import sys,html,shutil,os
 sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 from config import src, SITE, ASSETS, BUILD
 site=sys.argv[1] if len(sys.argv)>1 else SITE
-V1=src('INDRAYAM_V1_SRC')
+BLOG=src('INDRAYAM_BLOG_SRC')
 IMG=os.path.join(ASSETS,'images')
 # PUBLIC allowlist only. Newest first. (slug,title,date ISO,topic,summary)
 DOCS=[
@@ -34,7 +34,7 @@ assert not BLOCK & {d[0] for d in DOCS+MP+DS}
 import datetime
 def fmt(d): return datetime.date.fromisoformat(d).strftime('%B %-d, %Y')
 DOCS.sort(key=lambda d:d[2],reverse=True)
-shutil.copy(V1+'/style.css',site+'/style.css')
+shutil.copy(BLOG+'/style.css',site+'/style.css')
 os.makedirs(site+'/images',exist_ok=True)
 for f in ('favicon.ico','me.gif','blue-dash.gif'): shutil.copy(f'{IMG}/{f}',site+'/images/'+f)
 E=html.escape
@@ -112,7 +112,7 @@ page=f'''<!DOCTYPE html>
 </main>
 <p></p>
 <div class="copyright">
-    <a href="http://creativecommons.org/licenses/by-nd-nc/1.0/">Copyright</a> &copy; 2026 Anand Sharma. <a href="https://indrayam.com/disclaimer.html">Disclaimer</a>
+    <a href="http://creativecommons.org/licenses/by-nd-nc/1.0/">Copyright</a> &copy; 2026 Anand Sharma. <a href="https://blog.indrayam.com/disclaimer.html">Disclaimer</a>
 </div>
 </body>
 </html>

@@ -28,7 +28,7 @@ Each doc quotes its source repo and checks every quote at build time (build fail
 | `IMPECCABLE_SRC` | github.com/pbakaus/impeccable @ 9368675 (`pbakaus-impeccable`) |
 | `HALLMARK_SRC` | github.com/nutlope/hallmark @ 7ec8682 (`nutlope-hallmark`) |
 | `UIUXPROMAX_SRC` | github.com/nextlevelbuilder/ui-ux-pro-max-skill @ b7d5353 (`nextlevelbuilder-ui-ux-pro-max`) |
-| `INDRAYAM_V1_SRC` | the `v1/` folder of the indrayam.com site (for `style.css`) |
+| `INDRAYAM_BLOG_SRC` | the blog repo, github.com/indrayam/blog (for `style.css`). The old name `INDRAYAM_V1_SRC` still works. |
 
 A missing source stops the build with a message naming the var. You only need the sources for the docs you rebuild.
 
