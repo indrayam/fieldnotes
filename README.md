@@ -1,4 +1,4 @@
-# cribsheets.indrayam.com
+# fieldnotes.indrayam.com
 
 Single-page explainers, each a self-contained HTML file. Edited from more than one machine and agent, so follow the sync rules in `AGENTS.md`.
 
@@ -7,7 +7,7 @@ Single-page explainers, each a self-contained HTML file. Edited from more than o
 - `build/`: generators. `build.py` is the entry point, `config.py` holds all paths, `skdoc.py`/`shell.py`/`explorer.py`/`gal.py`/`base.css` are the shared template, `<slug>_data/doc.py` (and `pst.py` + `pstack_data/` for pstack; `mattpocock_data/<skill>.py` + `mattpocock_data/common.py` for the Matt Pocock skills; `design_data/<skill>.py` + `design_data/common.py` for the Design Skills) hold each doc's content, `site_index.py` builds the home page, `assets/` holds committed images and gallery data.
 
 ## Deploys
-Push to `main` and Vercel (project `indrayam-docs`, Root Directory `site`, no build step) deploys automatically. Nothing is built on Vercel; commit the generated `site/` files.
+Push to `main` and Vercel (project `fieldnotes`, Root Directory `site`, no build step) deploys automatically. Nothing is built on Vercel; commit the generated `site/` files.
 
 ## Building
 ```

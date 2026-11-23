@@ -36,7 +36,7 @@ def foot(name):
     return f'Compiled 23 Oct 2026 from mattpocock/skills @ {PIN} (committed 19 Oct 2026) · install counts from skills.sh as of 23 Oct 2026 · every quote is checked against its source file at build time · not affiliated with Matt Pocock or Lauren Tan.'
 NEXT_COMMON=[f'<a href="https://github.com/mattpocock/skills">github.com/mattpocock/skills</a>: the repo and its README',
   f'<a href="{SKSH}">skills.sh/mattpocock/skills</a>: install counts per skill',
-  '<a href="https://cribsheets.indrayam.com/pstack/">Inside pstack</a>: the pstack explainer on this site',
+  '<a href="https://fieldnotes.indrayam.com/pstack/">Inside pstack</a>: the pstack explainer on this site',
   f'<a href="{VIDEO}">Matt Pocock with poteto, live</a>: the stream quoted here']
 # Long handle-style titles ("mattpocock/setup-matt-pocock-skills") have no spaces; let them wrap on narrow screens.
 _hero=hero

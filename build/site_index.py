@@ -1,4 +1,4 @@
-"""Build cribsheets.indrayam.com home: 4th sibling of indrayam.com / dailydiff / resume.
+"""Build fieldnotes.indrayam.com home: 4th sibling of indrayam.com / dailydiff / resume.
 Styled by build/style.css (shipped as /style.css); header.html holds the site nav."""
 import sys,html,shutil,os
 sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
@@ -58,12 +58,12 @@ page=f'''<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cribsheets · Anand Sharma</title>
+<title>Field Notes · Anand Sharma</title>
 <meta name="description" content="{E(desc)}">
-<link rel="canonical" href="https://cribsheets.indrayam.com/">
-<meta property="og:type" content="website"><meta property="og:title" content="Cribsheets · Anand Sharma">
-<meta property="og:description" content="{E(desc)}"><meta property="og:url" content="https://cribsheets.indrayam.com/">
-<meta property="og:site_name" content="Cribsheets · Anand Sharma">
+<link rel="canonical" href="https://fieldnotes.indrayam.com/">
+<meta property="og:type" content="website"><meta property="og:title" content="Field Notes · Anand Sharma">
+<meta property="og:description" content="{E(desc)}"><meta property="og:url" content="https://fieldnotes.indrayam.com/">
+<meta property="og:site_name" content="Field Notes · Anand Sharma">
 <meta name="theme-color" content="#e7651a">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -77,7 +77,7 @@ page=f'''<!DOCTYPE html>
 
 <main class="post archives-page">
 <header class="page-masthead">
-    <h1 class="page-masthead-name">Cribsheets</h1>
+    <h1 class="page-masthead-name">Field Notes</h1>
 </header>
 <p class="docs-intro">Single-page explainers on things I’m using and learning: how they work, what they measure, where they fall short.</p>
 <h2 id="poteto-skills">poteto Skills</h2>

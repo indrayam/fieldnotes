@@ -47,6 +47,6 @@ def page(title,eyebrow,nav,body,footer=None,extra_js=''):
 <style>{CSS}</style></head><body><div class="shell">
 <nav class="rail" aria-label="Sections"><div class="eyebrow">{eyebrow}</div><ol id="railList">{lis}</ol>
 <button class="theme-btn" id="themeBtn" type="button">Theme: system</button></nav>
-<main><a class="docs-home" href="https://cribsheets.indrayam.com/">&larr; Cribsheets</a><details class="toc"><summary>{eyebrow}</summary><ol>{toc}</ol></details>{body}
+<main><a class="docs-home" href="https://fieldnotes.indrayam.com/">&larr; Field Notes</a><details class="toc"><summary>{eyebrow}</summary><ol>{toc}</ol></details>{body}
 <footer>{footer or DEFAULT_FOOT}</footer>
 </main></div><div class="backdrop" id="backdrop"></div><script>{JS}{extra_js}</script></body></html>'''

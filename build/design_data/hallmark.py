@@ -38,7 +38,7 @@ IT=[dict(id=s,name=n,group='Fits Anand',small=D.rd(T(s)).split('display: ')[1].s
   tag=Q(first(s),T(s)),invoke=f'/hallmark {n}: a landing page for ...',how=[fit,'Named themes skip the deal; the stamp records "(by request)".'],
   quotes=[[Q('keywords: '+D.rd(T(s)).split('keywords: ')[1].split('\n')[0],T(s)),T(s)]],files=[T(s),T(s).replace('.md','.jpg')],img=f'th-{s}',
   lesson='A theme is a material, not a plan: it never sets layout.',src=D.blob+T(s)) for s,n,fit in TH]
-s_themes=sec('themes','Theme Catalog','Six Of The 48 Suit A Terminal-First Engineer','Picked for Anand\'s sites (indrayam.com, Daily Diff, Cribsheets) and CLI-tool landings. Pictures are the repo\'s own theme renders.',
+s_themes=sec('themes','Theme Catalog','Six Of The 48 Suit A Terminal-First Engineer','Picked for Anand\'s sites (indrayam.com, Daily Diff, Field Notes) and CLI-tool landings. Pictures are the repo\'s own theme renders.',
  f'{explorer("hx","themes")}'+gal('ghx',GI,'sm')+notes([('Theme is a material',Q('A theme is a material, not a plan: it never says what a page contains or in what order, so two prompts in one theme make two different pages.',RD)),('All of them','<a href="https://www.usehallmark.com">usehallmark.com</a> shows all 48. The repo folder holds 48 theme files plus a README.')]))
 s_lint=sec('sloplint','Sloplint','The Floor Is Enforced By A Script, Not A Prompt','',
  code('''node ~/.claude/skills/hallmark/scripts/sloplint.mjs page.html            # static checks
