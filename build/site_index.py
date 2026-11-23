@@ -37,6 +37,8 @@ DOCS.sort(key=lambda d:d[2],reverse=True)
 shutil.copy(BLOG+'/style.css',site+'/style.css')
 os.makedirs(site+'/images',exist_ok=True)
 for f in ('favicon.ico','me.gif','blue-dash.gif'): shutil.copy(f'{IMG}/{f}',site+'/images/'+f)
+# The icon shared by every indrayam.com site, served from the site root.
+for f in ('favicon.ico','apple-touch-icon.png'): shutil.copy(f'{IMG}/{f}',site+'/'+f)
 E=html.escape
 HEADER=open(os.path.join(BUILD,'header.html')).read()
 def li(s,t,d,tp,sm): return f'''<li class="doc-entry"><h3 class="doc-title"><a href="/{s}/">{E(t)}</a></h3>
@@ -64,7 +66,8 @@ page=f'''<!DOCTYPE html>
 <meta property="og:description" content="{E(desc)}"><meta property="og:url" content="https://cribsheets.indrayam.com/">
 <meta property="og:site_name" content="Cribsheets · Anand Sharma">
 <meta name="theme-color" content="#e7651a">
-<link rel="Shortcut Icon" href="/images/favicon.ico">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300&amp;family=Lora:wght@400;700;900&amp;family=Newsreader:opsz,wght@6..72,400;6..72,700;6..72,900&amp;family=PT+Serif:wght@400;700&amp;family=Source+Sans+Pro:wght@400;700;900&amp;display=swap">
