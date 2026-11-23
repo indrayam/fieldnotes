@@ -101,6 +101,7 @@ page=f'''<!DOCTYPE html>
 {ds_items}
 </ul>
 <p class="docs-topics">Topics: {", ".join(E(t) for t in ["poteto Skills","Matt Pocock skills","Storytelling Skills","Design Skills"])} &middot; {len(DOCS)+len(MP)+len(DS)} docs</p>
+<p class="docs-companion">Field Notes are what I’ve studied up close. For things spotted in passing that may deserve a second look, see <a href="https://sightings.indrayam.com/">Sightings</a>.</p>
 </main>
 <p></p>
 <footer class="copyright">

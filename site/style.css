@@ -205,6 +205,14 @@ h2 {
 	padding-top: 8px;
 }
 
+.docs-companion {
+	margin: 28px 0 0;
+	font-size: 0.9rem;
+	font-style: italic;
+	text-align: center;
+	color: var(--color-muted);
+}
+
 /* ── Footer ─────────────────────────────────────────────────────────── */
 .copyright {
 	font-family: var(--font-site-body);
