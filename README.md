@@ -3,7 +3,7 @@
 Single-page explainers, each a self-contained HTML file. Edited from more than one machine and agent, so follow the sync rules in `AGENTS.md`.
 
 ## Layout
-- `site/`: exactly what is deployed. One folder per doc (`site/<slug>/index.html`) plus the home page `site/index.html`.
+- `site/`: exactly what is deployed. One folder per doc (`site/<slug>/index.html`) plus the home page `site/index.html`. Gallery images live beside their page in `site/<slug>/img/`: `build.py` runs `build/imgout.py` after each doc to move inline base64 images into content-hashed files there.
 - `build/`: generators. `build.py` is the entry point, `config.py` holds all paths, `skdoc.py`/`shell.py`/`explorer.py`/`gal.py`/`base.css` are the shared template, `<slug>_data/doc.py` (and `pst.py` + `pstack_data/` for pstack; `mattpocock_data/<skill>.py` + `mattpocock_data/common.py` for the Matt Pocock skills; `design_data/<skill>.py` + `design_data/common.py` for the Design Skills) hold each doc's content, `site_index.py` builds the home page, `assets/` holds committed images and gallery data.
 
 ## Deploys

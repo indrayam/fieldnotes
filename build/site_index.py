@@ -65,7 +65,9 @@ page=f'''<!DOCTYPE html>
 <meta property="og:site_name" content="Cribsheets · Anand Sharma">
 <meta name="theme-color" content="#e7651a">
 <link rel="Shortcut Icon" href="/images/favicon.ico">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300&amp;family=Lora:wght@400;700;900&amp;family=Newsreader:opsz,wght@6..72,400;6..72,700;6..72,900&amp;family=PT+Serif:wght@400;700&amp;family=Source+Sans+Pro:wght@400;700;900&amp;display=swap">
 <link rel="stylesheet" href="/style.css">
 <style>
 /* cribsheets.indrayam.com: only additions; tokens come from shared style.css */

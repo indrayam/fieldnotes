@@ -3,6 +3,7 @@ Each doc is written to site/<slug>/index.html; 'index' rebuilds site/index.html.
 import os, sys, subprocess, re
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from config import BUILD, SITE
+from imgout import externalize
 DOCS = {'pstack': 'pst.py', 'diagram-design': 'diagram-design_data/doc.py', 'illo': 'illo_data/doc.py',
         'drawio': 'drawio_data/doc.py', 'pretty-mermaid': 'pretty-mermaid_data/doc.py', 'excalidraw': 'excalidraw_data/doc.py',
         **{f'mattpocock-{k}': f'mattpocock_data/{k}.py' for k in ('grill-with-docs', 'wayfinder', 'to-spec-to-tickets', 'handoff', 'setup-matt-pocock-skills')},
@@ -13,6 +14,9 @@ def run(slug):
     print(f'== {slug}', flush=True)
     r = subprocess.run([sys.executable, os.path.join(BUILD, DOCS[slug])], cwd=BUILD)
     if r.returncode: sys.exit(f'{slug}: build failed (exit {r.returncode})')
+    if slug != 'index':
+        n = externalize(slug)  # inline base64 images -> site/<slug>/img/*
+        if n: print(f'   {n} images written to site/{slug}/img/', flush=True)
 def leak_check():
     for d, _, fs in os.walk(SITE):
         for f in fs:
