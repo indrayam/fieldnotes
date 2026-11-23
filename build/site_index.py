@@ -34,8 +34,6 @@ import datetime
 def fmt(d): return datetime.date.fromisoformat(d).strftime('%B %-d, %Y')
 DOCS.sort(key=lambda d:d[2],reverse=True)
 shutil.copy(os.path.join(BUILD,'style.css'),site+'/style.css')
-os.makedirs(site+'/images',exist_ok=True)
-for f in ('favicon.ico','me.gif','blue-dash.gif'): shutil.copy(f'{IMG}/{f}',site+'/images/'+f)
 # The icon shared by every indrayam.com site, served from the site root.
 for f in ('favicon.ico','apple-touch-icon.png'): shutil.copy(f'{IMG}/{f}',site+'/'+f)
 E=html.escape
