@@ -1,11 +1,12 @@
 /*
-Blog stylesheet for blog.indrayam.com.
+Stylesheet for the Cribsheets homepage (cribsheets.indrayam.com/).
 
-Every page uses the shared indrayam.com page layout (the same one as the
-resume, The Daily Diff, and the About Me page): a white page, the centered
-site nav, a centered Source Sans Pro masthead, and content with no box
-around it. The post-content rules further down keep the published posts
-(quotes, code, archival notes, legacy hooks) rendering as before.
+build/site_index.py copies this file to site/style.css. The explainers carry
+their own inline styles and do not use it.
+
+The site nav, masthead, orange top bar, and footer match the other
+indrayam.com sites (blog, resume, The Daily Diff). There is no shared file:
+when that chrome changes on the other sites, update the matching rules here.
 */
 
 :root {
@@ -13,25 +14,17 @@ around it. The post-content rules further down keep the published posts
 	--color-heading: #333333;
 	--color-content: #1f1f1d;
 	--color-muted: #808080;
-	--color-soft: #555555;
 	--color-faint: #767676;
 	--color-link: #990000;
 	--color-accent: #e7651a;
-	--color-accent-soft: rgba(231, 101, 26, 0.1);
 	--color-panel: #ffffff;
 	--color-panel-alt: #fcf7f4;
-	--color-border: #808080;
 	--color-border-light: #cccccc;
-	--color-rule: #e4e0dc;
-	--color-quote-border: #ebd4c8;
-	--color-archive-border: #cbd5d8;
-	--color-archive-accent: #8fa6ad;
 	--font-site-body: "PT Serif", Georgia, "Times New Roman", serif;
 	--font-content: Newsreader, Georgia, "Times New Roman", serif;
 	--font-heading: Lora, Georgia, "Times New Roman", serif;
 	--font-ui: "Source Sans Pro", Arial, sans-serif;
 	--font-nav: Fraunces, Georgia, "Times New Roman", serif;
-	--font-mono: Courier, "Courier New", monospace;
 	--page-width: 760px;
 }
 
@@ -45,21 +38,6 @@ around it. The post-content rules further down keep the published posts
 html {
 	max-width: 100%;
 	overflow-x: hidden;
-}
-
-img,
-svg,
-video,
-canvas {
-	max-width: 100%;
-	height: auto;
-}
-
-iframe,
-object,
-embed,
-table {
-	max-width: 100%;
 }
 
 body {
@@ -78,7 +56,7 @@ a {
 	text-decoration: underline;
 }
 
-/* ── Site nav (shared with the resume, The Daily Diff, and Cribsheets) ── */
+/* ── Site nav (same as the other indrayam.com sites) ───────────────── */
 .site-header {
 	max-width: var(--page-width);
 	margin: 18px auto 14px;
@@ -97,7 +75,6 @@ a {
 .site-nav li {
 	margin: 0;
 	padding: 0;
-	background: none;
 }
 
 .site-nav a {
@@ -121,55 +98,12 @@ a {
 	text-decoration-color: var(--color-accent);
 }
 
-.site-nav a:focus-visible,
-.blog-subnav a:focus-visible {
+.site-nav a:focus-visible {
 	outline: 2px solid var(--color-accent);
 	outline-offset: 4px;
 }
 
-/* Blog-only second row under the site nav: the two ways into the archive. */
-.blog-subnav ul {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 0 10px;
-	margin: 2px 0 0;
-	padding: 0;
-	list-style: none;
-}
-
-.blog-subnav li {
-	margin: 0;
-	padding: 0;
-	color: #b0a8a2;
-	font-family: var(--font-nav);
-	font-size: 0.82rem;
-	font-weight: 300;
-	line-height: 1.6;
-}
-
-.blog-subnav li + li::before {
-	content: "\00b7";
-	margin-right: 10px;
-}
-
-.blog-subnav a {
-	color: var(--color-soft);
-	text-decoration: underline;
-	text-decoration-color: transparent;
-	text-decoration-thickness: 2px;
-	text-underline-offset: 5px;
-	transition: text-decoration-color 0.15s ease;
-}
-
-.blog-subnav a:hover,
-.blog-subnav a:focus-visible,
-.blog-subnav a[aria-current="page"] {
-	color: #111111;
-	text-decoration-color: var(--color-accent);
-}
-
-/* ── Page body ──────────────────────────────────────────────────────── */
+/* ── Page body and masthead ─────────────────────────────────────────── */
 .post {
 	max-width: var(--page-width);
 	margin: 0 auto 10pt;
@@ -181,13 +115,12 @@ a {
 	overflow-wrap: anywhere;
 }
 
-/* ── Masthead: centered title, optional tagline, and post date ──────── */
 .page-masthead {
 	text-align: center;
 	padding-bottom: 0.45rem;
 }
 
-.page-masthead + * {
+.post > .page-masthead + * {
 	margin-top: 1em;
 }
 
@@ -204,537 +137,72 @@ a {
 	overflow-wrap: break-word;
 }
 
-/* Post titles run long, so they sit a step below the page titles. */
-.post-masthead .page-masthead-name {
-	font-size: clamp(2rem, 4.2vw, 3rem);
-	line-height: 1.08;
-	text-wrap: balance;
-}
-
-.page-masthead-tagline {
-	font-family: Newsreader, Georgia, "Times New Roman", serif;
-	font-size: 0.92rem;
-	letter-spacing: 0.02em;
-	line-height: 1.6;
-	color: var(--color-soft);
-	margin: 0.15rem 0 0;
-}
-
-/* Post date, styled like The Daily Diff's edition date. */
-.post-date {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 0.3rem;
-	margin: 1.1rem 0 0;
-	font-family: var(--font-content);
-	line-height: 1.2;
-}
-
-.post-date-day {
-	display: inline-flex;
-	align-items: center;
-	padding: 0.28rem 0.7rem 0.3rem;
-	border: 1px solid rgba(231, 101, 26, 0.4);
-	border-radius: 999px;
-	background: var(--color-accent-soft);
-	box-shadow: inset 0 -1px 0 rgba(231, 101, 26, 0.12);
-	color: var(--color-text);
-	font-size: 0.84rem;
-	font-weight: 700;
-	letter-spacing: 0.035em;
-}
-
-.post-date-time {
-	font-family: var(--font-mono);
-	font-size: 0.62rem;
-	text-transform: uppercase;
-	letter-spacing: 0.04em;
-	color: var(--color-soft);
-}
-
-/* ── Post content ───────────────────────────────────────────────────── */
-h1 {
-	font-family: var(--font-heading);
-	font-size: 2em;
-	font-weight: 900;
-	line-height: normal;
-	margin-top: 0;
-	margin-bottom: 0;
-}
-
+/* ── Sections and the doc list ──────────────────────────────────────── */
 h2 {
 	font-family: var(--font-heading);
 	font-size: 1.5em;
 	font-weight: 700;
 	line-height: normal;
-	margin-top: 0;
+	margin-top: 28px;
 	margin-bottom: 5pt;
 	border-bottom: 1px dashed var(--color-border-light);
 }
 
-h2 a {
-	color: var(--color-heading);
-	text-decoration: none;
-}
-
-h3 {
-	font-size: 1.17em;
-	font-weight: normal;
-	line-height: normal;
-	color: var(--color-muted);
-	margin-top: 0;
-}
-
-h4 {
-	font-size: 1em;
-	font-weight: bold;
-	line-height: normal;
-	color: var(--color-muted);
-	margin-top: 0;
-	margin-bottom: 0;
-}
-
-blockquote {
-	font: normal 17px/1.6 var(--font-heading);
-	margin: 1.2em 45px 1.4em;
-	border-left: 4px solid var(--color-accent);
-	padding: 4px 0 4px 18px;
-	color: #3d3a37;
-}
-
-blockquote p {
-	margin: 0;
-}
-
-blockquote cite {
-	display: block;
-	margin-top: 10px;
-	font: italic 14px/1.5 var(--font-site-body);
-	color: #666666;
-	text-align: right;
-}
-
-blockquote cite a {
-	color: var(--color-link);
-}
-
-.archival-note {
-	font: italic 11pt Georgia, "Times New Roman", Times, serif;
-	line-height: 1.55;
-	text-align: center;
-	margin: 0 auto 1.6em;
-	max-width: 34em;
-	padding: 0 0 0.9em;
-	border-bottom: 1px solid var(--color-rule);
-	color: #59666a;
-}
-
-.archival-note p {
-	margin: 0;
-}
-
-pre {
-	max-width: 100%;
-	margin: 1.4rem 0;
-	padding: 1rem 1.15rem;
-	font: 0.9rem/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-	color: #24292f;
-	background: #f6f8fa;
-	border: 1px solid #d0d7de;
-	border-left: 4px solid var(--color-accent);
-	border-radius: 6px;
-	box-shadow: 0 1px 2px rgba(27, 31, 36, 0.08);
-	overflow-x: auto;
-	overflow-y: hidden;
-	tab-size: 4;
-	-webkit-overflow-scrolling: touch;
-}
-
-.post pre {
-	overflow-wrap: normal;
-	white-space: pre;
-}
-
-pre code.hljs {
-	display: block;
-	padding: 0;
-	color: inherit;
-	background: transparent;
-}
-
-.hljs-comment,
-.hljs-quote {
-	color: #6a737d;
-	font-style: italic;
-}
-
-.hljs-keyword,
-.hljs-selector-tag,
-.hljs-subst,
-.hljs-section {
-	color: #cf222e;
-}
-
-.hljs-string,
-.hljs-doctag,
-.hljs-regexp,
-.hljs-addition {
-	color: #0a7b3e;
-}
-
-.hljs-number,
-.hljs-literal,
-.hljs-variable,
-.hljs-template-variable,
-.hljs-tag .hljs-attr {
-	color: #0550ae;
-}
-
-.hljs-title,
-.hljs-title.class_,
-.hljs-title.class_.inherited__,
-.hljs-title.function_ {
-	color: #8250df;
-}
-
-.hljs-attr,
-.hljs-attribute,
-.hljs-name,
-.hljs-selector-id,
-.hljs-selector-class {
-	color: #953800;
-}
-
-.hljs-built_in,
-.hljs-type,
-.hljs-symbol,
-.hljs-bullet {
-	color: #0a3069;
-}
-
-.hljs-meta,
-.hljs-meta .hljs-keyword {
-	color: #8250df;
-}
-
-.hljs-deletion {
-	color: #82071e;
-}
-
-.post table {
-	display: block;
-	width: 100%;
-	overflow-x: auto;
-}
-
-.post td,
-.post th {
-	overflow-wrap: anywhere;
-}
-
-.post iframe,
-.post object,
-.post embed {
-	display: block;
-}
-
-.post ul {
-	padding: 0;
-	margin: 0;
-}
-
-.post li {
-	list-style: none;
-}
-
-/* Category line at the end of a post. */
-.postlinks {
-	margin-top: 2em;
-	padding-top: 0.8em;
-	border-top: 1px solid var(--color-rule);
-	text-align: center;
-	font-family: var(--font-nav);
-	font-size: 0.85rem;
-	font-weight: 300;
-	color: var(--color-faint);
-}
-
-.postlinks a {
-	color: var(--color-soft);
-	text-decoration-color: var(--color-accent);
-	text-underline-offset: 4px;
-}
-
-/* ── Legacy content hooks used inside published posts ───────────────── */
-.flickr-photo {
-	border: solid 1px #000000;
-}
-
-.flickr-frame {
-	float: right;
-	margin-left: 15px;
-	margin-bottom: 15px;
-}
-
-.flickrEmailImage {
-	float: left;
-	margin-right: 15px;
-	margin-bottom: 15px;
-	border: solid 1px #000000;
-}
-
-.time {
-	font-family: Courier, monospace;
-}
-
-.note {
-	font-family: var(--font-site-body);
-	font-size: 12px;
-	color: var(--color-link);
-}
-
-#strike {
-	text-decoration: line-through;
-}
-
-.right {
-	text-align: right;
-}
-
-#code {
-	font-family: "Courier New", Courier, sans-serif;
-	font-weight: normal;
-	font-size: 10pt;
-	color: #3232cd;
-}
-
-#codeflow {
-	font-family: "Courier New", Courier, sans-serif;
-	font-weight: normal;
-}
-
-.poem {
-	font: italic 1.5em "monotype corsiva", Georgia, Serif;
-	margin-left: 10px;
-	margin-right: 10px;
-	border: 1px solid #ff9900;
-	background: #ffffcc;
-	width: 90%;
-	text-align: center;
-}
-
-.poem h2 {
-	font-family: "monotype corsiva", Georgia, Serif;
-	font-size: 105%;
-	font-weight: bold;
-	margin-left: 10px;
-	margin-right: 10px;
-	text-align: center;
-	border-width: 0;
-}
-
-#marriage {
-	font-family: "monotype corsiva", Georgia, Serif;
-	font-size: 115%;
-	font-weight: normal;
-	color: black;
-}
-
-.alt {
-	background-color: #FAFAF0 !important;
-}
-
-.small {
-	font-size: 0.9em;
-	color: #999;
-}
-
-/* ── Comments ───────────────────────────────────────────────────────── */
-.comments {
-	max-width: var(--page-width);
-	margin: 0 auto 10pt;
-	padding: 0 20px 24px;
-	font-family: var(--font-content);
-	font-size: 17px;
-	line-height: 1.5;
+.docs-intro {
+	margin: 0 0 14px;
 	color: var(--color-content);
-	overflow-wrap: anywhere;
 }
 
-.comments > h2 {
-	margin: 0 0 0.6em;
-	padding-bottom: 0.35em;
-	border-bottom: 4px double var(--color-muted);
-	font-family: var(--font-ui);
-	font-size: 1.35rem;
-	font-weight: 900;
-	color: var(--color-heading);
-	text-align: center;
-}
-
-.commententry,
-.commententryauthor {
-	padding: 0.6em 0 0.7em;
-	border-bottom: 1px solid var(--color-rule);
-}
-
-.commententryauthor {
-	padding-left: 14px;
-	border-left: 3px solid var(--color-accent);
-}
-
-.comments > p:empty {
-	display: none;
-}
-
-#commentmeta,
-.commentmeta {
-	font-size: 85%;
-	color: var(--color-faint);
-}
-
-/* ── About Me ───────────────────────────────────────────────────────── */
-.aboutme-hero {
-	clear: both;
-	margin: 0 auto 28px;
-	text-align: center;
-}
-
-.aboutme-hero img {
-	display: block;
-	height: auto;
-	width: 80%;
-	max-width: 100%;
-	margin: 0 auto;
-}
-
-.aboutme-image-caption {
-	color: var(--color-faint);
-	font-size: 0.5625rem;
-	line-height: 1.3;
-	margin: 4px auto 0;
-	text-align: center;
-	width: 80%;
-}
-
-.aboutme-photo {
-	float: left;
-	margin: 4px 18px 12px 0;
-	max-width: 160px;
-}
-
-/* ── Year and category archives ─────────────────────────────────────── */
-.archive-legend {
-	margin: 0 auto 24px;
-	max-width: 34em;
-	text-align: center;
-	color: #6c6460;
-	font-size: 0.8em;
-	font-style: italic;
-}
-
-.archive-marker {
-	color: #8a6d5a;
-	font-weight: bold;
-}
-
-.archives-page ul {
-	margin: 0 0 0 20px;
+.doc-list {
+	margin: 0;
 	padding: 0;
 }
 
-.archives-page li {
+.doc-entry {
 	list-style: none;
+	padding: 12px 0;
 	margin: 2px 0;
 	line-height: 1.5;
+	background: var(--color-panel);
 }
 
-.archives-page li.archive-degraded::before {
-	content: "*";
-	color: #8a6d5a;
-	font-weight: bold;
-	display: inline-block;
-	width: 0.8em;
-	margin-left: -0.8em;
+.doc-entry:hover {
+	background: var(--color-panel-alt);
 }
 
-.archives-page li.archive-degraded a {
-	color: #7e4f3a;
-}
-
-.archives-page details.category-group,
-.archives-page details.archive-year-group {
-	margin-top: 0;
-	border-bottom: 1px solid var(--color-rule);
-}
-
-.archives-page details.category-group summary,
-.archives-page details.archive-year-group summary {
-	display: block;
-	position: relative;
-	padding: 0.55em 0 0.55em 1.3em;
-	font-family: var(--font-ui);
-	font-size: 1.17em;
+.doc-title {
+	font-family: var(--font-heading);
+	font-size: 1.2em;
 	font-weight: 700;
+	line-height: normal;
 	color: var(--color-heading);
-	cursor: pointer;
-	list-style: none;
+	margin: 0;
 }
 
-.archives-page details summary:hover {
-	color: #111111;
+.doc-title a {
+	color: var(--color-link);
 }
 
-.archives-page details summary:focus-visible {
-	outline: 2px solid var(--color-accent);
-	outline-offset: 2px;
+.doc-meta {
+	font-family: var(--font-ui);
+	font-size: 0.82rem;
+	color: var(--color-muted);
+	margin: 2px 0 4px;
 }
 
-.archives-page details > ul {
-	padding-bottom: 0.8em;
+.doc-summary {
+	margin: 0;
+	font-size: 0.95em;
+	line-height: 1.45;
 }
 
-.archives-page details.category-group summary::-webkit-details-marker,
-.archives-page details.archive-year-group summary::-webkit-details-marker {
-	display: none;
-}
-
-.archives-page details.category-group summary::marker,
-.archives-page details.archive-year-group summary::marker {
-	content: "";
-}
-
-.archives-page details.category-group summary::before,
-.archives-page details.archive-year-group summary::before {
-	content: "";
-	position: absolute;
-	left: 0.25em;
-	top: 1em;
-	width: 0.4em;
-	height: 0.4em;
-	border-right: 2px solid var(--color-accent);
-	border-bottom: 2px solid var(--color-accent);
-	transform: rotate(-45deg);
-	transition: transform 0.15s ease;
-}
-
-.archives-page details.category-group[open] summary::before,
-.archives-page details.archive-year-group[open] summary::before {
-	top: 0.85em;
-	transform: rotate(45deg);
-}
-
-.archives-page details.category-group summary .small,
-.archives-page details.archive-year-group summary .small {
-	font-size: 0.72em;
-	font-weight: 400;
-	color: #8f8f8f;
-}
-
-/* ── 404 ────────────────────────────────────────────────────────────── */
-.error-page .error-code {
-	white-space: pre-wrap;
+.docs-topics {
+	font-family: var(--font-ui);
+	font-size: 0.85rem;
+	color: var(--color-muted);
+	margin-top: 14px;
+	border-top: 1px dashed var(--color-border-light);
+	padding-top: 8px;
 }
 
 /* ── Footer ─────────────────────────────────────────────────────────── */
@@ -748,8 +216,7 @@ pre code.hljs {
 
 /* ── Responsive ─────────────────────────────────────────────────────── */
 @media screen and (min-width: 1280px) and (hover: hover) and (pointer: fine) {
-	.post,
-	.comments {
+	.post {
 		max-width: 840px;
 	}
 }
@@ -757,21 +224,12 @@ pre code.hljs {
 @media screen and (max-width: 899px) {
 	.site-header {
 		max-width: none;
-		margin-left: 16px;
-		margin-right: 16px;
+		margin-left: 10px;
+		margin-right: 10px;
 	}
 
 	.post {
 		padding: 12px 16px 20px;
-	}
-
-	.comments {
-		padding: 0 16px 20px;
-	}
-
-	blockquote {
-		margin-left: 0.5rem;
-		margin-right: 0.5rem;
 	}
 }
 
@@ -782,25 +240,5 @@ pre code.hljs {
 
 	.post {
 		font-size: 18px;
-	}
-
-	pre {
-		padding: 0.85rem 0.9rem;
-		font-size: 0.82rem;
-	}
-
-	blockquote {
-		margin-left: 0;
-		margin-right: 0;
-		padding-left: 12px;
-	}
-
-	.archives-page ul {
-		margin-left: 12px;
-	}
-
-	.aboutme-hero img,
-	.aboutme-image-caption {
-		width: 100%;
 	}
 }

@@ -1,10 +1,9 @@
 """Build cribsheets.indrayam.com home: 4th sibling of indrayam.com / dailydiff / resume.
-Shares the blog's style.css (shipped verbatim as /style.css) and copyright; header.html holds the site nav."""
+Styled by build/style.css (shipped as /style.css); header.html holds the site nav."""
 import sys,html,shutil,os
 sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
-from config import src, SITE, ASSETS, BUILD
+from config import SITE, ASSETS, BUILD
 site=sys.argv[1] if len(sys.argv)>1 else SITE
-BLOG=src('INDRAYAM_BLOG_SRC')
 IMG=os.path.join(ASSETS,'images')
 # PUBLIC allowlist only. Newest first. (slug,title,date ISO,topic,summary)
 DOCS=[
@@ -34,7 +33,7 @@ assert not BLOCK & {d[0] for d in DOCS+MP+DS}
 import datetime
 def fmt(d): return datetime.date.fromisoformat(d).strftime('%B %-d, %Y')
 DOCS.sort(key=lambda d:d[2],reverse=True)
-shutil.copy(BLOG+'/style.css',site+'/style.css')
+shutil.copy(os.path.join(BUILD,'style.css'),site+'/style.css')
 os.makedirs(site+'/images',exist_ok=True)
 for f in ('favicon.ico','me.gif','blue-dash.gif'): shutil.copy(f'{IMG}/{f}',site+'/images/'+f)
 # The icon shared by every indrayam.com site, served from the site root.
@@ -72,36 +71,6 @@ page=f'''<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300&amp;family=Lora:wght@400;700;900&amp;family=Newsreader:opsz,wght@6..72,400;6..72,700;6..72,900&amp;family=PT+Serif:wght@400;700&amp;family=Source+Sans+Pro:wght@400;700;900&amp;display=swap">
 <link rel="stylesheet" href="/style.css">
-<style>
-/* cribsheets.indrayam.com: only additions; tokens come from shared style.css */
-.docs-brand{{margin:0 0 4px}}
-.docs-masthead-name{{font-family:"monotype corsiva",var(--font-heading);font-style:italic;font-size:2.1em;font-weight:700;margin:0;line-height:1.1;color:var(--color-heading)}}
-.docs-tagline{{font-family:var(--font-ui);font-size:.8rem;letter-spacing:.09em;text-transform:uppercase;color:var(--color-accent);font-weight:700;margin:0 0 10px}}
-.docs-intro{{margin:0 0 14px;color:var(--color-content)}}
-.post ul.doc-list{{margin:0;padding:0}}
-.doc-entry{{padding:12px 0;margin:0 0 10px;background:var(--color-panel)}}
-.doc-entry:hover{{background:var(--color-panel-alt)}}
-.doc-title,.archives-page .doc-title{{font-family:var(--font-heading);font-size:1.2em;font-weight:700;color:var(--color-heading);margin:0;padding-bottom:0;border-bottom:0}}
-.doc-title a{{color:var(--color-link)}}
-.doc-meta{{font-family:var(--font-ui);font-size:.82rem;color:var(--color-muted);margin:2px 0 4px}}
-.doc-summary{{margin:0;font-size:.95em;line-height:1.45}}
-/* Home-style chrome, matching The Daily Diff: white page, no box, centered site links, masthead heading. */
-body {{ background-image: none !important; background-color: #ffffff; }}
-.site-header {{ max-width: 760px; margin: 18px auto 14px; }}
-.site-nav ul {{ display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 22px; margin: 0; padding: 0; list-style: none; }}
-.site-nav li {{ margin: 0; padding: 0; background: none; }}
-.site-nav a {{ display: inline-block; padding: 4px 0; color: #111111; font-family: Fraunces, Georgia, "Times New Roman", serif; font-size: 1.05rem; font-weight: 300; line-height: 1.6; text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 3px; text-underline-offset: 7px; transition: text-decoration-color 0.15s ease; }}
-.site-nav a:hover, .site-nav a:focus-visible, .site-nav a[aria-current="page"] {{ text-decoration-color: #e7651a; }}
-.site-nav a:focus-visible {{ outline: 2px solid #e7651a; outline-offset: 4px; }}
-.post {{ border: none !important; margin-top: 0 !important; }}
-.page-masthead {{ text-align: center; padding-bottom: 0.45rem; }}
-.page-masthead-name {{ font-family: "Source Sans Pro", Arial, sans-serif; font-weight: 900; font-size: clamp(2.5rem, 5vw, 3.85rem); letter-spacing: 0; line-height: 1.02; color: #333333; margin: 0; padding: 0; border: 0; }}
-.page-masthead-tagline {{ font-family: Newsreader, Georgia, "Times New Roman", serif; font-size: 0.92rem; letter-spacing: 0.02em; line-height: 1.6; color: #555555; margin: 0.15rem 0 0; }}
-.page-masthead + * {{ margin-top: 1em; }}
-.page-masthead-rule {{ height: 0; border: none; border-top: 4px double #808080; margin: 1.1rem 0 0.32rem; }}
-@media screen and (max-width: 899px) {{ .site-header {{ max-width: none; margin-left: 10px; margin-right: 10px; }} }}
-.docs-topics{{font-family:var(--font-ui);font-size:.85rem;color:var(--color-muted);margin-top:14px;border-top:1px dashed var(--color-border-light);padding-top:8px}}
-</style>
 </head>
 <body>
 {HEADER}
@@ -111,22 +80,22 @@ body {{ background-image: none !important; background-color: #ffffff; }}
     <h1 class="page-masthead-name">Cribsheets</h1>
 </header>
 <p class="docs-intro">Single-page explainers on things I’m using and learning: how they work, what they measure, where they fall short.</p>
-<h2 id="poteto-skills" style="margin-top:28px">poteto Skills</h2>
+<h2 id="poteto-skills">poteto Skills</h2>
 <p class="docs-intro">Agent skills from Lauren Tan (poteto).</p>
 <ul class="doc-list">
 {poteto_items}
 </ul>
-<h2 id="matt-pocock-skills" style="margin-top:28px">Matt Pocock skills</h2>
+<h2 id="matt-pocock-skills">Matt Pocock skills</h2>
 <p class="docs-intro">One explainer per skill from <a href="https://github.com/mattpocock/skills">github.com/mattpocock/skills</a>, read at commit 5beb35b, with notes on pairing each with pstack.</p>
 <ul class="doc-list">
 {mp_items}
 </ul>
-<h2 id="storytelling-skills" style="margin-top:28px">Storytelling Skills</h2>
+<h2 id="storytelling-skills">Storytelling Skills</h2>
 <p class="docs-intro">Skills for diagrams, illustrations and visual explanation.</p>
 <ul class="doc-list">
 {story_items}
 </ul>
-<h2 id="design-skills" style="margin-top:28px">Design Skills</h2>
+<h2 id="design-skills">Design Skills</h2>
 <p class="docs-intro">Skills that build and review frontends. Pick one builder per project.</p>
 <ul class="doc-list">
 {ds_items}

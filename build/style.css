@@ -1,0 +1,244 @@
+/*
+Stylesheet for the Cribsheets homepage (cribsheets.indrayam.com/).
+
+build/site_index.py copies this file to site/style.css. The explainers carry
+their own inline styles and do not use it.
+
+The site nav, masthead, orange top bar, and footer match the other
+indrayam.com sites (blog, resume, The Daily Diff). There is no shared file:
+when that chrome changes on the other sites, update the matching rules here.
+*/
+
+:root {
+	--color-text: #333333;
+	--color-heading: #333333;
+	--color-content: #1f1f1d;
+	--color-muted: #808080;
+	--color-faint: #767676;
+	--color-link: #990000;
+	--color-accent: #e7651a;
+	--color-panel: #ffffff;
+	--color-panel-alt: #fcf7f4;
+	--color-border-light: #cccccc;
+	--font-site-body: "PT Serif", Georgia, "Times New Roman", serif;
+	--font-content: Newsreader, Georgia, "Times New Roman", serif;
+	--font-heading: Lora, Georgia, "Times New Roman", serif;
+	--font-ui: "Source Sans Pro", Arial, sans-serif;
+	--font-nav: Fraunces, Georgia, "Times New Roman", serif;
+	--page-width: 760px;
+}
+
+/* ── Baseline ───────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	max-width: 100%;
+	overflow-x: hidden;
+}
+
+body {
+	max-width: 100%;
+	overflow-x: hidden;
+	margin: 0 0 5px;
+	color: var(--color-text);
+	background-color: #ffffff;
+	border-top: 10px solid var(--color-accent);
+	font-family: var(--font-site-body);
+	font-size: 17px;
+}
+
+a {
+	color: var(--color-link);
+	text-decoration: underline;
+}
+
+/* ── Site nav (same as the other indrayam.com sites) ───────────────── */
+.site-header {
+	max-width: var(--page-width);
+	margin: 18px auto 14px;
+}
+
+.site-nav ul {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 4px 22px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.site-nav li {
+	margin: 0;
+	padding: 0;
+}
+
+.site-nav a {
+	display: inline-block;
+	padding: 4px 0;
+	color: #111111;
+	font-family: var(--font-nav);
+	font-size: 1.05rem;
+	font-weight: 300;
+	line-height: 1.6;
+	text-decoration: underline;
+	text-decoration-color: transparent;
+	text-decoration-thickness: 3px;
+	text-underline-offset: 7px;
+	transition: text-decoration-color 0.15s ease;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible,
+.site-nav a[aria-current="page"] {
+	text-decoration-color: var(--color-accent);
+}
+
+.site-nav a:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 4px;
+}
+
+/* ── Page body and masthead ─────────────────────────────────────────── */
+.post {
+	max-width: var(--page-width);
+	margin: 0 auto 10pt;
+	padding: 20px 20px 24px;
+	font-family: var(--font-content);
+	font-size: 19.2px;
+	line-height: 1.5;
+	color: var(--color-content);
+	overflow-wrap: anywhere;
+}
+
+.page-masthead {
+	text-align: center;
+	padding-bottom: 0.45rem;
+}
+
+.post > .page-masthead + * {
+	margin-top: 1em;
+}
+
+.page-masthead-name {
+	font-family: var(--font-ui);
+	font-weight: 900;
+	font-size: clamp(2.5rem, 5vw, 3.85rem);
+	letter-spacing: 0;
+	line-height: 1.02;
+	color: var(--color-heading);
+	margin: 0;
+	padding: 0;
+	border: 0;
+	overflow-wrap: break-word;
+}
+
+/* ── Sections and the doc list ──────────────────────────────────────── */
+h2 {
+	font-family: var(--font-heading);
+	font-size: 1.5em;
+	font-weight: 700;
+	line-height: normal;
+	margin-top: 28px;
+	margin-bottom: 5pt;
+	border-bottom: 1px dashed var(--color-border-light);
+}
+
+.docs-intro {
+	margin: 0 0 14px;
+	color: var(--color-content);
+}
+
+.doc-list {
+	margin: 0;
+	padding: 0;
+}
+
+.doc-entry {
+	list-style: none;
+	padding: 12px 0;
+	margin: 2px 0;
+	line-height: 1.5;
+	background: var(--color-panel);
+}
+
+.doc-entry:hover {
+	background: var(--color-panel-alt);
+}
+
+.doc-title {
+	font-family: var(--font-heading);
+	font-size: 1.2em;
+	font-weight: 700;
+	line-height: normal;
+	color: var(--color-heading);
+	margin: 0;
+}
+
+.doc-title a {
+	color: var(--color-link);
+}
+
+.doc-meta {
+	font-family: var(--font-ui);
+	font-size: 0.82rem;
+	color: var(--color-muted);
+	margin: 2px 0 4px;
+}
+
+.doc-summary {
+	margin: 0;
+	font-size: 0.95em;
+	line-height: 1.45;
+}
+
+.docs-topics {
+	font-family: var(--font-ui);
+	font-size: 0.85rem;
+	color: var(--color-muted);
+	margin-top: 14px;
+	border-top: 1px dashed var(--color-border-light);
+	padding-top: 8px;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────── */
+.copyright {
+	font-family: var(--font-site-body);
+	font-size: 0.6875rem;
+	margin-top: 5px;
+	text-align: center;
+	color: var(--color-faint);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+@media screen and (min-width: 1280px) and (hover: hover) and (pointer: fine) {
+	.post {
+		max-width: 840px;
+	}
+}
+
+@media screen and (max-width: 899px) {
+	.site-header {
+		max-width: none;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+
+	.post {
+		padding: 12px 16px 20px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	body {
+		font-size: 16px;
+	}
+
+	.post {
+		font-size: 18px;
+	}
+}

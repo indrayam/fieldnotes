@@ -16,8 +16,6 @@ SOURCES = {  # env var: (default, what to clone)
     'IMPECCABLE_SRC': ('/workspace/dorothy-docs/_scratch/impeccable', 'github.com/pbakaus/impeccable @ 9368675'),
     'HALLMARK_SRC': ('/workspace/dorothy-docs/_scratch/hallmark', 'github.com/nutlope/hallmark @ 7ec8682'),
     'UIUXPROMAX_SRC': ('/workspace/dorothy-docs/_scratch/ui-ux-pro-max-skill', 'github.com/nextlevelbuilder/ui-ux-pro-max-skill @ b7d5353'),
-    # Was INDRAYAM_V1_SRC; that name still works as a fallback.
-    'INDRAYAM_BLOG_SRC': (os.environ.get('INDRAYAM_V1_SRC', '/workspace/dorothy-docs/_src/indrayam-site/v1'), 'github.com/indrayam/blog, the blog at blog.indrayam.com (needs style.css)'),
 }
 def src(var):
     default, what = SOURCES[var]

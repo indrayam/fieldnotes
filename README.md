@@ -28,7 +28,6 @@ Each doc quotes its source repo and checks every quote at build time (build fail
 | `IMPECCABLE_SRC` | github.com/pbakaus/impeccable @ 9368675 (`pbakaus-impeccable`) |
 | `HALLMARK_SRC` | github.com/nutlope/hallmark @ 7ec8682 (`nutlope-hallmark`) |
 | `UIUXPROMAX_SRC` | github.com/nextlevelbuilder/ui-ux-pro-max-skill @ b7d5353 (`nextlevelbuilder-ui-ux-pro-max`) |
-| `INDRAYAM_BLOG_SRC` | the blog repo, github.com/indrayam/blog (for `style.css`). The old name `INDRAYAM_V1_SRC` still works. |
 
 A missing source stops the build with a message naming the var. You only need the sources for the docs you rebuild.
 
@@ -37,4 +36,4 @@ A missing source stops the build with a message naming the var. You only need th
 - Generated docs (everything listed above): edit `build/`, then rebuild. A hand edit to their `site/` file is overwritten on the next rebuild.
 - Check branch and working-tree state before editing; follow `AGENTS.md` for safe synchronization. Keep commits small; never force-push.
 - No internal Cisco material (ai-native-assessment, ai-harness-setup, anything from work). `build.py` fails if it finds it.
-- Content work stays in this repo; don't edit the sibling indrayam.com repos from here. Shared site chrome (header nav, footer, `style.css`, favicon) may change here as part of a cross-site update; see `AGENTS.md`.
+- Content work stays in this repo; don't edit the sibling indrayam.com repos from here. Shared site chrome (header nav, footer, favicon, and the matching rules in `build/style.css`) may change here as part of a cross-site update; see `AGENTS.md`. The homepage's stylesheet is `build/style.css`, copied to `site/style.css` on rebuild; it no longer comes from the blog.
