@@ -8,7 +8,7 @@ Read `README.md` before changing or building this site. It is the detailed refer
 - On a shared or default branch such as `main`, do not pull with rebase. Fetch `origin` when network access is available, review incoming commits, and coordinate before integrating them.
 - On a clean private branch, fetch and rebase onto its upstream only when that is the established workflow. If the branch is dirty, behind, or diverged, use a safe workflow that preserves local and remote changes before editing.
 - Keep commits small. Never force-push.
-- Content work (explainers, the docs homepage, the build) stays inside this repository. Do not edit the sibling indrayam.com repos from here.
+- Content work (explainers, the Field Notes homepage, the build) stays inside this repository. Do not edit the sibling indrayam.com repos from here.
 - Shared site chrome (header nav, footer, the orange top bar and masthead rules in `build/style.css`, favicon) is kept aligned across all six indrayam.com sites and may be changed here as part of a cross-site update. Make such changes through the builder in `build/` plus a rebuild, and don't revert them on a later rebuild.
 
 ## Sources and generated pages
