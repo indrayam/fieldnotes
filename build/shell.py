@@ -12,12 +12,15 @@ table.dense{width:100%}table.dense td.nm{white-space:normal}table.dense td code{
 table.mx th{letter-spacing:0;font-size:.64rem;text-transform:none}table.mx td.y{background:var(--sky);color:var(--sky-ink);font-weight:600;text-align:center}
 table.mx td.n{color:var(--ink-3);text-align:center}
 tr.grp td{background:var(--code-bg);font-family:var(--f-display);font-weight:700;font-size:.82rem;letter-spacing:.04em}
-.code pre{overflow-x:auto;max-width:100%}.code{max-width:100%}
+.code pre{overflow-x:auto;max-width:100%}.code{max-width:100%}.code pre code{font:inherit;background:none;padding:0;border-radius:0;overflow-wrap:normal}
 .s0{color:var(--ink-3)}.s4{color:var(--sky-ink);font-weight:700}
 """
 CSS+=XCSS
 JS=r"""
 function mk(t,c,txt){const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e}
+// Scrollable blocks that overflow become keyboard-reachable, labelled regions.
+function srx(){document.querySelectorAll('.code pre,.codecard,.figure,.tablewrap').forEach(el=>{const o=el.scrollWidth>el.clientWidth+1,m=el.hasAttribute('data-sr');if(o&&!m&&!el.hasAttribute('tabindex')){el.setAttribute('data-sr','');el.tabIndex=0;el.setAttribute('role','region');const w=el.closest('.code'),f=w&&w.nextElementSibling,s=el.querySelector('caption,svg title');const t=(f&&f.classList.contains('figcap')?f.textContent:s?s.textContent:'').trim();el.setAttribute('aria-label',t||(el.matches('.tablewrap')?'Scrollable table':el.matches('.figure')?'Scrollable figure':'Scrollable code'))}else if(!o&&m){['data-sr','tabindex','role','aria-label'].forEach(a=>el.removeAttribute(a))}})}
+srx();let srt;addEventListener('resize',()=>{clearTimeout(srt);srt=setTimeout(srx,150)});
 document.querySelectorAll('.code').forEach(w=>{const b=mk('button','copy','Copy');b.type='button';b.onclick=async()=>{const t=w.querySelector('pre').innerText;try{await navigator.clipboard.writeText(t)}catch(e){const r=document.createElement('textarea');r.value=t;document.body.appendChild(r);r.select();document.execCommand('copy');r.remove()}b.textContent='Copied';b.classList.add('ok');setTimeout(()=>{b.textContent='Copy';b.classList.remove('ok')},1400)};w.appendChild(b)});
 const tbn=document.getElementById('themeBtn'),root=document.documentElement,order=['system','light','dark'];
 let th=root.getAttribute('data-theme')||'system';tbn.textContent='Theme: '+th;
@@ -28,7 +31,7 @@ const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const
 secs.forEach(s=>s&&io.observe(s));
 """+XJS
 def esc(s): return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
-def code(s,cap=None): return f'<div class="code"><pre>{esc(s)}</pre></div>'+(f'<p class="figcap">{cap}</p>' if cap else '')
+def code(s,cap=None): return f'<div class="code"><pre><code>{esc(s)}</code></pre></div>'+(f'<p class="figcap">{cap}</p>' if cap else '')
 DEFAULT_FOOT="Built by Dorothy Docs."
 def page(title,eyebrow,nav,body,footer=None,extra_js=''):
     lis=''.join(f'<li><a href="#{i}"{" class=\"on\"" if n==0 else ""}>{t}</a></li>' for n,(i,t) in enumerate(nav))

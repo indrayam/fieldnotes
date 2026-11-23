@@ -39,16 +39,16 @@ os.makedirs(site+'/images',exist_ok=True)
 for f in ('favicon.ico','me.gif','blue-dash.gif'): shutil.copy(f'{IMG}/{f}',site+'/images/'+f)
 E=html.escape
 HEADER=open(os.path.join(BUILD,'header.html')).read()
-def li(s,t,d,tp,sm): return f'''<li class="doc-entry"><h4 class="doc-title"><a href="/{s}/">{E(t)}</a></h4>
+def li(s,t,d,tp,sm): return f'''<li class="doc-entry"><h3 class="doc-title"><a href="/{s}/">{E(t)}</a></h3>
 <p class="doc-meta"><time datetime="{d}">{fmt(d)}</time></p><p class="doc-summary">{E(sm)}</p></li>'''
 POTETO=[d for d in DOCS if d[0]=='pstack']
 STORY=[d for d in DOCS if d[0]!='pstack']
 poteto_items="\n".join(li(*d) for d in POTETO)
 story_items="\n".join(li(*d) for d in STORY)
 ds_items="\n".join(li(*d) for d in DS)
-items="\n".join(f'''<li class="doc-entry"><h4 class="doc-title"><a href="/{s}/">{E(t)}</a></h4>
+items="\n".join(f'''<li class="doc-entry"><h3 class="doc-title"><a href="/{s}/">{E(t)}</a></h3>
 <p class="doc-meta"><time datetime="{d}">{fmt(d)}</time> &mdash; {E(tp)}</p><p class="doc-summary">{E(sm)}</p></li>''' for s,t,d,tp,sm in DOCS)
-mp_items="\n".join(f'''<li class="doc-entry"><h4 class="doc-title"><a href="/{s}/">{E(t)}</a></h4>
+mp_items="\n".join(f'''<li class="doc-entry"><h3 class="doc-title"><a href="/{s}/">{E(t)}</a></h3>
 <p class="doc-meta"><time datetime="{d}">{fmt(d)}</time></p><p class="doc-summary">{E(sm)}</p></li>''' for s,t,d,tp,sm in MP)
 topics=sorted({d[3] for d in DOCS})
 desc="Anand Sharma’s docs: long-form explainers on AI tooling, agent skills and whatever else I’m learning."
@@ -78,7 +78,7 @@ page=f'''<!DOCTYPE html>
 .post ul.doc-list{{margin:0;padding:0}}
 .doc-entry{{padding:12px 0;margin:0 0 10px;background:var(--color-panel)}}
 .doc-entry:hover{{background:var(--color-panel-alt)}}
-.doc-title{{font-family:var(--font-heading);font-size:1.2em;font-weight:700;color:var(--color-heading);margin:0}}
+.doc-title,.archives-page .doc-title{{font-family:var(--font-heading);font-size:1.2em;font-weight:700;color:var(--color-heading);margin:0;padding-bottom:0;border-bottom:0}}
 .doc-title a{{color:var(--color-link)}}
 .doc-meta{{font-family:var(--font-ui);font-size:.82rem;color:var(--color-muted);margin:2px 0 4px}}
 .doc-summary{{margin:0;font-size:.95em;line-height:1.45}}
@@ -89,7 +89,7 @@ body {{ background-image: none !important; background-color: #ffffff; }}
 .site-nav li {{ margin: 0; padding: 0; background: none; }}
 .site-nav a {{ display: inline-block; padding: 4px 0; color: #111111; font-family: Fraunces, Georgia, "Times New Roman", serif; font-size: 1.05rem; font-weight: 300; line-height: 1.6; text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 3px; text-underline-offset: 7px; transition: text-decoration-color 0.15s ease; }}
 .site-nav a:hover, .site-nav a:focus-visible, .site-nav a[aria-current="page"] {{ text-decoration-color: #e7651a; }}
-.site-nav a:focus-visible {{ outline: none; }}
+.site-nav a:focus-visible {{ outline: 2px solid #e7651a; outline-offset: 4px; }}
 .post {{ border: none !important; margin-top: 0 !important; }}
 .page-masthead {{ text-align: center; padding-bottom: 0.45rem; }}
 .page-masthead-name {{ font-family: "Source Sans Pro", Arial, sans-serif; font-weight: 900; font-size: clamp(2.5rem, 5vw, 3.85rem); letter-spacing: 0; line-height: 1.02; color: #333333; margin: 0; padding: 0; border: 0; }}
@@ -131,9 +131,9 @@ body {{ background-image: none !important; background-color: #ffffff; }}
 <p class="docs-topics">Topics: {", ".join(E(t) for t in ["poteto Skills","Matt Pocock skills","Storytelling Skills","Design Skills"])} &middot; {len(DOCS)+len(MP)+len(DS)} docs</p>
 </main>
 <p></p>
-<div class="copyright">
-    <a href="http://creativecommons.org/licenses/by-nd-nc/1.0/">Copyright</a> &copy; 2026 Anand Sharma. <a href="https://blog.indrayam.com/disclaimer.html">Disclaimer</a>
-</div>
+<footer class="copyright">
+    <a href="https://creativecommons.org/licenses/by-nd-nc/1.0/">Copyright</a> &copy; 2026 Anand Sharma. <a href="https://blog.indrayam.com/disclaimer.html">Disclaimer</a>
+</footer>
 </body>
 </html>
 '''

@@ -24,7 +24,7 @@
 .post ul.doc-list{margin:0;padding:0}
 .doc-entry{padding:12px 0;margin:0 0 10px;background:var(--color-panel)}
 .doc-entry:hover{background:var(--color-panel-alt)}
-.doc-title{font-family:var(--font-heading);font-size:1.2em;font-weight:700;color:var(--color-heading);margin:0}
+.doc-title,.archives-page .doc-title{font-family:var(--font-heading);font-size:1.2em;font-weight:700;color:var(--color-heading);margin:0;padding-bottom:0;border-bottom:0}
 .doc-title a{color:var(--color-link)}
 .doc-meta{font-family:var(--font-ui);font-size:.82rem;color:var(--color-muted);margin:2px 0 4px}
 .doc-summary{margin:0;font-size:.95em;line-height:1.45}
@@ -35,7 +35,7 @@ body { background-image: none !important; background-color: #ffffff; }
 .site-nav li { margin: 0; padding: 0; background: none; }
 .site-nav a { display: inline-block; padding: 4px 0; color: #111111; font-family: Fraunces, Georgia, "Times New Roman", serif; font-size: 1.05rem; font-weight: 300; line-height: 1.6; text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 3px; text-underline-offset: 7px; transition: text-decoration-color 0.15s ease; }
 .site-nav a:hover, .site-nav a:focus-visible, .site-nav a[aria-current="page"] { text-decoration-color: #e7651a; }
-.site-nav a:focus-visible { outline: none; }
+.site-nav a:focus-visible { outline: 2px solid #e7651a; outline-offset: 4px; }
 .post { border: none !important; margin-top: 0 !important; }
 .page-masthead { text-align: center; padding-bottom: 0.45rem; }
 .page-masthead-name { font-family: "Source Sans Pro", Arial, sans-serif; font-weight: 900; font-size: clamp(2.5rem, 5vw, 3.85rem); letter-spacing: 0; line-height: 1.02; color: #333333; margin: 0; padding: 0; border: 0; }
@@ -68,52 +68,52 @@ body { background-image: none !important; background-color: #ffffff; }
 <h2 id="poteto-skills" style="margin-top:28px">poteto Skills</h2>
 <p class="docs-intro">Agent skills from Lauren Tan (poteto).</p>
 <ul class="doc-list">
-<li class="doc-entry"><h4 class="doc-title"><a href="/pstack/">pstack</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/pstack/">pstack</a></h3>
 <p class="doc-meta"><time datetime="2026-10-21">October 21, 2026</time></p><p class="doc-summary">Lauren Tan’s pack of agent skills for Cursor: one router, /poteto-mode, picks a playbook and pulls in skills and principles as needed.</p></li>
 </ul>
 <h2 id="matt-pocock-skills" style="margin-top:28px">Matt Pocock skills</h2>
 <p class="docs-intro">One explainer per skill from <a href="https://github.com/mattpocock/skills">github.com/mattpocock/skills</a>, read at commit 5beb35b, with notes on pairing each with pstack.</p>
 <ul class="doc-list">
-<li class="doc-entry"><h4 class="doc-title"><a href="/mattpocock-grill-with-docs/">mattpocock/grill-with-docs</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/mattpocock-grill-with-docs/">mattpocock/grill-with-docs</a></h3>
 <p class="doc-meta"><time datetime="2026-10-23">October 23, 2026</time></p><p class="doc-summary">A relentless design interview that writes a glossary and ADRs as you go. Two lines that load grilling and domain-modeling.</p></li>
-<li class="doc-entry"><h4 class="doc-title"><a href="/mattpocock-wayfinder/">mattpocock/wayfinder</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/mattpocock-wayfinder/">mattpocock/wayfinder</a></h3>
 <p class="doc-meta"><time datetime="2026-10-23">October 23, 2026</time></p><p class="doc-summary">Plans work too big for one session as a map of decision tickets on your issue tracker, resolved one ticket per session.</p></li>
-<li class="doc-entry"><h4 class="doc-title"><a href="/mattpocock-to-spec-to-tickets/">mattpocock/to-spec → to-tickets</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/mattpocock-to-spec-to-tickets/">mattpocock/to-spec → to-tickets</a></h3>
 <p class="doc-meta"><time datetime="2026-10-23">October 23, 2026</time></p><p class="doc-summary">Turns a finished conversation into a published spec, then a graph of tracer-bullet tickets that implement-spec builds.</p></li>
-<li class="doc-entry"><h4 class="doc-title"><a href="/mattpocock-handoff/">mattpocock/handoff</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/mattpocock-handoff/">mattpocock/handoff</a></h3>
 <p class="doc-meta"><time datetime="2026-10-23">October 23, 2026</time></p><p class="doc-summary">Compacts a conversation into a temp-folder note a fresh agent can pick up, with suggested skills and links instead of copies.</p></li>
-<li class="doc-entry"><h4 class="doc-title"><a href="/mattpocock-setup-matt-pocock-skills/">mattpocock/setup-matt-pocock-skills</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/mattpocock-setup-matt-pocock-skills/">mattpocock/setup-matt-pocock-skills</a></h3>
 <p class="doc-meta"><time datetime="2026-10-23">October 23, 2026</time></p><p class="doc-summary">A one-time interview that tells the engineering skills where your tracker, triage labels and glossary live.</p></li>
 </ul>
 <h2 id="storytelling-skills" style="margin-top:28px">Storytelling Skills</h2>
 <p class="docs-intro">Skills for diagrams, illustrations and visual explanation.</p>
 <ul class="doc-list">
-<li class="doc-entry"><h4 class="doc-title"><a href="/diagram-design/">Diagram Design</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/diagram-design/">Diagram Design</a></h3>
 <p class="doc-meta"><time datetime="2026-10-20">October 20, 2026</time></p><p class="doc-summary">An agent skill that draws diagrams as one self-contained HTML file with hand-placed inline SVG in a strict editorial style. 45 types shown.</p></li>
-<li class="doc-entry"><h4 class="doc-title"><a href="/illo/">Illo</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/illo/">Illo</a></h3>
 <p class="doc-meta"><time datetime="2026-10-20">October 20, 2026</time></p><p class="doc-summary">Turns an idea into an editorial illustration, labelled explainer or transparent cutout, with pixels from an external image model.</p></li>
-<li class="doc-entry"><h4 class="doc-title"><a href="/drawio/">Draw.io</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/drawio/">Draw.io</a></h3>
 <p class="doc-meta"><time datetime="2026-10-20">October 20, 2026</time></p><p class="doc-summary">jgraph’s draw.io skill: one SKILL.md shared across four agent plugins, backed by the draw.io MCP servers.</p></li>
-<li class="doc-entry"><h4 class="doc-title"><a href="/pretty-mermaid/">Pretty Mermaid</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/pretty-mermaid/">Pretty Mermaid</a></h3>
 <p class="doc-meta"><time datetime="2026-10-20">October 20, 2026</time></p><p class="doc-summary">Renders Mermaid diagrams to themed SVG/PNG with the beautiful-mermaid package. No headless browser needed.</p></li>
-<li class="doc-entry"><h4 class="doc-title"><a href="/excalidraw/">Excalidraw</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/excalidraw/">Excalidraw</a></h3>
 <p class="doc-meta"><time datetime="2026-10-20">October 20, 2026</time></p><p class="doc-summary">An MCP server plus skill: a live Excalidraw canvas, REST and WebSocket sync, and headless PNG/SVG export.</p></li>
 </ul>
 <h2 id="design-skills" style="margin-top:28px">Design Skills</h2>
 <p class="docs-intro">Skills that build and review frontends. Pick one builder per project.</p>
 <ul class="doc-list">
-<li class="doc-entry"><h4 class="doc-title"><a href="/pbakaus-impeccable/">pbakaus/impeccable</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/pbakaus-impeccable/">pbakaus/impeccable</a></h3>
 <p class="doc-meta"><time datetime="2026-10-24">October 24, 2026</time></p><p class="doc-summary">One skill, 24 commands and a no-LLM detector for app UI: PRODUCT.md, DESIGN.md, audit, critique, polish, bolder, quieter, animate.</p></li>
-<li class="doc-entry"><h4 class="doc-title"><a href="/nutlope-hallmark/">nutlope/hallmark</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/nutlope-hallmark/">nutlope/hallmark</a></h3>
 <p class="doc-meta"><time datetime="2026-10-24">October 24, 2026</time></p><p class="doc-summary">A landing-page skill with 48 themes, a 16-rule Floor and sloplint, a linter that fails AI tells before you ship.</p></li>
-<li class="doc-entry"><h4 class="doc-title"><a href="/nextlevelbuilder-ui-ux-pro-max/">nextlevelbuilder/ui-ux-pro-max</a></h4>
+<li class="doc-entry"><h3 class="doc-title"><a href="/nextlevelbuilder-ui-ux-pro-max/">nextlevelbuilder/ui-ux-pro-max</a></h3>
 <p class="doc-meta"><time datetime="2026-10-24">October 24, 2026</time></p><p class="doc-summary">A searchable design reference, not a builder: when to search it and when to hand off to Impeccable or Hallmark.</p></li>
 </ul>
 <p class="docs-topics">Topics: poteto Skills, Matt Pocock skills, Storytelling Skills, Design Skills &middot; 14 docs</p>
 </main>
 <p></p>
-<div class="copyright">
-    <a href="http://creativecommons.org/licenses/by-nd-nc/1.0/">Copyright</a> &copy; 2026 Anand Sharma. <a href="https://blog.indrayam.com/disclaimer.html">Disclaimer</a>
-</div>
+<footer class="copyright">
+    <a href="https://creativecommons.org/licenses/by-nd-nc/1.0/">Copyright</a> &copy; 2026 Anand Sharma. <a href="https://blog.indrayam.com/disclaimer.html">Disclaimer</a>
+</footer>
 </body>
 </html>

@@ -95,7 +95,7 @@ def explorer(prefix, label):
 <div class="ex-list"><input class="search" id="{prefix}Search" type="search" placeholder="Filter {label}…" aria-label="Filter {label}">
 <div class="chips" id="{prefix}Chips"></div>
 <div class="items" id="{prefix}Items" role="listbox" aria-label="{label.title()}"></div></div>
-<div class="ex-detail" id="{prefix}Detail" aria-live="polite"><button class="sheet-close" type="button" data-close>Close</button><div class="ex-pane" id="{prefix}Pane"></div></div></div>
+<div class="ex-detail" id="{prefix}Detail"><button class="sheet-close" type="button" data-close>Close</button><div class="ex-pane" id="{prefix}Pane"></div></div></div>
 <dialog class="ex-sheet" id="{prefix}Sheet" aria-label="{label.title()} details"></dialog>'''
 def data_js(name, obj):
     return f'const {name}={json.dumps(obj, ensure_ascii=False).replace("</", "<\\/")};\n'
