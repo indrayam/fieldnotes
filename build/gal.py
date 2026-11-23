@@ -28,12 +28,13 @@ def gallery(gid,items,cls=''):
     return f'<div class="gal {cls}" id="{gid}">'+''.join(card(o) for o in items)+'</div>'
 def chips(gid,keys):
     return f'<div class="chips" data-gfilter="{gid}"><button type="button" class="chip" data-k="all" aria-pressed="true">All</button>'+''.join(f'<button type="button" class="chip" data-k="{k}" aria-pressed="false">{html.escape(lbl)}</button>' for k,lbl in keys)+'</div>'
-LB='<dialog class="lb" id="lb"><div class="lbin" id="lbin"><img id="lbimg" alt=""><div class="lbbar"><span id="lbcap"></span><span><button type="button" id="lbswap">Light / dark</button> <button type="button" id="lbx">Close</button></span></div></div></dialog>'
+LB='<dialog class="lb" id="lb" aria-labelledby="lbcap"><div class="lbin" id="lbin"><img id="lbimg" alt=""><div class="lbbar"><span id="lbcap"></span><span><button type="button" id="lbswap">Light / dark</button> <button type="button" id="lbx">Close</button></span></div></div></dialog>'
 GJS=r'''
 (function(){const lb=document.getElementById('lb');if(!lb)return;const im=document.getElementById('lbimg'),cap=document.getElementById('lbcap'),sw=document.getElementById('lbswap'),lbin=document.getElementById('lbin');let cur=null,dk=false;
 function isDark(){const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)}
 function show(){const l=cur.querySelector('.gi-l'),d=cur.querySelector('.gi-d');const useD=dk&&d;im.src=(useD?d:l).src;im.alt=(useD?d:l).alt;lbin.classList.toggle('dk',!!(useD||cur.classList.contains('dark')));cap.textContent=cur.dataset.cap+(d?(useD?' · dark':' · light'):'');sw.style.display=d?'':'none'}
-document.querySelectorAll('.gimg').forEach(b=>b.onclick=()=>{cur=b;dk=isDark();show();lb.showModal()});
+document.querySelectorAll('.gimg').forEach(b=>b.onclick=()=>{cur=b;dk=isDark();show();lb.showModal();document.getElementById('lbx').focus()});
+lb.addEventListener('close',()=>{if(cur&&cur.isConnected)cur.focus()});
 sw.onclick=()=>{dk=!dk;show()};document.getElementById('lbx').onclick=()=>lb.close();lb.addEventListener('click',e=>{if(e.target===lb)lb.close()});
 document.querySelectorAll('[data-gfilter]').forEach(box=>{const g=document.getElementById(box.dataset.gfilter);const cs=[...box.querySelectorAll('.chip')];cs.forEach(c=>c.onclick=()=>{cs.forEach(x=>x.setAttribute('aria-pressed',x===c));const k=c.dataset.k;[...g.children].forEach(a=>{a.style.display=(k==='all'||a.dataset.k.split(' ').includes(k))?'':'none'})})});})();
 '''

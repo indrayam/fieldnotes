@@ -47,28 +47,32 @@ section[id],header[id]{scroll-margin-top:calc(env(safe-area-inset-top,0px) + 64p
 .pcard .test{font-size:.88rem;color:var(--ink);font-style:italic;border-top:1px dashed var(--line);padding-top:6px}
 .gname{display:flex;align-items:baseline;gap:10px;margin-top:22px}.gname span{font-family:var(--f-display);font-size:.8rem;color:var(--ink-3)}
 .stub{font-family:var(--f-display);font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:var(--gold-soft);color:#7a5208;padding:1px 7px;border-radius:999px;margin-left:6px;vertical-align:middle}
+dialog.ex-sheet{display:none}
 @media (max-width:860px){
 .explorer{grid-template-columns:minmax(0,1fr);height:62vh;min-height:420px}
-.ex-detail{position:fixed;left:0;right:0;bottom:0;height:86vh;border-radius:16px 16px 0 0;z-index:50;transform:translateY(105%);transition:transform .6s var(--ease);padding-bottom:env(safe-area-inset-bottom,0px)}
-.ex-detail.open{transform:translateY(0)}
+.explorer>.ex-detail{display:none}
+dialog.ex-sheet[open]{display:block;position:fixed;inset:auto 0 0 0;margin:0;width:100%;max-width:none;height:86vh;max-height:none;padding:0;border:0;background:transparent;color:inherit;overflow:visible;animation:ex-sheet-in .6s var(--ease)}
+dialog.ex-sheet::backdrop{background:rgba(20,18,28,.45)}
+dialog.ex-sheet .ex-detail{height:100%;border-radius:16px 16px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}
 .ex-pane{padding:52px 20px 34px}
-.sheet-close{display:block;position:absolute;top:10px;right:12px;z-index:2;font-family:var(--f-display);font-size:.85rem;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 14px;cursor:pointer}
-.backdrop{display:block;position:fixed;inset:0;background:rgba(20,18,28,.45);z-index:40;opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
-.backdrop.open{opacity:1;pointer-events:auto}}
+.sheet-close{display:block;position:absolute;top:10px;right:12px;z-index:2;font-family:var(--f-display);font-size:.85rem;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:5px 14px;cursor:pointer}}
+@keyframes ex-sheet-in{from{transform:translateY(105%)}to{transform:translateY(0)}}
 """
 JS = r"""
 const xesc=(s)=>String(s).replace(/[&<>"]/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const xstore={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 const xmobile=()=>window.matchMedia("(max-width: 860px)").matches;
-const xbackdrop=document.getElementById("backdrop");let xopen=null;
-function closeSheet(){if(!xopen)return;xopen.classList.remove("open");xbackdrop.classList.remove("open");xopen=null}
-if(xbackdrop)xbackdrop.addEventListener("click",closeSheet);
-document.addEventListener("keydown",(e)=>{if(e.key==="Escape")closeSheet()});
-document.querySelectorAll("[data-close]").forEach((b)=>b.addEventListener("click",closeSheet));
+document.querySelectorAll("[data-close]").forEach((b)=>b.addEventListener("click",()=>{const d=b.closest("dialog");if(d)d.close()}));
 document.querySelectorAll(".toc a").forEach((a)=>a.addEventListener("click",()=>a.closest("details").open=false));
 function makeExplorer({prefix,groups,getText,renderItem,renderDetail,key}){
   const $=(s)=>document.getElementById(prefix+s);
-  const itemsEl=$("Items"),chipsEl=$("Chips"),searchEl=$("Search"),detailEl=$("Detail"),paneEl=$("Pane");
+  const itemsEl=$("Items"),chipsEl=$("Chips"),searchEl=$("Search"),detailEl=$("Detail"),paneEl=$("Pane"),sheetEl=$("Sheet"),homeEl=$("Explorer");
+  // Mobile: the detail pane moves into a modal <dialog> (focus moves in, Esc and backdrop close it) and back on close.
+  let opener=null;const sheetLabel=sheetEl?sheetEl.getAttribute("aria-label"):"";
+  function openSheet(btn){if(!sheetEl)return;opener=btn;const nm=btn&&btn.querySelector("span");sheetEl.setAttribute("aria-label",nm?nm.textContent.trim():sheetLabel);sheetEl.appendChild(detailEl);sheetEl.showModal();const c=detailEl.querySelector(".sheet-close");if(c)c.focus()}
+  if(sheetEl){sheetEl.addEventListener("close",()=>{homeEl.appendChild(detailEl);const back=(opener&&opener.isConnected)?opener:itemsEl.querySelector(`.item[data-id="${CSS.escape(selected)}"]`);if(back)back.focus();opener=null});
+    sheetEl.addEventListener("click",(e)=>{if(e.target===sheetEl)sheetEl.close()});
+    window.matchMedia("(max-width: 860px)").addEventListener("change",(e)=>{if(!e.matches&&sheetEl.open)sheetEl.close()})}
   let filter="all",query="";const all=groups.flatMap(([,l])=>l);
   let selected=xstore.get(key);if(!all.some((x)=>x.id===selected))selected=all[0].id;
   chipsEl.innerHTML=[["all","All"],...groups.map(([g])=>[g,g])].map(([v,l])=>`<button class="chip" type="button" data-v="${xesc(v)}" aria-pressed="${v===filter}">${xesc(l)}</button>`).join("");
@@ -76,12 +80,12 @@ function makeExplorer({prefix,groups,getText,renderItem,renderDetail,key}){
   searchEl.addEventListener("input",()=>{query=searchEl.value.trim().toLowerCase();drawList()});
   function drawList(){let h="",n=0;for(const [g,l] of groups){if(filter!=="all"&&filter!==g)continue;const rows=l.filter((x)=>!query||getText(x).toLowerCase().includes(query));if(!rows.length)continue;h+=`<div class="grp">${xesc(g)}</div>`;h+=rows.map((x)=>{n++;return renderItem(x,x.id===selected)}).join("")}
     itemsEl.innerHTML=n?h:`<div class="empty">Nothing matches "${xesc(query)}".</div>`;itemsEl.dataset.count=n}
-  itemsEl.addEventListener("click",(e)=>{const b=e.target.closest(".item");if(b)select(b.dataset.id,true)});
+  itemsEl.addEventListener("click",(e)=>{const b=e.target.closest(".item");if(b)select(b.dataset.id,true,b)});
   itemsEl.addEventListener("keydown",(e)=>{if(e.key!=="ArrowDown"&&e.key!=="ArrowUp")return;const its=[...itemsEl.querySelectorAll(".item")];const i=its.findIndex((x)=>x.dataset.id===selected);const nx=its[Math.max(0,Math.min(its.length-1,i+(e.key==="ArrowDown"?1:-1)))];if(nx){e.preventDefault();select(nx.dataset.id,false);nx.focus()}});
-  function select(id,fromClick){const changed=id!==selected;selected=id;xstore.set(key,id);
+  function select(id,fromClick,btn){const changed=id!==selected;selected=id;xstore.set(key,id);
     itemsEl.querySelectorAll(".item").forEach((b)=>b.setAttribute("aria-selected",b.dataset.id===id));
     if(changed){paneEl.classList.add("fading");setTimeout(()=>{paneEl.innerHTML=renderDetail(id);paneEl.scrollTop=0;paneEl.classList.remove("fading")},220)}
-    if(fromClick&&xmobile()){detailEl.classList.add("open");xbackdrop.classList.add("open");xopen=detailEl}}
+    if(fromClick&&xmobile())openSheet(btn)}
   drawList();paneEl.innerHTML=renderDetail(selected);
 }
 """
@@ -91,6 +95,7 @@ def explorer(prefix, label):
 <div class="ex-list"><input class="search" id="{prefix}Search" type="search" placeholder="Filter {label}…" aria-label="Filter {label}">
 <div class="chips" id="{prefix}Chips"></div>
 <div class="items" id="{prefix}Items" role="listbox" aria-label="{label.title()}"></div></div>
-<div class="ex-detail" id="{prefix}Detail" aria-live="polite"><button class="sheet-close" type="button" data-close>Close</button><div class="ex-pane" id="{prefix}Pane"></div></div></div>'''
+<div class="ex-detail" id="{prefix}Detail" aria-live="polite"><button class="sheet-close" type="button" data-close>Close</button><div class="ex-pane" id="{prefix}Pane"></div></div></div>
+<dialog class="ex-sheet" id="{prefix}Sheet" aria-label="{label.title()} details"></dialog>'''
 def data_js(name, obj):
     return f'const {name}={json.dumps(obj, ensure_ascii=False).replace("</", "<\\/")};\n'
